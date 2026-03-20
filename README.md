@@ -1,13 +1,18 @@
 # bake
 
-# bake init
+### install
+```shell
+go install github.com/sishui/bake/cmd/bake@latest
+```
+
+### bake init
     初始化 一个简易的 bake 配置文件`bake.gen.yaml`到当前文件夹
-# bake version
+### bake version
     查看当前bake版本
-# bake
+### bake
     根据配置文件生成model
 
-# 配置文件说明:
+### 配置文件说明:
 ```yaml
 log:
   file: "" #生成日志，默认为空
@@ -36,9 +41,9 @@ db:
         comment: "test all types comment" #自定义表的注释
         tags: # 自定义tag (key, []options)
           - key: "form"
-            name: "$SnakeCase"
+            name: "$SnakeCase" #tag 的name 转换成SnakeCase， 无name 不转换
           - key: "xml"
-            name: "$CamelCase"
+            name: "$CamelCase" #tag 的name 转换成CamelCase， 无name 不转换
       mail:
         tags:
           - key: "form"
@@ -57,7 +62,7 @@ db:
                 options: [ "rel:has-many", "join:id=mail_id" ]
 ```
 
-# 生成文件说明: 可以不使用内置的模板生成model,自己在配置里指定模板,传进模板的对象结构是：
+### 生成文件说明: 可以不使用内置的模板生成model,自己在配置里指定模板,传进模板的对象结构是：
 ```go
 type Model struct {
 	Version            string     // bake version
