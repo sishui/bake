@@ -1,0 +1,49 @@
+
+#go install github.com/sishui/bake/cmd/bake@latest
+#bake init
+
+log:
+  file: ""
+
+uncountables: ["sms", "mms", "rls"]
+
+initialisms: ["ID", "UID", "URL", "URI", "UUID", "IP"]
+
+timezone: ""
+
+template:
+  dir: ""
+  model: "model"
+output:
+  dir: "model"
+  package: "model"
+  module: "github.com/username/project"
+db:
+  - driver: "postgres"
+    dsn: "postgres://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable"
+    schema: "public"
+    included: []
+    excluded: []
+    customs:
+      test_all_types:
+        tags:
+          - key: "form"
+            name: "$SnakeCase"
+          - key: "xml"
+            name: "$CamelCase"
+      mail:
+        tags:
+          - key: "form"
+        fields:
+          has_attachment:
+            name: "CustomHasAttachment"
+            tags:
+              - key: "json"
+                name: "#has_attachment"
+          attachments:
+            type: "[]*MailAttachment"
+            comment: "email attachments"
+            relation: true
+            tags:
+              - key: "bun"
+                options: [ "rel:has-many", "join:id=mail_id" ]
