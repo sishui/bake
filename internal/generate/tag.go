@@ -145,7 +145,7 @@ func newJSONTag(name string, options ...string) *Tag {
 	return NewTag("json", name, options...)
 }
 
-func newCustomTags(fieldName string, cfg []*config.Tag) []*Tag {
+func newCustomTags(fieldName string, cfg ...*config.Tag) []*Tag {
 	count := len(cfg)
 	if count == 0 {
 		return nil

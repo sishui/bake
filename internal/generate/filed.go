@@ -67,8 +67,8 @@ func NewCustomField(fieldName string, customTable *config.CustomTable) *Field {
 		name = customField.Name
 	}
 	tags := NewTags(newJSONTag(name, "omitempty"))
-	tags.Add(newCustomTags(name, customTable.Tags)...)
-	tags.Add(newCustomTags(name, customField.Tags)...)
+	tags.Add(newCustomTags(name, customTable.Tags...)...)
+	tags.Add(newCustomTags(name, customField.Tags...)...)
 	field := &Field{
 		Imports:    nil,
 		Name:       naming.ColumnToField(name, nil),
@@ -111,13 +111,8 @@ func fieldImports(desc types.Desc, customField *config.CustomField) []string {
 }
 
 func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*config.Tag) *Tags {
-	var fieldTags []*config.Tag
-	if customField != nil {
-		fieldTags = customField.Tags
-	}
-
 	tags := NewTags(newBunTag(c), newJSONTag(c.Name, "omitempty"))
-	tags.Add(newCustomTags(c.Name, objectTags)...)
+	tags.Add(newCustomTags(c.Name, objectTags...)...)
 	if customField == nil {
 		return tags
 	}
@@ -136,7 +131,7 @@ func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*
 			tags.Add(newJSONTag(name, options...))
 			continue
 		}
-		tags.Add(newCustomTags(name, fieldTags)...)
+		tags.Add(newCustomTags(name, v)...)
 	}
 	return tags
 }
