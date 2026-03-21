@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/sishui/bake/internal/config"
@@ -73,18 +74,47 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		return 0, err
 	}
 	slog.Debug("loaded tables", "count", len(tables))
-	for _, table := range tables {
-		slog.Debug("processing table", "name", table.Name, "columns", len(table.Columns))
-		m, err := NewModel(table, db, c, initialisms)
-		if err != nil {
-			return 0, err
-		}
-		filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
-		if err != nil {
-			return 0, err
-		}
-		slog.Debug("generated model", "table", m.Table, "model", m.Model, "file", filename)
+
+	type result struct {
+		model    *Model
+		filename string
+		err      error
 	}
+
+	results := make(chan result, len(tables))
+	var wg sync.WaitGroup
+
+	for _, table := range tables {
+		wg.Add(1)
+		go func(table *schema.Table) {
+			defer wg.Done()
+			slog.Debug("processing table", "name", table.Name, "columns", len(table.Columns))
+			m, err := NewModel(table, db, c, initialisms)
+			if err != nil {
+				results <- result{err: err}
+				return
+			}
+			filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
+			if err != nil {
+				results <- result{err: err}
+				return
+			}
+			slog.Debug("generated model", "table", m.Table, "model", m.Model, "file", filename)
+			results <- result{model: m, filename: filename}
+		}(table)
+	}
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	for r := range results {
+		if r.err != nil {
+			return 0, r.err
+		}
+	}
+
 	return len(tables), nil
 }
 
