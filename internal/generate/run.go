@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/logger"
@@ -16,6 +17,10 @@ import (
 
 func Run(c *config.Config) error {
 	logger.Init(c.Log)
+
+	start := time.Now()
+	slog.Info("bake started")
+
 	err := os.MkdirAll(c.Output.Dir, 0o755)
 	if err != nil {
 		return err
@@ -29,24 +34,32 @@ func Run(c *config.Config) error {
 	if err != nil {
 		return err
 	}
-	return run(ctx, c, tmpl)
-}
-
-func run(ctx context.Context, c *config.Config, tmpl *templates) error {
-	initialisms := c.Naming()
-
-	for _, db := range c.DB {
-		if err := generate(ctx, db, c, tmpl, initialisms); err != nil {
-			return err
-		}
+	tableCount, err := run(ctx, c, tmpl)
+	if err != nil {
+		return err
 	}
+	slog.Info("bake completed", "duration", time.Since(start).String(), "tables", tableCount)
 	return nil
 }
 
-func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) error {
+func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
+	initialisms := c.Naming()
+	totalTables := 0
+
+	for _, db := range c.DB {
+		count, err := generate(ctx, db, c, tmpl, initialisms)
+		if err != nil {
+			return 0, err
+		}
+		totalTables += count
+	}
+	return totalTables, nil
+}
+
+func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) (int, error) {
 	s, err := schema.New(db)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer func() {
 		if err := s.Close(); err != nil {
@@ -55,22 +68,20 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 	}()
 	tables, err := s.Load(ctx)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	for _, table := range tables {
 		m, err := NewModel(table, db, c, initialisms)
 		if err != nil {
-			return err
+			return 0, err
 		}
 		filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
 		if err != nil {
-			return err
+			return 0, err
 		}
-		if c.Log.Level == "debug" {
-			slog.DebugContext(ctx, "generate", "table", m.Table, "file", filename)
-		}
+		slog.DebugContext(ctx, "generate", "table", m.Table, "file", filename)
 	}
-	return nil
+	return len(tables), nil
 }
 
 func cleanDir(dir string) error {

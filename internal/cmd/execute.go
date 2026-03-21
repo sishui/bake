@@ -31,6 +31,7 @@ func Execute() {
 	flags.StringP("output", "o", "", "model output directory")
 	flags.StringP("package", "p", "", "model package name")
 	flags.StringP("dsn", "n", "", "data source name")
+	flags.BoolP("verbose", "v", false, "verbose output")
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -55,12 +56,16 @@ func runRootCommand(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	verbose, err := flags.GetBool("verbose")
+	if err != nil {
+		return err
+	}
 	cfg, err := config.Parse(config.Args{
 		Config:  configFile,
 		Output:  output,
 		Package: pkg,
 		DSN:     dsn,
-		Verbose: false,
+		Verbose: verbose,
 	})
 	if err != nil {
 		return err
