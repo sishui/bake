@@ -47,6 +47,7 @@ func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
 	totalTables := 0
 
 	for _, db := range c.DB {
+		slog.Debug("processing database", "driver", db.Driver, "schema", db.Schema)
 		count, err := generate(ctx, db, c, tmpl, initialisms)
 		if err != nil {
 			return 0, err
@@ -66,11 +67,14 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 			slog.ErrorContext(ctx, "close db", "error", err)
 		}
 	}()
+	slog.Debug("loading schema", "driver", db.Driver, "schema", db.Schema)
 	tables, err := s.Load(ctx)
 	if err != nil {
 		return 0, err
 	}
+	slog.Debug("loaded tables", "count", len(tables))
 	for _, table := range tables {
+		slog.Debug("processing table", "name", table.Name, "columns", len(table.Columns))
 		m, err := NewModel(table, db, c, initialisms)
 		if err != nil {
 			return 0, err
@@ -79,7 +83,7 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		if err != nil {
 			return 0, err
 		}
-		slog.DebugContext(ctx, "generate", "table", m.Table, "file", filename)
+		slog.Debug("generated model", "table", m.Table, "model", m.Model, "file", filename)
 	}
 	return len(tables), nil
 }
