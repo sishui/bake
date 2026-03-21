@@ -112,11 +112,11 @@ func (s *postgres) loadTables(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func(ctx context.Context) {
+	defer func() {
 		if err := rows.Close(); err != nil {
 			slog.ErrorContext(ctx, "close rows", "error", err)
 		}
-	}(ctx)
+	}()
 	result := make([]*Table, 0, 128)
 	for rows.Next() {
 		var t Table
@@ -147,11 +147,11 @@ func (s *postgres) loadColumns(ctx context.Context, tables []*Table) (map[string
 	if err != nil {
 		return nil, err
 	}
-	defer func(ctx context.Context) {
+	defer func() {
 		if err := rows.Close(); err != nil {
 			slog.ErrorContext(ctx, "close rows", "error", err)
 		}
-	}(ctx)
+	}()
 	result := make(map[string][]*Column, len(tables))
 	for _, t := range tables {
 		result[t.Name] = make([]*Column, 0, 32)
