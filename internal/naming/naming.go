@@ -1,4 +1,4 @@
-// Package naming provides naming texts
+// Package naming provides text naming utilities.
 package naming
 
 import (

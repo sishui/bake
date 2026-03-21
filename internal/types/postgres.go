@@ -1,3 +1,4 @@
+// Package types provides PostgreSQL database type to Go type mapping.
 package types
 
 import (

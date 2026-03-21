@@ -1,4 +1,4 @@
-// Package types db type to go type mapping
+// Package types provides database column type to Go type mapping.
 package types
 
 import (

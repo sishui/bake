@@ -1,4 +1,4 @@
-// Package types db type to go type mapping
+// Package types provides MySQL database type to Go type mapping.
 package types
 
 import (
