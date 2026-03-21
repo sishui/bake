@@ -5,8 +5,9 @@ import (
 	"github.com/sishui/bake/internal/schema"
 )
 
+type DescFunc func(c *schema.Column) (Desc, error)
 
-type DescFunc func(c *schema.Column) Desc
+var DescFuncs = map[string]DescFunc{}
 
 type Desc struct {
 	Type    string   // go Type

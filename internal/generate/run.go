@@ -58,7 +58,10 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		return err
 	}
 	for _, table := range tables {
-		m := NewModel(table, db, c, initialisms)
+		m, err := NewModel(table, db, c, initialisms)
+		if err != nil {
+			return err
+		}
 		filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
 		if err != nil {
 			return err

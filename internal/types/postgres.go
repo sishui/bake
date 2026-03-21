@@ -1,48 +1,53 @@
 package types
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/sishui/bake/internal/schema"
 )
 
-func PostgresDescFunc(c *schema.Column) Desc {
+func init() {
+	DescFuncs["postgres"] = PostgresDescFunc
+}
+
+func PostgresDescFunc(c *schema.Column) (Desc, error) {
 	switch c.DataType {
 	case "int2", "smallint":
-		return newNumericDesc(c, "int16", "int16")
+		return newNumericDesc(c, "int16", "int16"), nil
 	case "int4", "integer":
-		return newNumericDesc(c, "int32", "int32")
+		return newNumericDesc(c, "int32", "int32"), nil
 	case "bigint", "int8":
-		return newNumericDesc(c, "int64", "int64")
+		return newNumericDesc(c, "int64", "int64"), nil
 	case "float4", "real":
-		return newNumericDesc(c, "float32", "float32")
+		return newNumericDesc(c, "float32", "float32"), nil
 	case "float8", "double precision":
-		return newNumericDesc(c, "float64", "float64")
+		return newNumericDesc(c, "float64", "float64"), nil
 	case "numeric", "decimal":
-		return newDecimalDesc(c)
+		return newDecimalDesc(c), nil
 	case "bool":
-		return newBoolDesc(c)
+		return newBoolDesc(c), nil
 	case "text", "character varying", "character", "varchar", "char", "bpchar":
-		return newStringDesc(c)
+		return newStringDesc(c), nil
 	case "bytea", "bit":
-		return newBytesDesc()
+		return newBytesDesc(), nil
 	case "date", "timestamp", "timestamp without time zone", "timestamp with time zone", "time", "time without time zone":
-		return newTimeDesc(c)
+		return newTimeDesc(c), nil
 	case "json", "jsonb":
-		return newJSONDesc()
+		return newJSONDesc(), nil
 	case "uuid":
-		return newUUIDDesc(c)
+		return newUUIDDesc(c), nil
 	case "inet", "cidr":
-		return newIPDesc(c)
+		return newIPDesc(c), nil
 	case "interval":
-		return newIntervalDesc(c)
+		return newIntervalDesc(c), nil
 	case "ARRAY":
 		return newArrayDesc(c)
 	default:
 		if strings.HasPrefix(c.DataType, "enum_") {
-			return newEnumDesc(c)
+			return newEnumDesc(c), nil
 		}
-		panic("unsupported type: " + c.DataType)
+		return Desc{}, errors.Join(ErrUnsupportedType, errors.New(c.DataType))
 	}
 }
 
@@ -76,7 +81,9 @@ func newIntervalDesc(c *schema.Column) Desc {
 	}
 }
 
-func newArrayDesc(c *schema.Column) Desc {
+var ErrUnsupportedArrayType = errors.New("unsupported array type")
+
+func newArrayDesc(c *schema.Column) (Desc, error) {
 	typ := ""
 	switch c.ColumnType {
 	case "_text", "_varchar":
@@ -88,7 +95,7 @@ func newArrayDesc(c *schema.Column) Desc {
 	case "_uuid":
 		typ = "[]uuid.UUID"
 	default:
-		panic("unsupported array type: " + c.ColumnType)
+		return Desc{}, errors.Join(ErrUnsupportedArrayType, errors.New(c.ColumnType))
 	}
 	return Desc{
 		Type: typ,
@@ -96,5 +103,5 @@ func newArrayDesc(c *schema.Column) Desc {
 		Imports: []string{
 			"github.com/google/uuid",
 		},
-	}
+	}, nil
 }

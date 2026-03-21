@@ -31,7 +31,7 @@ type Model struct {
 	MaxRelationLength  int        // max relation length
 }
 
-func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms map[string]string) *Model {
+func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms map[string]string) (*Model, error) {
 	m := &Model{
 		Version:  cfg.Version,
 		Package:  cfg.Output.Package,
@@ -49,7 +49,11 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	fields = append(fields, &Field{Name: m.BunModel})
 	columns := make(map[string]struct{}, len(t.Columns))
 	for _, c := range t.Columns {
-		fields = append(fields, NewField(c, customTable, db.Driver, initialisms))
+		f, err := NewField(c, customTable, db.Driver, initialisms)
+		if err != nil {
+			return nil, err
+		}
+		fields = append(fields, f)
 		columns[c.Name] = struct{}{}
 	}
 
@@ -57,7 +61,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	alignFields(groupFields(fields))
 	m.Fields = fields[1:]
 	m.init()
-	return m
+	return m, nil
 }
 
 func (m *Model) init() {

@@ -1,6 +1,8 @@
 package generate
 
 import (
+	"errors"
+
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -24,15 +26,14 @@ type Field struct {
 	IsRelation  bool     // is relation
 }
 
-func NewField(c *schema.Column, customTable *config.CustomTable, driver string, initialisms map[string]string) *Field {
-	var desc types.Desc
-	switch driver {
-	case "mysql":
-		desc = types.MySQLDescFunc(c)
-	case "postgres":
-		desc = types.PostgresDescFunc(c)
-	default:
-		panic("unsupported driver")
+func NewField(c *schema.Column, customTable *config.CustomTable, driver string, initialisms map[string]string) (*Field, error) {
+	fn, ok := types.DescFuncs[driver]
+	if !ok {
+		return nil, errors.New("unsupported driver: " + driver)
+	}
+	desc, err := fn(c)
+	if err != nil {
+		return nil, err
 	}
 	var (
 		customField *config.CustomField
@@ -54,7 +55,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 		IsNullable: c.IsNullable(),
 		IsCustom:   false,
 		IsRelation: false,
-	}
+	}, nil
 }
 
 func NewCustomField(fieldName string, customTable *config.CustomTable) *Field {
