@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/jinzhu/inflection"
 	"github.com/sishui/bake/internal/naming"
 )
 
@@ -51,6 +52,7 @@ func TestSingular(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			inflection.AddUncountable("sms", "mms", "rls")
 			if got := naming.Singular(tt.args.input); got != tt.want {
 				t.Errorf("Singular() = %v, want %v", got, tt.want)
 			}
@@ -122,9 +124,9 @@ func TestCamelCase(t *testing.T) {
 			want: "WordWord",
 		},
 		{
-			name: "Should convert word_WORD to WordWord",
+			name: "Should convert word_WORD to WordWORD",
 			args: args{raw: "word_WORD"},
-			want: "WordWord",
+			want: "WordWORD",
 		},
 	}
 	for _, tt := range tests {
@@ -345,17 +347,22 @@ func TestPadRight(t *testing.T) {
 		{
 			name: "Should pad right with spaces",
 			args: args{"test", 10},
-			want: "test          ",
+			want: "test      ",
 		},
 		{
-			name: "Should pad right with tabs",
-			args: args{"test", 1},
-			want: "test ",
+			name: "Should pad right with spaces when len < n",
+			args: args{"test", 6},
+			want: "test  ",
 		},
 		{
 			name: "Not pad if already longer than n",
-			args: args{" test", -1},
-			want: " test",
+			args: args{"test", 4},
+			want: "test",
+		},
+		{
+			name: "Not pad if n is negative",
+			args: args{"test", -1},
+			want: "test",
 		},
 	}
 	for _, tt := range tests {

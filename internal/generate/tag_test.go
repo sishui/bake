@@ -134,7 +134,7 @@ func TestTagToString(t *testing.T) {
 			args: args{
 				tags: NewTags(
 					NewTag("bun", "id", "pk", "autoincrement", "nullzero", "notnull"),
-					newJSONTag("name"),
+					newJSONTag("name", "omitempty"),
 				),
 			},
 			want: "`bun:\"id,pk,autoincrement,nullzero,notnull\" json:\"name,omitempty\"`",
@@ -144,7 +144,7 @@ func TestTagToString(t *testing.T) {
 			args: args{
 				tags: NewTags(
 					NewTag("bun", "created_at", "pk", "autoincrement", "nullzero", "notnull", "default:'CURRENT_TIMESTAMP'"),
-					newJSONTag("name"),
+					newJSONTag("name", "omitempty"),
 					NewTag("csv", "name"),
 				),
 			},
@@ -155,7 +155,7 @@ func TestTagToString(t *testing.T) {
 			args: args{
 				tags: NewTags(
 					NewTag("bun", "created_at", "pk", "autoincrement", "nullzero", "notnull"),
-					newJSONTag("name"),
+					newJSONTag("name", "omitempty"),
 					NewTag("csv", "name"),
 					NewTag("xml", "name"),
 				),
