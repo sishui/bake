@@ -237,6 +237,9 @@ func Parse(args Args) (*Config, error) {
 		config.Output.Package = filepath.Base(config.Output.Dir)
 	}
 	if config.DB == nil {
+		if args.DSN == "" {
+			return nil, errors.New("db.dsn is required: set via config file or --dsn flag")
+		}
 		config.DB = []*DB{
 			{
 				DSN: args.DSN,
