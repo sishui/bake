@@ -78,7 +78,16 @@ func ToSnakeCase(s string) string {
 }
 
 func NormalizeIdentifier(s string) string {
-	sanitized := strings.ReplaceAll(variantSanitizeRegex.ReplaceAllString(s, ""), "-", "_")
+	var b strings.Builder
+	b.Grow(len(s))
+	for _, c := range s {
+		if c == '-' {
+			b.WriteByte('_')
+		} else if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' {
+			b.WriteRune(c)
+		}
+	}
+	sanitized := b.String()
 	if len(sanitized) != 0 && ((sanitized[0] >= '0' && sanitized[0] <= '9') || sanitized[0] == '_') {
 		sanitized = "T" + sanitized
 	}
