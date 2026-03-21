@@ -158,15 +158,15 @@ func Concat(a, b string, maxN int) string {
 	return s + strings.Repeat(" ", maxN-len(a))
 }
 
-func applySuffix(s string, initialisms map[string]string) string {
-	words := SplitWords(s)
+// func applySuffix(s string, initialisms map[string]string) string {
+// 	words := SplitWords(s)
 
-	var b strings.Builder
-	for _, w := range words {
-		b.WriteString(normalize(w, initialisms))
-	}
-	return b.String()
-}
+// 	var b strings.Builder
+// 	for _, w := range words {
+// 		b.WriteString(normalize(w, initialisms))
+// 	}
+// 	return b.String()
+// }
 
 func SplitWords(s string) []string {
 	var words []string
