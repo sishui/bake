@@ -136,7 +136,7 @@ func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*
 			tags.Add(newJSONTag(name, options...))
 			continue
 		}
-		tags.Add(newCustomTags(customField.Name, fieldTags)...)
+		tags.Add(newCustomTags(name, fieldTags)...)
 	}
 	return tags
 }
