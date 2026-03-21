@@ -539,9 +539,19 @@ func (m *{{.Model}}) BeforeInsert(ctx context.Context, query *bun.InsertQuery) e
 	if m.CreatedAt == 0 {
 		m.CreatedAt = now.UnixMilli()
 	}
+{{- else if eq $createdAtType "*int64" }}
+	if m.CreatedAt == nil {
+		nowMs := now.UnixMilli()
+		m.CreatedAt = &nowMs
+	}
 {{- else if eq $createdAtType "int32" }}
 	if m.CreatedAt == 0 {
 		m.CreatedAt = int32(now.Unix())
+	}
+{{- else if eq $createdAtType "*int32" }}
+	if m.CreatedAt == nil {
+		nowSec := int32(now.Unix())
+		m.CreatedAt = &nowSec
 	}
 {{- end }}
 {{- end }}
@@ -559,13 +569,22 @@ func (m *{{.Model}}) BeforeInsert(ctx context.Context, query *bun.InsertQuery) e
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = now.UnixMilli()
 	}
+{{- else if eq $updatedAtType "*int64" }}
+	if m.UpdatedAt == nil {
+		nowMs := now.UnixMilli()
+		m.UpdatedAt = &nowMs
+	}
 {{- else if eq $updatedAtType "int32" }}
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = int32(now.Unix())
 	}
+{{- else if eq $updatedAtType "*int32" }}
+	if m.UpdatedAt == nil {
+		nowSec := int32(now.Unix())
+		m.UpdatedAt = &nowSec
+	}
 {{- end }}
 {{- end }}
-
 	return nil
 }
 
@@ -597,12 +616,21 @@ func (m *{{.Model}}) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) e
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = now.UnixMilli()
 	}
+{{- else if eq $updatedAtType "*int64" }}
+	if m.UpdatedAt == nil {
+		nowMs := now.UnixMilli()
+		m.UpdatedAt = &nowMs
+	}
 {{- else if eq $updatedAtType "int32" }}
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = int32(now.Unix())
 	}
+{{- else if eq $updatedAtType "*int32" }}
+	if m.UpdatedAt == nil {
+		nowSec := int32(now.Unix())
+		m.UpdatedAt = &nowSec
+	}
 {{- end }}
 {{- end }}
-
 	return nil
 }
