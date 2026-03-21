@@ -17,32 +17,31 @@ import (
 )
 
 func Run(c *config.Config) error {
+	ctx := context.Background()
 	logger.Init(c.Log)
 
 	start := time.Now()
 	slog.Info("bake started")
 
-	slog.Debug("step: creating output directory", "dir", c.Output.Dir)
+	slog.DebugContext(ctx, "creating output directory", "dir", c.Output.Dir)
 	err := os.MkdirAll(c.Output.Dir, 0o755)
 	if err != nil {
 		return err
 	}
 
-	ctx := context.Background()
-
-	slog.DebugContext(ctx, "step: parsing templates", "dir", c.Template.Dir)
+	slog.DebugContext(ctx, "parsing templates", "dir", c.Template.Dir)
 	tmpl, err := parseTemplates(c.Template)
 	if err != nil {
 		return err
 	}
 
-	slog.DebugContext(ctx, "step: cleaning old generated files", "dir", c.Output.Dir)
+	slog.DebugContext(ctx, "cleaning old generated files", "dir", c.Output.Dir)
 	err = cleanDir(c.Output.Dir)
 	if err != nil {
 		return err
 	}
 
-	slog.DebugContext(ctx, "step: loading schema and generating models")
+	slog.DebugContext(ctx, "loading schema and generating models")
 	tableCount, err := run(ctx, c, tmpl)
 	if err != nil {
 		return err
