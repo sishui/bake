@@ -71,6 +71,16 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 }
 
 func cleanDir(dir string) error {
+	info, err := os.Stat(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+	if !info.IsDir() {
+		return nil
+	}
 	return filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
