@@ -366,3 +366,89 @@ func TestPadRight(t *testing.T) {
 		})
 	}
 }
+
+func TestTableToAlias(t *testing.T) {
+	tests := []struct {
+		name  string
+		table string
+		want  string
+	}{
+		{
+			name:  "Should add alias suffix",
+			table: "users",
+			want:  "users_alias",
+		},
+		{
+			name:  "Should handle already aliased",
+			table: "user_orders",
+			want:  "user_orders_alias",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := naming.TableToAlias(tt.table); got != tt.want {
+				t.Errorf("TableToAlias() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStructToReceiver(t *testing.T) {
+	tests := []struct {
+		name       string
+		structName string
+		want       string
+	}{
+		{
+			name:       "Should convert to lowercase first char",
+			structName: "User",
+			want:       "u",
+		},
+		{
+			name:       "Should handle multi-char name",
+			structName: "UserOrder",
+			want:       "u",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := naming.StructToReceiver(tt.structName); got != tt.want {
+				t.Errorf("StructToReceiver() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSplitWords(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  []string
+	}{
+		{
+			name:  "Should split camelCase",
+			input: "userName",
+			want:  []string{"user", "Name"},
+		},
+		{
+			name:  "Should split multiple capitals",
+			input: "userXMLParser",
+			want:  []string{"user", "XML", "Parser"},
+		},
+		{
+			name:  "Should handle single word",
+			input: "User",
+			want:  []string{"User"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := naming.SplitWords(tt.input); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SplitWords() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
