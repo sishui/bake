@@ -7,9 +7,12 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/sync/semaphore"
 
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/logger"
@@ -17,7 +20,9 @@ import (
 )
 
 func Run(c *config.Config) error {
-	ctx := context.Background()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	logger.Init(c.Log)
 
 	start := time.Now()
@@ -92,10 +97,23 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 	results := make(chan result, len(tables))
 	var wg sync.WaitGroup
 
+	limiter := semaphore.NewWeighted(int64(runtime.NumCPU() * 4))
+
 	for _, table := range tables {
+		if err := limiter.Acquire(ctx, 1); err != nil {
+			break
+		}
 		wg.Add(1)
 		go func(table *schema.Table) {
 			defer wg.Done()
+			defer limiter.Release(1)
+
+			select {
+			case <-ctx.Done():
+				return
+			default:
+			}
+
 			slog.DebugContext(ctx, "processing table", "name", table.Name, "columns", len(table.Columns))
 			m, err := NewModel(table, db, c, initialisms)
 			if err != nil {
