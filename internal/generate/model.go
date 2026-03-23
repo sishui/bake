@@ -204,35 +204,16 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 	}
 	results := make([]*Field, 0, len(foreignKeys))
 	for _, fk := range foreignKeys {
-		// Generate the belongs-to relation field
-		// e.g., for posts.user_id -> users.id, generate User *User
 		fieldName := naming.TableToStruct(fk.RefTable) // "users" -> "User"
-
-		// Check if custom field exists for merging
-		var customField *config.CustomField
-		if customTable != nil {
-			name := naming.Singular(fk.RefTable) // "user"
-			customField = customTable.Fields[name]
-		}
-
+		fieldType := "*" + fieldName                   // "*User"
 		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
-		fieldType := "*" + fieldName // "*User"
 		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 
-		// Merge with custom config if exists
-		if customField != nil {
-			if customField.Name != "" {
-				fieldName = customField.Name
-			}
-			if customField.Type != "" {
-				fieldType = customField.Type
-			}
-			if len(customField.Tags) > 0 {
-				tags = NewTags(newCustomTags(name, customField.Tags...)...)
-			}
-		}
+		// Merge with custom config
+		customField := getCustomField(customTable, naming.Singular(fk.RefTable))
+		fieldName, fieldType, tags = mergeRelationField(customField, fieldName, fieldType, tags, name)
 
-		field := &Field{
+		results = append(results, &Field{
 			Name:       fieldName,
 			Type:       fieldType,
 			Tag:        tags.String(),
@@ -240,8 +221,7 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 			Kind:       types.KindStruct,
 			IsCustom:   true,
 			IsRelation: true,
-		}
-		results = append(results, field)
+		})
 	}
 	return results
 }
@@ -252,35 +232,19 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns ma
 	}
 	results := make([]*Field, 0, len(reverseForeignKeys))
 	for _, fk := range reverseForeignKeys {
-		// Skip if the column already exists
 		if _, ok := columns[fk.ColumnName]; ok {
 			continue
 		}
 
-		fieldName := naming.ToCamelCase(fk.Table)           // "Posts"
-		fieldType := "[]*" + naming.TableToStruct(fk.Table) // "[]*Post"
+		fieldName := naming.ToCamelCase(fk.Table) // "Posts"
+		fieldType := "[]*" + naming.TableToStruct(fk.Table)
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 
-		// Check if custom field exists for merging
-		var customField *config.CustomField
-		if customTable != nil {
-			customField = customTable.Fields[fk.Table]
-		}
+		// Merge with custom config
+		customField := getCustomField(customTable, fk.Table)
+		fieldName, fieldType, tags = mergeRelationField(customField, fieldName, fieldType, tags, fk.Table)
 
-		// Merge with custom config if exists
-		if customField != nil {
-			if customField.Name != "" {
-				fieldName = customField.Name
-			}
-			if customField.Type != "" {
-				fieldType = customField.Type
-			}
-			if len(customField.Tags) > 0 {
-				tags = NewTags(newCustomTags(fk.Table, customField.Tags...)...)
-			}
-		}
-
-		field := &Field{
+		results = append(results, &Field{
 			Name:       fieldName,
 			Type:       fieldType,
 			Tag:        tags.String(),
@@ -288,8 +252,30 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns ma
 			Kind:       types.KindStruct,
 			IsCustom:   true,
 			IsRelation: true,
-		}
-		results = append(results, field)
+		})
 	}
 	return results
+}
+
+func getCustomField(customTable *config.CustomTable, key string) *config.CustomField {
+	if customTable == nil {
+		return nil
+	}
+	return customTable.Fields[key]
+}
+
+func mergeRelationField(customField *config.CustomField, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
+	if customField == nil {
+		return fieldName, fieldType, tags
+	}
+	if customField.Name != "" {
+		fieldName = customField.Name
+	}
+	if customField.Type != "" {
+		fieldType = customField.Type
+	}
+	if len(customField.Tags) > 0 {
+		tags = NewTags(newCustomTags(name, customField.Tags...)...)
+	}
+	return fieldName, fieldType, tags
 }
