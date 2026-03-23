@@ -82,11 +82,11 @@ func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir stri
 	if err != nil {
 		return "", err
 	}
-	defer func(ctx context.Context) {
+	defer func() {
 		if err := file.Close(); err != nil {
 			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", err)
 		}
-	}(ctx)
+	}()
 	err = tmpl.Execute(file, data)
 	if err != nil {
 		return "", err
@@ -95,7 +95,7 @@ func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir stri
 	if err != nil {
 		return "", err
 	}
-	return fullPath, err
+	return fullPath, nil
 }
 
 func parseBuiltinTemplate(file fs.DirEntry) (*template.Template, error) {
