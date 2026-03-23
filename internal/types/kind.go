@@ -18,11 +18,11 @@ func TypeToKind(typ string) string {
 		return KindNumeric
 	case "string", "*string":
 		return KindString
-	case "[]byte":
+	case "[]byte", "*[]byte":
 		return KindBytes
-	case "time.Time":
+	case "time.Time", "*time.Time":
 		return KindTime
-	case "bool":
+	case "bool", "*bool":
 		return KindBoolean
 	default:
 		return KindStruct
