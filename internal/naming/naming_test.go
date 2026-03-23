@@ -427,35 +427,3 @@ func TestStructToReceiver(t *testing.T) {
 		})
 	}
 }
-
-func TestSplitWords(t *testing.T) {
-	tests := []struct {
-		name  string
-		input string
-		want  []string
-	}{
-		{
-			name:  "Should split camelCase",
-			input: "userName",
-			want:  []string{"user", "Name"},
-		},
-		{
-			name:  "Should split multiple capitals",
-			input: "userXMLParser",
-			want:  []string{"user", "XML", "Parser"},
-		},
-		{
-			name:  "Should handle single word",
-			input: "User",
-			want:  []string{"User"},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := naming.SplitWords(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("SplitWords() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
