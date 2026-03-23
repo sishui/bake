@@ -52,6 +52,7 @@ func parseTemplates(cfg *config.Template) (*templates, error) {
 			if os.IsNotExist(err) {
 				return nil
 			}
+			return err
 		}
 		if !strings.HasSuffix(path, ".tmpl") {
 			return nil
