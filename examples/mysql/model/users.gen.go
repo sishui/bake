@@ -301,13 +301,14 @@ const (
 )
 
 // User generates a model for the "users" table.
+// 用户表
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
-	ID            int64     `bun:"id,pk,notnull" json:"id,omitempty"`                                        //
-	Name          string    `bun:"name,notnull" json:"name,omitempty"`                                       //
-	Email         string    `bun:"email,notnull" json:"email,omitempty"`                                     //
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty"` //
-	Posts         []*Post   `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`                //
+	ID            int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`                             //
+	Name          string    `bun:"name,notnull" json:"name,omitempty"`                                          // 用户名
+	Email         string    `bun:"email,notnull" json:"email,omitempty"`                                        // 邮箱
+	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty"` // 创建时间
+	Posts         []*Post   `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`                   //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

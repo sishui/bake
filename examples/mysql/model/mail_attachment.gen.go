@@ -447,7 +447,6 @@ func (m *MailAttachment) BeforeInsert(ctx context.Context, query *bun.InsertQuer
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = now.UnixMilli()
 	}
-
 	return nil
 }
 
@@ -456,6 +455,5 @@ func (m *MailAttachment) BeforeUpdate(ctx context.Context, query *bun.UpdateQuer
 	if m.UpdatedAt == 0 {
 		m.UpdatedAt = now.UnixMilli()
 	}
-
 	return nil
 }

@@ -1210,7 +1210,6 @@ func (m *TestAllType) BeforeInsert(ctx context.Context, query *bun.InsertQuery) 
 	if m.UpdatedAt.IsZero() {
 		m.UpdatedAt = now
 	}
-
 	return nil
 }
 
@@ -1219,6 +1218,5 @@ func (m *TestAllType) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) 
 	if m.UpdatedAt.IsZero() {
 		m.UpdatedAt = now
 	}
-
 	return nil
 }

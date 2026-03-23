@@ -40,6 +40,31 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("%#v", data)
+	var user model.User
+	err = db.NewSelect().
+		Model(&user).
+		Where(model.UserIDEq, 1).
+		Relation(model.UserRelationPosts).
+		Scan(ctx)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(user.ID, user.Name)
+	for _, post := range user.Posts {
+		fmt.Println(post.ID, post.Title)
+	}
+
+	var posts []*model.Post
+	err = db.NewSelect().
+		Model(&posts).
+		Relation(model.PostRelationUser).
+		Scan(ctx)
+	if err != nil {
+		panic(err)
+	}
+	for _, post := range posts {
+		fmt.Println(post.ID, post.Title, post.User.ID, post.User.Name)
+	}
 	fmt.Println("done")
 }
 

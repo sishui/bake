@@ -461,7 +461,6 @@ func (m *Mail) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
 	if m.UpdatedAt.IsZero() {
 		m.UpdatedAt = now
 	}
-
 	return nil
 }
 
@@ -470,6 +469,5 @@ func (m *Mail) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	if m.UpdatedAt.IsZero() {
 		m.UpdatedAt = now
 	}
-
 	return nil
 }
