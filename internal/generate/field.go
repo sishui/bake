@@ -107,8 +107,11 @@ func fieldImports(desc types.Desc, customField *config.CustomField) []string {
 	if customField == nil || customField.Import == "" {
 		return desc.Imports
 	}
-	desc.Imports = append(desc.Imports, customField.Import)
-	return desc.Imports
+	// Avoid modifying the original desc.Imports slice
+	imports := make([]string, len(desc.Imports), len(desc.Imports)+1)
+	copy(imports, desc.Imports)
+	imports = append(imports, customField.Import)
+	return imports
 }
 
 func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*config.Tag) *Tags {
