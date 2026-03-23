@@ -66,6 +66,27 @@ ORDER BY
   a.attnum;
 `
 
+const pgForeignKeyQuery = `
+SELECT
+  tc.constraint_name,
+  kcu.table_name,
+  kcu.column_name,
+  ccu.table_name AS referenced_table_name,
+  ccu.column_name AS referenced_column_name
+FROM
+  information_schema.table_constraints AS tc
+  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
+  AND tc.table_schema = kcu.table_schema
+  JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
+  AND ccu.table_schema = tc.table_schema
+WHERE
+  tc.constraint_type = 'FOREIGN KEY'
+  AND tc.table_schema = $1
+ORDER BY
+  tc.constraint_name,
+  kcu.ordinal_position;
+`
+
 type postgres struct {
 	db  *sql.DB
 	cfg *config.DB
@@ -92,7 +113,12 @@ func (s *postgres) Load(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
+	foreignKeys, err := s.loadForeignKeys(ctx)
+	if err != nil {
+		return nil, err
+	}
 	assignColumns(tables, columns)
+	assignForeignKeys(tables, columns, foreignKeys)
 	return tables, nil
 }
 
@@ -155,6 +181,32 @@ func (s *postgres) loadColumns(ctx context.Context, tables []*Table) (map[string
 		c.Default = columnDefault.String
 		c.Comment = comment.String
 		result[c.Table] = append(result[c.Table], &c)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (s *postgres) loadForeignKeys(ctx context.Context) ([]ForeignKey, error) {
+	rows, err := s.db.QueryContext(ctx, pgForeignKeyQuery, s.cfg.Schema)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			slog.ErrorContext(ctx, "close rows", "error", err)
+		}
+	}()
+	var result []ForeignKey
+	for rows.Next() {
+		var fk ForeignKey
+		var tableName string
+		err = rows.Scan(&fk.ConstraintName, &tableName, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, fk)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

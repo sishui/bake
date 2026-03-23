@@ -71,3 +71,36 @@ func assignColumns(tables []*Table, columns map[string][]*Column) {
 		})
 	}
 }
+
+// assignForeignKeys assigns foreign key information to tables and columns.
+func assignForeignKeys(tables []*Table, columns map[string][]*Column, foreignKeys []ForeignKey) {
+	// Create a map for quick table lookup
+	tableMap := make(map[string]*Table, len(tables))
+	for _, t := range tables {
+		tableMap[t.Name] = t
+	}
+
+	// Create a map for quick column lookup
+	columnMap := make(map[string]*Column)
+	for _, cols := range columns {
+		for _, c := range cols {
+			columnMap[c.Table+"."+c.Name] = c
+		}
+	}
+
+	// Assign foreign keys to tables and columns
+	for _, fk := range foreignKeys {
+		// Find the table by checking which table contains this column
+		for tableName, cols := range columns {
+			for _, c := range cols {
+				if c.Name == fk.ColumnName {
+					c.ForeignKey = &fk
+					if t, ok := tableMap[tableName]; ok {
+						t.ForeignKeys = append(t.ForeignKeys, fk)
+					}
+					break
+				}
+			}
+		}
+	}
+}

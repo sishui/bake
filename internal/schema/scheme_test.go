@@ -190,3 +190,82 @@ func TestColumnIsUnsigned(t *testing.T) {
 		}
 	}
 }
+
+func TestColumnIsForeignKey(t *testing.T) {
+	tests := []struct {
+		name string
+		fk   *ForeignKey
+		want bool
+	}{
+		{
+			name: "no foreign key",
+			fk:   nil,
+			want: false,
+		},
+		{
+			name: "has foreign key",
+			fk:   &ForeignKey{ConstraintName: "fk_user_id"},
+			want: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Column{ForeignKey: tt.fk}
+			got := c.IsForeignKey()
+			if got != tt.want {
+				t.Errorf("IsForeignKey() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestAssignForeignKeys(t *testing.T) {
+	tables := []*Table{
+		{Name: "posts"},
+		{Name: "users"},
+	}
+	columns := map[string][]*Column{
+		"posts": {
+			{Name: "id", OrdinalPosition: 1},
+			{Name: "user_id", OrdinalPosition: 2},
+		},
+		"users": {
+			{Name: "id", OrdinalPosition: 1},
+		},
+	}
+	foreignKeys := []ForeignKey{
+		{
+			ConstraintName: "fk_posts_user_id",
+			ColumnName:     "user_id",
+			RefTable:       "users",
+			RefColumn:      "id",
+		},
+	}
+
+	assignForeignKeys(tables, columns, foreignKeys)
+
+	// Check that user_id column has foreign key
+	userIDColumn := columns["posts"][1]
+	if userIDColumn.ForeignKey == nil {
+		t.Fatal("user_id column should have foreign key")
+	}
+	if userIDColumn.ForeignKey.RefTable != "users" {
+		t.Errorf("foreign key ref table = %q, want %q", userIDColumn.ForeignKey.RefTable, "users")
+	}
+	if userIDColumn.ForeignKey.RefColumn != "id" {
+		t.Errorf("foreign key ref column = %q, want %q", userIDColumn.ForeignKey.RefColumn, "id")
+	}
+
+	// Check that posts table has foreign key
+	postsTable := tables[0]
+	if len(postsTable.ForeignKeys) != 1 {
+		t.Fatalf("posts table should have 1 foreign key, got %d", len(postsTable.ForeignKeys))
+	}
+
+	// Check that users table has no foreign keys
+	usersTable := tables[1]
+	if len(usersTable.ForeignKeys) != 0 {
+		t.Fatalf("users table should have 0 foreign keys, got %d", len(usersTable.ForeignKeys))
+	}
+}

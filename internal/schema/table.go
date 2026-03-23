@@ -4,9 +4,10 @@ package schema
 import "strings"
 
 type Table struct {
-	Name    string
-	Comment string
-	Columns []*Column
+	Name        string
+	Comment     string
+	Columns     []*Column
+	ForeignKeys []ForeignKey
 }
 
 type Column struct {
@@ -20,6 +21,14 @@ type Column struct {
 	Key             string // ColumnKey
 	Extra           string
 	Comment         string // ColumnComment
+	ForeignKey      *ForeignKey
+}
+
+type ForeignKey struct {
+	ConstraintName string // FK constraint name
+	ColumnName     string // Column in this table
+	RefTable       string // Referenced table
+	RefColumn      string // Referenced column
 }
 
 func (c *Column) IsNullable() bool {
@@ -36,4 +45,8 @@ func (c *Column) IsAutoIncrement() bool {
 
 func (c *Column) IsUnsigned() bool {
 	return strings.Contains(c.ColumnType, "unsigned")
+}
+
+func (c *Column) IsForeignKey() bool {
+	return c.ForeignKey != nil
 }

@@ -40,6 +40,23 @@ ORDER BY
   ordinal_position;
 `
 
+const mysqlForeignKeyQuery = `
+SELECT
+  constraint_name,
+  table_name,
+  column_name,
+  referenced_table_name,
+  referenced_column_name
+FROM
+  information_schema.KEY_COLUMN_USAGE
+WHERE
+  table_schema = ?
+  AND referenced_table_name IS NOT NULL
+ORDER BY
+  constraint_name,
+  ordinal_position;
+`
+
 type mysqlScheme struct {
 	db       *sql.DB
 	cfg      *config.DB
@@ -72,7 +89,12 @@ func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
+	foreignKeys, err := s.loadForeignKeys(ctx)
+	if err != nil {
+		return nil, err
+	}
 	assignColumns(tables, columns)
+	assignForeignKeys(tables, columns, foreignKeys)
 	return tables, nil
 }
 
@@ -136,5 +158,31 @@ func (s *mysqlScheme) loadColumns(ctx context.Context, tables []*Table) (map[str
 		return nil, err
 	}
 
+	return result, nil
+}
+
+func (s *mysqlScheme) loadForeignKeys(ctx context.Context) ([]ForeignKey, error) {
+	rows, err := s.db.QueryContext(ctx, mysqlForeignKeyQuery, s.database)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			slog.ErrorContext(ctx, "close rows", "error", err)
+		}
+	}()
+	var result []ForeignKey
+	for rows.Next() {
+		var fk ForeignKey
+		var tableName string
+		err = rows.Scan(&fk.ConstraintName, &tableName, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, fk)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
 	return result, nil
 }
