@@ -208,16 +208,30 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 		// e.g., for posts.user_id -> users.id, generate User *User
 		fieldName := naming.TableToStruct(fk.RefTable) // "users" -> "User"
 
-		// Skip if custom field already exists with this name
-		name := naming.Singular(fk.RefTable)
+		// Check if custom field exists for merging
+		var customField *config.CustomField
 		if customTable != nil {
-			if _, ok := customTable.Fields[name]; ok {
-				continue
+			name := naming.Singular(fk.RefTable) // "user"
+			customField = customTable.Fields[name]
+		}
+
+		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
+		fieldType := "*" + fieldName // "*User"
+		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
+
+		// Merge with custom config if exists
+		if customField != nil {
+			if customField.Name != "" {
+				fieldName = customField.Name
+			}
+			if customField.Type != "" {
+				fieldType = customField.Type
+			}
+			if len(customField.Tags) > 0 {
+				tags = NewTags(newCustomTags(name, customField.Tags...)...)
 			}
 		}
 
-		fieldType := "*" + fieldName // "*User"
-		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 		field := &Field{
 			Name:       fieldName,
 			Type:       fieldType,
@@ -243,17 +257,31 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns ma
 			continue
 		}
 
-		// Skip if custom field already exists with this name
+		fieldName := naming.ToCamelCase(fk.Table)           // "Posts"
+		fieldType := "[]*" + naming.TableToStruct(fk.Table) // "[]*Post"
+		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
+
+		// Check if custom field exists for merging
+		var customField *config.CustomField
 		if customTable != nil {
-			if _, ok := customTable.Fields[fk.Table]; ok {
-				continue
+			customField = customTable.Fields[fk.Table]
+		}
+
+		// Merge with custom config if exists
+		if customField != nil {
+			if customField.Name != "" {
+				fieldName = customField.Name
+			}
+			if customField.Type != "" {
+				fieldType = customField.Type
+			}
+			if len(customField.Tags) > 0 {
+				tags = NewTags(newCustomTags(fk.Table, customField.Tags...)...)
 			}
 		}
 
-		fieldType := "[]*" + naming.TableToStruct(fk.Table) // "[]*Post"
-		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 		field := &Field{
-			Name:       naming.ToCamelCase(fk.Table),
+			Name:       fieldName,
 			Type:       fieldType,
 			Tag:        tags.String(),
 			ColumnName: fk.ColumnName,
