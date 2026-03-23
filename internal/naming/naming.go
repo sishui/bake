@@ -4,7 +4,6 @@ package naming
 import (
 	"regexp"
 	"strings"
-	"unicode"
 
 	"github.com/fatih/camelcase"
 	"github.com/jinzhu/inflection"
@@ -165,42 +164,6 @@ func Concat(a, b string, maxN int) string {
 		return s
 	}
 	return s + strings.Repeat(" ", maxN-len(a))
-}
-
-// func applySuffix(s string, initialisms map[string]string) string {
-// 	words := SplitWords(s)
-
-// 	var b strings.Builder
-// 	for _, w := range words {
-// 		b.WriteString(normalize(w, initialisms))
-// 	}
-// 	return b.String()
-// }
-
-func SplitWords(s string) []string {
-	var words []string
-	runes := []rune(s)
-
-	start := 0
-	for i := 1; i < len(runes); i++ {
-		if unicode.IsLower(runes[i-1]) && unicode.IsUpper(runes[i]) {
-			words = append(words, string(runes[start:i]))
-			start = i
-			continue
-		}
-
-		if i+1 < len(runes) &&
-			unicode.IsUpper(runes[i-1]) &&
-			unicode.IsUpper(runes[i]) &&
-			unicode.IsLower(runes[i+1]) {
-			words = append(words, string(runes[start:i]))
-			start = i
-		}
-	}
-
-	words = append(words, string(runes[start:]))
-
-	return words
 }
 
 func normalize(word string, initialisms map[string]string) string {
