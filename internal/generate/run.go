@@ -3,6 +3,7 @@ package generate
 
 import (
 	"context"
+	"errors"
 	"io/fs"
 	"log/slog"
 	"os"
@@ -135,10 +136,15 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		close(results)
 	}()
 
+	errs := make([]error, 0, len(tables))
 	for r := range results {
 		if r.err != nil {
-			return 0, r.err
+			errs = append(errs, r.err)
 		}
+	}
+
+	if len(errs) > 0 {
+		return 0, errors.Join(errs...)
 	}
 
 	return len(tables), nil
