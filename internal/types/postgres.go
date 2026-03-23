@@ -86,6 +86,7 @@ var ErrUnsupportedArrayType = errors.New("unsupported array type")
 
 func newArrayDesc(c *schema.Column) (Desc, error) {
 	typ := ""
+	var imports []string
 	switch c.ColumnType {
 	case "_text", "_varchar":
 		typ = "[]string"
@@ -95,14 +96,13 @@ func newArrayDesc(c *schema.Column) (Desc, error) {
 		typ = "[]int64"
 	case "_uuid":
 		typ = "[]uuid.UUID"
+		imports = []string{"github.com/google/uuid"}
 	default:
 		return Desc{}, errors.Join(ErrUnsupportedArrayType, errors.New(c.ColumnType))
 	}
 	return Desc{
-		Type: typ,
-		Kind: KindStruct,
-		Imports: []string{
-			"github.com/google/uuid",
-		},
+		Type:    typ,
+		Kind:    KindStruct,
+		Imports: imports,
 	}, nil
 }
