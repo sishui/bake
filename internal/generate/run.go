@@ -73,38 +73,56 @@ func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
 }
 
 func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) (int, error) {
-	s, err := schema.New(db)
+	tables, err := loadSchema(ctx, db)
 	if err != nil {
 		return 0, err
+	}
+
+	results := processTablesConcurrently(ctx, tables, db, c, tmpl, initialisms)
+
+	errs := collectErrors(results)
+	if len(errs) > 0 {
+		return 0, errors.Join(errs...)
+	}
+	return len(tables), nil
+}
+
+func loadSchema(ctx context.Context, db *config.DB) ([]*schema.Table, error) {
+	s, err := schema.New(db)
+	if err != nil {
+		return nil, err
 	}
 	defer func() {
 		if err := s.Close(); err != nil {
 			slog.ErrorContext(ctx, "close db", "error", err)
 		}
 	}()
+
 	slog.DebugContext(ctx, "loading schema", "driver", db.Driver, "schema", db.Schema)
 	tables, err := s.Load(ctx)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	slog.DebugContext(ctx, "loaded tables", "count", len(tables))
 
-	type result struct {
-		model    *Model
-		filename string
-		err      error
-	}
+	return tables, nil
+}
 
+type result struct {
+	model    *Model
+	filename string
+	err      error
+}
+
+func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) <-chan result {
 	results := make(chan result, len(tables))
 	var wg sync.WaitGroup
-
 	limiter := semaphore.NewWeighted(int64(runtime.NumCPU() * 4))
 
-	var acquireErr error
 	for _, table := range tables {
 		if err := limiter.Acquire(ctx, 1); err != nil {
 			if !errors.Is(err, context.Canceled) {
-				acquireErr = err
+				results <- result{err: err}
 			}
 			break
 		}
@@ -140,21 +158,17 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		close(results)
 	}()
 
-	errs := make([]error, 0, len(tables))
-	if acquireErr != nil {
-		errs = append(errs, acquireErr)
-	}
+	return results
+}
+
+func collectErrors(results <-chan result) []error {
+	var errs []error
 	for r := range results {
 		if r.err != nil {
 			errs = append(errs, r.err)
 		}
 	}
-
-	if len(errs) > 0 {
-		return 0, errors.Join(errs...)
-	}
-
-	return len(tables), nil
+	return errs
 }
 
 func cleanDir(dir string) error {
