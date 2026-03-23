@@ -67,7 +67,7 @@ type Template struct {
 
 func (t *Template) Validate() error {
 	if t.Model == "" {
-		return errors.New("output.module is required")
+		return errors.New("template.model is required")
 	}
 
 	return nil
