@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"log/slog"
-	"slices"
-	"sort"
 
 	"github.com/go-sql-driver/mysql"
 
@@ -74,12 +72,7 @@ func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
-	for _, t := range tables {
-		t.Columns = columns[t.Name]
-		sort.Slice(t.Columns, func(i, j int) bool {
-			return t.Columns[i].OrdinalPosition < t.Columns[j].OrdinalPosition
-		})
-	}
+	assignColumns(tables, columns)
 	return tables, nil
 }
 
@@ -104,12 +97,7 @@ func (s *mysqlScheme) loadTables(ctx context.Context) ([]*Table, error) {
 		if err != nil {
 			return nil, err
 		}
-		if slices.Index(s.cfg.Excluded, t.Name) >= 0 {
-			slog.DebugContext(ctx, "table", t.Name, "excluded table")
-			continue
-		}
-		if (len(s.cfg.Included) > 0) && slices.Index(s.cfg.Included, t.Name) == -1 {
-			slog.DebugContext(ctx, "table", t.Name, "skipping table")
+		if !shouldIncludeTable(ctx, t.Name, s.cfg) {
 			continue
 		}
 		result = append(result, &t)
