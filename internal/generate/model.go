@@ -2,7 +2,6 @@
 package generate
 
 import (
-	"github.com/jinzhu/inflection"
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -59,8 +58,8 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	}
 
 	fields = append(fields, newCustomFields(customTable, columns)...)
-	fields = append(fields, newBelongsToRelationFields(t.ForeignKeys)...)
-	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, columns)...)
+	fields = append(fields, newBelongsToRelationFields(t.ForeignKeys, customTable)...)
+	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, columns, customTable)...)
 	alignFields(groupFields(fields))
 	m.Fields = fields[1:]
 	m.init()
@@ -199,7 +198,7 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 	return results
 }
 
-func newBelongsToRelationFields(foreignKeys []schema.ForeignKey) []*Field {
+func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
 	if len(foreignKeys) == 0 {
 		return nil
 	}
@@ -207,10 +206,17 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey) []*Field {
 	for _, fk := range foreignKeys {
 		// Generate the belongs-to relation field
 		// e.g., for posts.user_id -> users.id, generate User *User
-		// fk.RefTable = "users", so we generate "User" and "*User"
-		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
 		fieldName := naming.TableToStruct(fk.RefTable) // "users" -> "User"
-		fieldType := "*" + fieldName                   // "*User"
+
+		// Skip if custom field already exists with this name
+		name := naming.Singular(fk.RefTable)
+		if customTable != nil {
+			if _, ok := customTable.Fields[name]; ok {
+				continue
+			}
+		}
+
+		fieldType := "*" + fieldName // "*User"
 		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 		field := &Field{
 			Name:       fieldName,
@@ -218,6 +224,7 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey) []*Field {
 			Tag:        tags.String(),
 			ColumnName: fk.ColumnName,
 			Kind:       types.KindStruct,
+			IsCustom:   true,
 			IsRelation: true,
 		}
 		results = append(results, field)
@@ -225,7 +232,7 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey) []*Field {
 	return results
 }
 
-func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns map[string]struct{}) []*Field {
+func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns map[string]struct{}, customTable *config.CustomTable) []*Field {
 	if len(reverseForeignKeys) == 0 {
 		return nil
 	}
@@ -235,16 +242,23 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns ma
 		if _, ok := columns[fk.ColumnName]; ok {
 			continue
 		}
-		sourceModel := naming.TableToStruct(fk.Table)
-		fieldName := inflection.Plural(sourceModel) // "post" ->
-		fieldType := "[]*" + sourceModel            // "[]*Post"
+
+		// Skip if custom field already exists with this name
+		if customTable != nil {
+			if _, ok := customTable.Fields[fk.Table]; ok {
+				continue
+			}
+		}
+
+		fieldType := "[]*" + naming.TableToStruct(fk.Table) // "[]*Post"
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 		field := &Field{
-			Name:       fieldName,
+			Name:       naming.ToCamelCase(fk.Table),
 			Type:       fieldType,
 			Tag:        tags.String(),
 			ColumnName: fk.ColumnName,
 			Kind:       types.KindStruct,
+			IsCustom:   true,
 			IsRelation: true,
 		}
 		results = append(results, field)
