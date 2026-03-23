@@ -135,6 +135,11 @@ func newBunTag(c *schema.Column) *Tag {
 	if c.Name == "deleted_at" {
 		options = append(options, "soft_delete")
 	}
+	// Add foreign key relation
+	if c.ForeignKey != nil {
+		options = append(options, "rel:belongs-to")
+		options = append(options, "join:"+c.Name+"="+c.ForeignKey.RefColumn)
+	}
 	return NewTag("bun", c.Name, options...)
 }
 

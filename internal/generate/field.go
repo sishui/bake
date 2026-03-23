@@ -48,7 +48,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 		IsPrimary:  c.IsPrimaryKey(),
 		IsNullable: c.IsNullable(),
 		IsCustom:   false,
-		IsRelation: false,
+		IsRelation: c.ForeignKey != nil,
 	}, nil
 }
 
