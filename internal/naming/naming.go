@@ -204,6 +204,9 @@ func SplitWords(s string) []string {
 }
 
 func normalize(word string, initialisms map[string]string) string {
+	if word == "" {
+		return ""
+	}
 	lower := strings.ToLower(word)
 
 	if v, ok := initialisms[lower]; ok {
