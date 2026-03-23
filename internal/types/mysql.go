@@ -11,7 +11,7 @@ import (
 var ErrUnsupportedType = errors.New("unsupported type")
 
 func init() {
-	DescFuncs["mysql"] = MySQLDescFunc
+	descFuncs["mysql"] = MySQLDescFunc
 }
 
 func MySQLDescFunc(c *schema.Column) (Desc, error) {

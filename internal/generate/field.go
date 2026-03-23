@@ -1,8 +1,6 @@
 package generate
 
 import (
-	"errors"
-
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -27,11 +25,7 @@ type Field struct {
 }
 
 func NewField(c *schema.Column, customTable *config.CustomTable, driver string, initialisms map[string]string) (*Field, error) {
-	fn, ok := types.DescFuncs[driver]
-	if !ok {
-		return nil, errors.New("unsupported driver: " + driver)
-	}
-	desc, err := fn(c)
+	desc, err := types.NewDesc(driver, c)
 	if err != nil {
 		return nil, err
 	}

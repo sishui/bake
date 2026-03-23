@@ -2,12 +2,22 @@
 package types
 
 import (
+	"fmt"
+
 	"github.com/sishui/bake/internal/schema"
 )
 
 type DescFunc func(c *schema.Column) (Desc, error)
 
-var DescFuncs = map[string]DescFunc{}
+var descFuncs = map[string]DescFunc{}
+
+func NewDesc(driver string, c *schema.Column) (Desc, error) {
+	fn, ok := descFuncs[driver]
+	if !ok {
+		return Desc{}, fmt.Errorf("unsupported driver: %s", driver)
+	}
+	return fn(c)
+}
 
 type Desc struct {
 	Type    string   // go Type

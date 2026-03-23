@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	DescFuncs["postgres"] = PostgresDescFunc
+	descFuncs["postgres"] = PostgresDescFunc
 }
 
 func PostgresDescFunc(c *schema.Column) (Desc, error) {

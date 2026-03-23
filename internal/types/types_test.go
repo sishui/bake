@@ -409,15 +409,15 @@ func TestPostgresDescFunc(t *testing.T) {
 }
 
 func TestDescFuncs(t *testing.T) {
-	if len(DescFuncs) != 2 {
-		t.Errorf("DescFuncs length = %d, want 2", len(DescFuncs))
-	}
+	c := &schema.Column{DataType: "text"}
 
-	if _, ok := DescFuncs["mysql"]; !ok {
-		t.Error("DescFuncs should contain mysql")
+	if _, err := NewDesc("mysql", c); err != nil {
+		t.Errorf("NewDesc(mysql) error = %v", err)
 	}
-
-	if _, ok := DescFuncs["postgres"]; !ok {
-		t.Error("DescFuncs should contain postgres")
+	if _, err := NewDesc("postgres", c); err != nil {
+		t.Errorf("NewDesc(postgres) error = %v", err)
+	}
+	if _, err := NewDesc("unsupported", c); err == nil {
+		t.Error("NewDesc(unsupported) should return error")
 	}
 }
