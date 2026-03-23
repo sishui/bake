@@ -100,8 +100,12 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 
 	limiter := semaphore.NewWeighted(int64(runtime.NumCPU() * 4))
 
+	var acquireErr error
 	for _, table := range tables {
 		if err := limiter.Acquire(ctx, 1); err != nil {
+			if !errors.Is(err, context.Canceled) {
+				acquireErr = err
+			}
 			break
 		}
 		wg.Add(1)
@@ -137,6 +141,9 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 	}()
 
 	errs := make([]error, 0, len(tables))
+	if acquireErr != nil {
+		errs = append(errs, acquireErr)
+	}
 	for r := range results {
 		if r.err != nil {
 			errs = append(errs, r.err)
