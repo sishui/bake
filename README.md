@@ -6,6 +6,7 @@ A database model code generator for Go. Generate ORM models from database schema
 
 - Supports MySQL and PostgreSQL databases
 - Automatic Go type mapping for database columns
+- Automatic foreign key detection and relation tag generation
 - Customizable templates
 - Custom field names, types, comments, and tags
 - Table relationship support (has-many, has-one)
@@ -190,6 +191,43 @@ type Field struct {
 | inet, cidr | net.IP |
 | interval | time.Duration |
 | ARRAY | []string, []int32, []int64, []uuid.UUID |
+
+## Foreign Key Relations
+
+bake automatically detects foreign key relationships from your database schema and generates the appropriate bun relation tags.
+
+### How It Works
+
+When a column has a foreign key constraint:
+
+```sql
+-- posts.user_id references users.id
+ALTER TABLE posts ADD CONSTRAINT fk_posts_user_id 
+  FOREIGN KEY (user_id) REFERENCES users(id);
+```
+
+bake will automatically:
+
+1. Set `IsRelation = true` on the field
+2. Generate the bun relation tag: `bun:"user_id,rel:belongs-to,join:user_id=id"`
+
+### Generated Example
+
+For the `posts` table with `user_id` foreign key:
+
+```go
+type Post struct {
+    bun.BaseModel `bun:"table:posts"`
+    
+    ID        int32     `bun:"id,pk,autoincrement"`
+    UserID    int64     `bun:"user_id,rel:belongs-to,join:user_id=id" json:"user_id,omitempty"`
+    Title     string    `bun:"title,notnull" json:"title,omitempty"`
+}
+```
+
+### Manual Override
+
+You can still manually configure relations using the `customs` configuration. Manual configuration takes precedence over automatic detection.
 
 ## Development
 
