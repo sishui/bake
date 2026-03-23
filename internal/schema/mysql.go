@@ -65,7 +65,7 @@ func NewMySQL(cfg *config.DB) (Scheme, error) {
 }
 
 func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
-	slog.InfoContext(ctx, "load schema", "driver", s.cfg.Driver, "dsn", s.cfg.DSN, "databse", s.database)
+	slog.InfoContext(ctx, "load schema", "driver", s.cfg.Driver, "dsn", s.cfg.DSN, "database", s.database)
 	tables, err := s.loadTables(ctx)
 	if err != nil {
 		return nil, err
