@@ -222,31 +222,34 @@ func TestColumnIsForeignKey(t *testing.T) {
 
 func TestAssignForeignKeys(t *testing.T) {
 	tables := []*Table{
-		{Name: "posts"},
-		{Name: "users"},
-	}
-	columns := map[string][]*Column{
-		"posts": {
-			{Name: "id", OrdinalPosition: 1},
-			{Name: "user_id", OrdinalPosition: 2},
+		{
+			Name: "posts",
+			Columns: []*Column{
+				{Name: "id", OrdinalPosition: 1},
+				{Name: "user_id", OrdinalPosition: 2},
+			},
 		},
-		"users": {
-			{Name: "id", OrdinalPosition: 1},
+		{
+			Name: "users",
+			Columns: []*Column{
+				{Name: "id", OrdinalPosition: 1},
+			},
 		},
 	}
 	foreignKeys := []ForeignKey{
 		{
 			ConstraintName: "fk_posts_user_id",
+			Table:          "posts",
 			ColumnName:     "user_id",
 			RefTable:       "users",
 			RefColumn:      "id",
 		},
 	}
 
-	assignForeignKeys(tables, columns, foreignKeys)
+	assignForeignKeys(tables, foreignKeys)
 
 	// Check that user_id column has foreign key
-	userIDColumn := columns["posts"][1]
+	userIDColumn := tables[0].Columns[1]
 	if userIDColumn.ForeignKey == nil {
 		t.Fatal("user_id column should have foreign key")
 	}
@@ -267,5 +270,13 @@ func TestAssignForeignKeys(t *testing.T) {
 	usersTable := tables[1]
 	if len(usersTable.ForeignKeys) != 0 {
 		t.Fatalf("users table should have 0 foreign keys, got %d", len(usersTable.ForeignKeys))
+	}
+
+	// Check that users table has reverse foreign key
+	if len(usersTable.ReverseForeignKeys) != 1 {
+		t.Fatalf("users table should have 1 reverse foreign key, got %d", len(usersTable.ReverseForeignKeys))
+	}
+	if usersTable.ReverseForeignKeys[0].ColumnName != "user_id" {
+		t.Errorf("reverse foreign key column = %q, want %q", usersTable.ReverseForeignKeys[0].ColumnName, "user_id")
 	}
 }

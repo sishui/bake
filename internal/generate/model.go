@@ -2,6 +2,7 @@
 package generate
 
 import (
+	"github.com/jinzhu/inflection"
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -58,6 +59,8 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	}
 
 	fields = append(fields, newCustomFields(customTable, columns)...)
+	fields = append(fields, newBelongsToRelationFields(t.ForeignKeys)...)
+	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, columns)...)
 	alignFields(groupFields(fields))
 	m.Fields = fields[1:]
 	m.init()
@@ -192,6 +195,59 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 			continue
 		}
 		results = append(results, NewCustomField(k, customTable))
+	}
+	return results
+}
+
+func newBelongsToRelationFields(foreignKeys []schema.ForeignKey) []*Field {
+	if len(foreignKeys) == 0 {
+		return nil
+	}
+	results := make([]*Field, 0, len(foreignKeys))
+	for _, fk := range foreignKeys {
+		// Generate the belongs-to relation field
+		// e.g., for posts.user_id -> users.id, generate User *User
+		// fk.RefTable = "users", so we generate "User" and "*User"
+		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
+		fieldName := naming.TableToStruct(fk.RefTable) // "users" -> "User"
+		fieldType := "*" + fieldName                   // "*User"
+		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
+		field := &Field{
+			Name:       fieldName,
+			Type:       fieldType,
+			Tag:        tags.String(),
+			ColumnName: fk.ColumnName,
+			Kind:       types.KindStruct,
+			IsRelation: true,
+		}
+		results = append(results, field)
+	}
+	return results
+}
+
+func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns map[string]struct{}) []*Field {
+	if len(reverseForeignKeys) == 0 {
+		return nil
+	}
+	results := make([]*Field, 0, len(reverseForeignKeys))
+	for _, fk := range reverseForeignKeys {
+		// Skip if the column already exists
+		if _, ok := columns[fk.ColumnName]; ok {
+			continue
+		}
+		sourceModel := naming.TableToStruct(fk.Table)
+		fieldName := inflection.Plural(sourceModel) // "post" ->
+		fieldType := "[]*" + sourceModel            // "[]*Post"
+		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
+		field := &Field{
+			Name:       fieldName,
+			Type:       fieldType,
+			Tag:        tags.String(),
+			ColumnName: fk.ColumnName,
+			Kind:       types.KindStruct,
+			IsRelation: true,
+		}
+		results = append(results, field)
 	}
 	return results
 }

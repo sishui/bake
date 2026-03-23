@@ -94,7 +94,7 @@ func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 		return nil, err
 	}
 	assignColumns(tables, columns)
-	assignForeignKeys(tables, columns, foreignKeys)
+	assignForeignKeys(tables, foreignKeys)
 	return tables, nil
 }
 
@@ -174,8 +174,7 @@ func (s *mysqlScheme) loadForeignKeys(ctx context.Context) ([]ForeignKey, error)
 	var result []ForeignKey
 	for rows.Next() {
 		var fk ForeignKey
-		var tableName string
-		err = rows.Scan(&fk.ConstraintName, &tableName, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
+		err = rows.Scan(&fk.ConstraintName, &fk.Table, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
 		if err != nil {
 			return nil, err
 		}

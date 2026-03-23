@@ -128,3 +128,37 @@ VALUES
     (2, 1, 1001, 10, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT),
     (2, 2, 2001, 5, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT),
     (2, 1, 3001, 1, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT);
+
+-- 外键示例: users + posts
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(64) NOT NULL,
+  email VARCHAR(128) NOT NULL UNIQUE,
+  created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  title VARCHAR(256) NOT NULL,
+  content TEXT,
+  status SMALLINT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_posts_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_posts_user_id ON posts (user_id);
+
+INSERT INTO users (name, email) VALUES
+  ('Alice', 'alice@example.com'),
+  ('Bob', 'bob@example.com');
+
+INSERT INTO posts (user_id, title, content, status) VALUES
+  (1, 'First Post', 'Hello World!', 1),
+  (1, 'Second Post', 'Another post by Alice', 0),
+  (2, 'Bob Post', 'Post by Bob', 1);

@@ -4,10 +4,11 @@ package schema
 import "strings"
 
 type Table struct {
-	Name        string
-	Comment     string
-	Columns     []*Column
-	ForeignKeys []ForeignKey
+	Name               string
+	Comment            string
+	Columns            []*Column
+	ForeignKeys        []ForeignKey
+	ReverseForeignKeys []ForeignKey // Foreign keys from other tables referencing this table
 }
 
 type Column struct {
@@ -26,9 +27,10 @@ type Column struct {
 
 type ForeignKey struct {
 	ConstraintName string // FK constraint name
-	ColumnName     string // Column in this table
-	RefTable       string // Referenced table
-	RefColumn      string // Referenced column
+	Table          string // Source table (e.g., "posts")
+	ColumnName     string // Column in source table (e.g., "user_id")
+	RefTable       string // Referenced table (e.g., "users")
+	RefColumn      string // Referenced column (e.g., "id")
 }
 
 func (c *Column) IsNullable() bool {
