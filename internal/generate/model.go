@@ -47,19 +47,21 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	customTable := db.Customs[t.Name]
 	m.applyCustom(customTable)
 	fields = append(fields, &Field{Name: m.BunModel})
-	columns := make(map[string]struct{}, len(t.Columns))
 	for _, c := range t.Columns {
 		f, err := NewField(c, customTable, db.Driver, initialisms)
 		if err != nil {
 			return nil, err
 		}
 		fields = append(fields, f)
-		columns[c.Name] = struct{}{}
 	}
-
-	fields = append(fields, newCustomFields(customTable, columns)...)
+	columns := make(map[string]struct{}, len(t.Columns))
 	fields = append(fields, newBelongsToRelationFields(t.ForeignKeys, customTable)...)
-	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, columns, customTable)...)
+	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, customTable)...)
+
+	for _, f := range fields {
+		columns[f.ColumnName] = struct{}{}
+	}
+	fields = append(fields, newCustomFields(customTable, columns)...)
 	alignFields(groupFields(fields))
 	m.Fields = fields[1:]
 	m.init()
@@ -204,20 +206,17 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 	}
 	results := make([]*Field, 0, len(foreignKeys))
 	for _, fk := range foreignKeys {
-		fieldName := naming.TableToStruct(fk.RefTable) // "users" -> "User"
-		fieldType := "*" + fieldName                   // "*User"
+		fieldName := naming.TableToStruct(fk.RefTable)
 		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
 		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 
-		// Merge with custom config
-		customField := getCustomField(customTable, naming.Singular(fk.RefTable))
-		fieldName, fieldType, tags = mergeRelationField(customField, fieldName, fieldType, tags, name)
+		fieldName, fieldType, tags := mergeRelationField(customTable, fieldName, "*"+fieldName, tags, naming.Singular(fk.RefTable))
 
 		results = append(results, &Field{
 			Name:       fieldName,
 			Type:       fieldType,
 			Tag:        tags.String(),
-			ColumnName: fk.ColumnName,
+			ColumnName: name,
 			Kind:       types.KindStruct,
 			IsCustom:   true,
 			IsRelation: true,
@@ -226,29 +225,23 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 	return results
 }
 
-func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns map[string]struct{}, customTable *config.CustomTable) []*Field {
+func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
 	if len(reverseForeignKeys) == 0 {
 		return nil
 	}
 	results := make([]*Field, 0, len(reverseForeignKeys))
 	for _, fk := range reverseForeignKeys {
-		if _, ok := columns[fk.ColumnName]; ok {
-			continue
-		}
-
-		fieldName := naming.ToCamelCase(fk.Table) // "Posts"
+		columnName := naming.ToCamelCase(fk.Table)
 		fieldType := "[]*" + naming.TableToStruct(fk.Table)
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 
-		// Merge with custom config
-		customField := getCustomField(customTable, fk.Table)
-		fieldName, fieldType, tags = mergeRelationField(customField, fieldName, fieldType, tags, fk.Table)
+		fieldName, fieldType, tags := mergeRelationField(customTable, columnName, fieldType, tags, fk.Table)
 
 		results = append(results, &Field{
 			Name:       fieldName,
 			Type:       fieldType,
 			Tag:        tags.String(),
-			ColumnName: fk.ColumnName,
+			ColumnName: fk.Table,
 			Kind:       types.KindStruct,
 			IsCustom:   true,
 			IsRelation: true,
@@ -257,14 +250,16 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, columns ma
 	return results
 }
 
-func getCustomField(customTable *config.CustomTable, key string) *config.CustomField {
+func mergeRelationField(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
 	if customTable == nil {
-		return nil
+		return fieldName, fieldType, tags
 	}
-	return customTable.Fields[key]
-}
-
-func mergeRelationField(customField *config.CustomField, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
+	// Apply table-level tags
+	if len(customTable.Tags) > 0 {
+		tags.Add(newCustomTags(name, customTable.Tags...)...)
+	}
+	// Apply field-level config
+	customField := customTable.Fields[name]
 	if customField == nil {
 		return fieldName, fieldType, tags
 	}
@@ -275,7 +270,7 @@ func mergeRelationField(customField *config.CustomField, fieldName, fieldType st
 		fieldType = customField.Type
 	}
 	if len(customField.Tags) > 0 {
-		tags = NewTags(newCustomTags(name, customField.Tags...)...)
+		tags.Add(newCustomTags(fieldName, customField.Tags...)...)
 	}
 	return fieldName, fieldType, tags
 }
