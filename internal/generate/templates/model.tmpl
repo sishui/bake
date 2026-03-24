@@ -272,6 +272,54 @@ const (
 
 const (
 {{- range $field := .Fields}}
+	{{- if eq $field.Kind "NUMERIC" }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AVGExpr" $maxNumericLength }} = "AVG({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if eq $field.Kind "NUMERIC" }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AVGExpr" $maxNumericLength }} = "AVG({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MINExpr" $maxOrderedLength }} = "MIN({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MINExpr" $maxOrderedLength }} = "MIN({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MAXExpr" $maxOrderedLength }} = "MAX({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MAXExpr" $maxOrderedLength }} = "MAX({{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
 	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AddExpr" $maxNumericLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} + ?"
 	{{- end}}
