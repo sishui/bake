@@ -31,6 +31,30 @@ db:
             name: "$SnakeCase"
           - key: "xml"
             name: "$CamelCase"
+      users:
+        tags:
+          - key: "form"
+            name: "$SnakeCase"
+        fields:
+          posts:
+            type: "[]*Post"
+            comment: "custom comment"
+            relation: true
+            tags:
+              - key: "bun"
+                options: [ "rel:has-many", "join:id=user_id" ]
+      posts:
+        tags:
+        - key: "xml"
+          name: "$SnakeCase"
+        fields:
+          user:
+            type: "*User"
+            comment: "custom comment"
+            relation: true
+            tags:
+              - key: "bun"
+                options: [ "rel:belongs-to", "join:user_id=id" ]
       mail:
         tags:
           - key: "form"

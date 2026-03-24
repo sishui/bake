@@ -41,7 +41,7 @@ const (
 	UserName      = "name"
 	UserEmail     = "email"
 	UserCreatedAt = "created_at"
-	UserPosts     = "user_id"
+	UserPosts     = "posts"
 )
 
 const (
@@ -53,7 +53,7 @@ const (
 	UserAliasName      = "users_alias.name"
 	UserAliasEmail     = "users_alias.email"
 	UserAliasCreatedAt = "users_alias.created_at"
-	UserAliasPosts     = "users_alias.user_id"
+	UserAliasPosts     = "users_alias.posts"
 )
 
 var (
@@ -61,7 +61,6 @@ var (
 	UserNameIdent      = bun.Ident("name")
 	UserEmailIdent     = bun.Ident("email")
 	UserCreatedAtIdent = bun.Ident("created_at")
-	UserPostsIdent     = bun.Ident("user_id")
 )
 
 const (
@@ -69,7 +68,6 @@ const (
 	UserNameEq      = "name = ?"
 	UserEmailEq     = "email = ?"
 	UserCreatedAtEq = "created_at = ?"
-	UserPostsEq     = "user_id = ?"
 )
 
 const (
@@ -77,7 +75,6 @@ const (
 	UserAliasNameEq      = "users_alias.name = ?"
 	UserAliasEmailEq     = "users_alias.email = ?"
 	UserAliasCreatedAtEq = "users_alias.created_at = ?"
-	UserAliasPostsEq     = "users_alias.user_id = ?"
 )
 
 const (
@@ -85,7 +82,6 @@ const (
 	UserNameNeq      = "name <> ?"
 	UserEmailNeq     = "email <> ?"
 	UserCreatedAtNeq = "created_at <> ?"
-	UserPostsNeq     = "user_id <> ?"
 )
 
 const (
@@ -93,7 +89,6 @@ const (
 	UserAliasNameNeq      = "users_alias.name <> ?"
 	UserAliasEmailNeq     = "users_alias.email <> ?"
 	UserAliasCreatedAtNeq = "users_alias.created_at <> ?"
-	UserAliasPostsNeq     = "users_alias.user_id <> ?"
 )
 
 const (
@@ -304,11 +299,11 @@ const (
 // 用户表
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
-	ID            int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`                             //
-	Name          string    `bun:"name,notnull" json:"name,omitempty"`                                          // 用户名
-	Email         string    `bun:"email,notnull" json:"email,omitempty"`                                        // 邮箱
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty"` // 创建时间
-	Posts         []*Post   `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`                   //
+	ID            int64     `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty"`                                     //
+	Name          string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                                // 用户名
+	Email         string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                             // 邮箱
+	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
+	Posts         []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                              //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

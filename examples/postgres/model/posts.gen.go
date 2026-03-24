@@ -44,7 +44,7 @@ const (
 	PostStatus    = "status"
 	PostCreatedAt = "created_at"
 	PostUpdatedAt = "updated_at"
-	PostUser      = "user_id"
+	PostUser      = "user"
 )
 
 const (
@@ -59,7 +59,7 @@ const (
 	PostAliasStatus    = "posts_alias.status"
 	PostAliasCreatedAt = "posts_alias.created_at"
 	PostAliasUpdatedAt = "posts_alias.updated_at"
-	PostAliasUser      = "posts_alias.user_id"
+	PostAliasUser      = "posts_alias.user"
 )
 
 var (
@@ -70,7 +70,6 @@ var (
 	PostStatusIdent    = bun.Ident("status")
 	PostCreatedAtIdent = bun.Ident("created_at")
 	PostUpdatedAtIdent = bun.Ident("updated_at")
-	PostUserIdent      = bun.Ident("user_id")
 )
 
 const (
@@ -81,7 +80,6 @@ const (
 	PostStatusEq    = "status = ?"
 	PostCreatedAtEq = "created_at = ?"
 	PostUpdatedAtEq = "updated_at = ?"
-	PostUserEq      = "user_id = ?"
 )
 
 const (
@@ -92,7 +90,6 @@ const (
 	PostAliasStatusEq    = "posts_alias.status = ?"
 	PostAliasCreatedAtEq = "posts_alias.created_at = ?"
 	PostAliasUpdatedAtEq = "posts_alias.updated_at = ?"
-	PostAliasUserEq      = "posts_alias.user_id = ?"
 )
 
 const (
@@ -103,7 +100,6 @@ const (
 	PostStatusNeq    = "status <> ?"
 	PostCreatedAtNeq = "created_at <> ?"
 	PostUpdatedAtNeq = "updated_at <> ?"
-	PostUserNeq      = "user_id <> ?"
 )
 
 const (
@@ -114,7 +110,6 @@ const (
 	PostAliasStatusNeq    = "posts_alias.status <> ?"
 	PostAliasCreatedAtNeq = "posts_alias.created_at <> ?"
 	PostAliasUpdatedAtNeq = "posts_alias.updated_at <> ?"
-	PostAliasUserNeq      = "posts_alias.user_id <> ?"
 )
 
 const (
@@ -424,14 +419,14 @@ const (
 // Post generates a model for the "posts" table.
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
-	ID            int64     `bun:"id,pk,notnull" json:"id,omitempty"`                                        //
-	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty"`                                 //
-	Title         string    `bun:"title,notnull" json:"title,omitempty"`                                     //
-	Content       *string   `bun:"content,notnull" json:"content,omitempty"`                                 //
-	Status        int16     `bun:"status,notnull,default:'0'" json:"status,omitempty"`                       //
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty"` //
-	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at,omitempty"` //
-	User          *User     `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"`                //
+	ID            int64     `bun:"id,pk,notnull" json:"id,omitempty" xml:"id"`                                                //
+	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                    //
+	Title         string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                          //
+	Content       *string   `bun:"content,notnull" json:"content,omitempty" xml:"content"`                                    //
+	Status        int16     `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                           //
+	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty" xml:"created_at"` //
+	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at,omitempty" xml:"updated_at"` //
+	User          *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                           //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

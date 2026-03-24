@@ -44,7 +44,7 @@ const (
 	PostStatus    = "status"
 	PostCreatedAt = "created_at"
 	PostUpdatedAt = "updated_at"
-	PostUser      = "user_id"
+	PostUser      = "user"
 )
 
 const (
@@ -59,7 +59,7 @@ const (
 	PostAliasStatus    = "posts_alias.status"
 	PostAliasCreatedAt = "posts_alias.created_at"
 	PostAliasUpdatedAt = "posts_alias.updated_at"
-	PostAliasUser      = "posts_alias.user_id"
+	PostAliasUser      = "posts_alias.user"
 )
 
 var (
@@ -70,7 +70,6 @@ var (
 	PostStatusIdent    = bun.Ident("status")
 	PostCreatedAtIdent = bun.Ident("created_at")
 	PostUpdatedAtIdent = bun.Ident("updated_at")
-	PostUserIdent      = bun.Ident("user_id")
 )
 
 const (
@@ -81,7 +80,6 @@ const (
 	PostStatusEq    = "status = ?"
 	PostCreatedAtEq = "created_at = ?"
 	PostUpdatedAtEq = "updated_at = ?"
-	PostUserEq      = "user_id = ?"
 )
 
 const (
@@ -92,7 +90,6 @@ const (
 	PostAliasStatusEq    = "posts_alias.status = ?"
 	PostAliasCreatedAtEq = "posts_alias.created_at = ?"
 	PostAliasUpdatedAtEq = "posts_alias.updated_at = ?"
-	PostAliasUserEq      = "posts_alias.user_id = ?"
 )
 
 const (
@@ -103,7 +100,6 @@ const (
 	PostStatusNeq    = "status <> ?"
 	PostCreatedAtNeq = "created_at <> ?"
 	PostUpdatedAtNeq = "updated_at <> ?"
-	PostUserNeq      = "user_id <> ?"
 )
 
 const (
@@ -114,7 +110,6 @@ const (
 	PostAliasStatusNeq    = "posts_alias.status <> ?"
 	PostAliasCreatedAtNeq = "posts_alias.created_at <> ?"
 	PostAliasUpdatedAtNeq = "posts_alias.updated_at <> ?"
-	PostAliasUserNeq      = "posts_alias.user_id <> ?"
 )
 
 const (
@@ -425,14 +420,14 @@ const (
 // 文章表
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
-	ID            int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`                             //
-	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty"`                                    // 用户ID
-	Title         string    `bun:"title,notnull" json:"title,omitempty"`                                        // 标题
-	Content       *string   `bun:"content,nullzero" json:"content,omitempty"`                                   // 内容
-	Status        int8      `bun:"status,notnull,default:'0'" json:"status,omitempty"`                          // 状态: 0=草稿, 1=发布
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty"` // 创建时间
-	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty"` // 更新时间
-	User          *User     `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"`                   //
+	ID            int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty" xml:"id"`                                     //
+	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                       // 用户ID
+	Title         string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                             // 标题
+	Content       *string   `bun:"content,nullzero" json:"content,omitempty" xml:"content"`                                      // 内容
+	Status        int8      `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                              // 状态: 0=草稿, 1=发布
+	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty" xml:"created_at"` // 创建时间
+	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty" xml:"updated_at"` // 更新时间
+	User          *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                              //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
