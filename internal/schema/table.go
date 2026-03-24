@@ -34,7 +34,12 @@ type ForeignKey struct {
 }
 
 func (c *Column) IsNullable() bool {
-	return c.Nullable == "YES" || c.Nullable == "true"
+	switch c.Nullable {
+	case "YES", "y", "yes", "true", "t":
+		return true
+	default:
+		return false
+	}
 }
 
 func (c *Column) IsPrimaryKey() bool {

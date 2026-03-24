@@ -114,20 +114,28 @@ func TestColumnIsNullable(t *testing.T) {
 		nullable string
 		want     bool
 	}{
+		// MySQL values
 		{"YES", true},
-		{"yes", false},
+		{"NO", false},
+		{"yes", true},
+		{"no", false},
+		// PostgreSQL values (t/f)
+		{"t", true},
+		{"f", false},
 		{"true", true},
 		{"false", false},
-		{"NO", false},
 		{"", false},
+		{"anything", false},
 	}
 
 	for _, tt := range tests {
-		c := &Column{Nullable: tt.nullable}
-		got := c.IsNullable()
-		if got != tt.want {
-			t.Errorf("IsNullable(%q) = %v, want %v", tt.nullable, got, tt.want)
-		}
+		t.Run(tt.nullable, func(t *testing.T) {
+			c := &Column{Nullable: tt.nullable}
+			got := c.IsNullable()
+			if got != tt.want {
+				t.Errorf("IsNullable(%q) = %v, want %v", tt.nullable, got, tt.want)
+			}
+		})
 	}
 }
 
