@@ -272,7 +272,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AddExpr" $maxNumericLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} + ?"
 	{{- end}}
 {{- end}}
@@ -280,7 +280,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AddExpr" $maxNumericLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} + ?"
 	{{- end}}
 {{- end}}
@@ -288,7 +288,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SubExpr" $maxNumericLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} - ?"
 	{{- end}}
 {{- end}}
@@ -296,7 +296,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SubExpr" $maxNumericLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} - ?"
 	{{- end}}
 {{- end}}
@@ -304,7 +304,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AddLeastExpr" $maxNumericLength }} = "{{$field.ColumnName}} = LEAST({{$field.ColumnName}} + ?, ?)"
 	{{- end}}
 {{- end}}
@@ -312,7 +312,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AddLeastExpr" $maxNumericLength }} = "{{$field.ColumnName}} = LEAST({{$field.ColumnName}} + ?, ?)"
 	{{- end}}
 {{- end}}
@@ -320,7 +320,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SubGreatestExpr" $maxNumericLength }} = "{{$field.ColumnName}} = GREATEST({{$field.ColumnName}} - ?, ?)"
 	{{- end}}
 {{- end}}
@@ -328,7 +328,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SubGreatestExpr" $maxNumericLength }} = "{{$field.ColumnName}} = GREATEST({{$field.ColumnName}} - ?, ?)"
 	{{- end}}
 {{- end}}
@@ -336,7 +336,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "ClampExpr" $maxNumericLength }} = "{{$field.ColumnName}} = LEAST(GREATEST({{$field.ColumnName}} + ?, ?), ?)"
 	{{- end}}
 {{- end}}
@@ -344,7 +344,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
+	{{- if eq $field.Kind "NUMERIC" and not $field.IsPrimaryKey }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "ClampExpr" $maxNumericLength }} = "{{$field.ColumnName}} = LEAST(GREATEST({{$field.ColumnName}} + ?, ?), ?)"
 	{{- end}}
 {{- end}}
