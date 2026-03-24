@@ -210,20 +210,14 @@ func newBelongsToFields(foreignKeys []schema.ForeignKey, customTable *config.Cus
 	results := make([]*Field, 0, len(foreignKeys))
 	for _, fk := range foreignKeys {
 		fieldName := naming.TableToStruct(fk.RefTable)
-		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
+		singular := naming.Singular(fk.RefTable)
+		name := naming.ToSnakeCase(singular)
 		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 
-		fieldName, fieldType, tags := applyRelationCustoms(customTable, fieldName, "*"+fieldName, tags, naming.Singular(fk.RefTable))
+		field := newRelationField(customTable, fieldName, "*"+fieldName, tags, singular)
+		field.ColumnName = name
 
-		results = append(results, &Field{
-			Name:       fieldName,
-			Type:       fieldType,
-			Tag:        tags.String(),
-			ColumnName: name,
-			Kind:       types.KindStruct,
-			IsCustom:   true,
-			IsRelation: true,
-		})
+		results = append(results, field)
 	}
 	return results
 }
@@ -238,24 +232,24 @@ func newHasManyFields(reverseForeignKeys []schema.ForeignKey, customTable *confi
 		fieldType := "[]*" + naming.TableToStruct(fk.Table)
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 
-		fieldName, fieldType, tags := applyRelationCustoms(customTable, columnName, fieldType, tags, fk.Table)
+		field := newRelationField(customTable, columnName, fieldType, tags, fk.Table)
+		field.ColumnName = fk.Table
 
-		results = append(results, &Field{
-			Name:       fieldName,
-			Type:       fieldType,
-			Tag:        tags.String(),
-			ColumnName: fk.Table,
-			Kind:       types.KindStruct,
-			IsCustom:   true,
-			IsRelation: true,
-		})
+		results = append(results, field)
 	}
 	return results
 }
 
-func applyRelationCustoms(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
+func newRelationField(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) *Field {
 	if customTable == nil {
-		return fieldName, fieldType, tags
+		return &Field{
+			Name:       fieldName,
+			Type:       fieldType,
+			Tag:        tags.String(),
+			Kind:       types.KindStruct,
+			IsCustom:   true,
+			IsRelation: true,
+		}
 	}
 	// Apply table-level tags
 	if len(customTable.Tags) > 0 {
@@ -264,7 +258,14 @@ func applyRelationCustoms(customTable *config.CustomTable, fieldName, fieldType 
 	// Apply field-level config
 	customField := customTable.Fields[name]
 	if customField == nil {
-		return fieldName, fieldType, tags
+		return &Field{
+			Name:       fieldName,
+			Type:       fieldType,
+			Tag:        tags.String(),
+			Kind:       types.KindStruct,
+			IsCustom:   true,
+			IsRelation: true,
+		}
 	}
 	if customField.Name != "" {
 		fieldName = customField.Name
@@ -275,5 +276,12 @@ func applyRelationCustoms(customTable *config.CustomTable, fieldName, fieldType 
 	if len(customField.Tags) > 0 {
 		tags.Add(newCustomTags(fieldName, customField.Tags...)...)
 	}
-	return fieldName, fieldType, tags
+	return &Field{
+		Name:       fieldName,
+		Type:       fieldType,
+		Tag:        tags.String(),
+		Kind:       types.KindStruct,
+		IsCustom:   true,
+		IsRelation: true,
+	}
 }
