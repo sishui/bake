@@ -9,26 +9,28 @@ import (
 )
 
 type Model struct {
-	Version            string     // bake version
-	Package            string     // package name
-	Imports            [][]string // imports
-	BunModel           string     // bun.BaseModel
-	Table              string     // table name
-	Model              string     // model name
-	Alias              string     // model alias
-	Comments           []string   // model comments
-	Fields             []*Field   // fields
-	Timezone           string     // timezone
-	CreatedAtType      string     // created_at type
-	UpdatedAtType      string     // updated_at type
-	DeletedAtType      string     // deleted_at type
-	MaxFieldLength     int        // max field length
-	MaxNullableLength  int        // max nullable length
-	MaxStringLength    int        // max string length
-	MaxNumericLength   int        // max numeric length
-	MaxOrderedLength   int        // max ordered length
-	MaxEquatableLength int        // max equatable length
-	MaxRelationLength  int        // max relation length
+	Version             string     // bake version
+	Package             string     // package name
+	Imports             [][]string // imports
+	BunModel            string     // bun.BaseModel
+	Table               string     // table name
+	Model               string     // model name
+	Alias               string     // model alias
+	Comments            []string   // model comments
+	Fields              []*Field   // fields
+	Timezone            string     // timezone
+	CreatedAtType       string     // created_at type
+	UpdatedAtType       string     // updated_at type
+	DeletedAtType       string     // deleted_at type
+	MaxFieldLength      int        // max field length
+	MaxNullableLength   int        // max nullable length
+	MaxStringLength     int        // max string length
+	MaxNumericLength    int        // max numeric length
+	MaxOrderedLength    int        // max ordered length
+	MaxEquatableLength  int        // max equatable length
+	MaxRelationLength   int        // max relation length
+	MaxArithmeticLength int        // max arithmetic length (non-pk numeric)
+	MaxTimeLength       int        // max time length
 }
 
 func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms map[string]string) (*Model, error) {
@@ -96,10 +98,14 @@ func (m *Model) init() {
 			m.MaxNumericLength = max(m.MaxNumericLength, nameLen)
 			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
 			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
+			if !f.IsPrimary {
+				m.MaxArithmeticLength = max(m.MaxArithmeticLength, nameLen)
+			}
 
 		case types.KindTime:
 			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
 			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
+			m.MaxTimeLength = max(m.MaxTimeLength, nameLen)
 
 		case types.KindBoolean, types.KindEnum:
 			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
