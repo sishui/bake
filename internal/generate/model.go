@@ -55,8 +55,8 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 		fields = append(fields, f)
 	}
 	columns := make(map[string]struct{}, len(t.Columns))
-	fields = append(fields, newBelongsToRelationFields(t.ForeignKeys, customTable)...)
-	fields = append(fields, newReverseRelationFields(t.ReverseForeignKeys, customTable)...)
+	fields = append(fields, newBelongsToFields(t.ForeignKeys, customTable)...)
+	fields = append(fields, newHasManyFields(t.ReverseForeignKeys, customTable)...)
 
 	for _, f := range fields {
 		columns[f.ColumnName] = struct{}{}
@@ -200,7 +200,7 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 	return results
 }
 
-func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
+func newBelongsToFields(foreignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
 	if len(foreignKeys) == 0 {
 		return nil
 	}
@@ -210,7 +210,7 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 		name := naming.ToSnakeCase(naming.Singular(fk.RefTable))
 		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
 
-		fieldName, fieldType, tags := mergeRelationField(customTable, fieldName, "*"+fieldName, tags, naming.Singular(fk.RefTable))
+		fieldName, fieldType, tags := applyRelationCustoms(customTable, fieldName, "*"+fieldName, tags, naming.Singular(fk.RefTable))
 
 		results = append(results, &Field{
 			Name:       fieldName,
@@ -225,7 +225,7 @@ func newBelongsToRelationFields(foreignKeys []schema.ForeignKey, customTable *co
 	return results
 }
 
-func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
+func newHasManyFields(reverseForeignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
 	if len(reverseForeignKeys) == 0 {
 		return nil
 	}
@@ -235,7 +235,7 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, customTabl
 		fieldType := "[]*" + naming.TableToStruct(fk.Table)
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
 
-		fieldName, fieldType, tags := mergeRelationField(customTable, columnName, fieldType, tags, fk.Table)
+		fieldName, fieldType, tags := applyRelationCustoms(customTable, columnName, fieldType, tags, fk.Table)
 
 		results = append(results, &Field{
 			Name:       fieldName,
@@ -250,7 +250,7 @@ func newReverseRelationFields(reverseForeignKeys []schema.ForeignKey, customTabl
 	return results
 }
 
-func mergeRelationField(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
+func applyRelationCustoms(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) (string, string, *Tags) {
 	if customTable == nil {
 		return fieldName, fieldType, tags
 	}
