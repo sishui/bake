@@ -195,7 +195,10 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 		if field.Name == "" && field.Type == "" && !field.Relation {
 			continue
 		}
-		results = append(results, NewCustomField(k, customTable))
+		f := NewCustomField(k, customTable)
+		if f != nil { // defensive: avoid nil element
+			results = append(results, f)
+		}
 	}
 	return results
 }
