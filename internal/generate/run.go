@@ -140,16 +140,25 @@ func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *
 			slog.DebugContext(ctx, "processing table", "name", table.Name, "columns", len(table.Columns))
 			m, err := NewModel(table, db, c, initialisms)
 			if err != nil {
-				results <- result{err: err}
+				select {
+				case <-ctx.Done():
+				case results <- result{err: err}:
+				}
 				return
 			}
 			filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
 			if err != nil {
-				results <- result{err: err}
+				select {
+				case <-ctx.Done():
+				case results <- result{err: err}:
+				}
 				return
 			}
 			slog.DebugContext(ctx, "generated model", "table", m.Table, "model", m.Model, "file", filename)
-			results <- result{model: m, filename: filename}
+			select {
+			case <-ctx.Done():
+			case results <- result{model: m, filename: filename}:
+			}
 		}(table)
 	}
 
