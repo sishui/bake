@@ -197,17 +197,76 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDSUMExpr          = "SUM(id)"
-	MailAttachmentAliasMailIDSUMExpr      = "SUM(mail_id)"
-	MailAttachmentAliasKindSUMExpr        = "SUM(kind)"
-	MailAttachmentAliasRewardIDSUMExpr    = "SUM(reward_id)"
-	MailAttachmentAliasRewardCountSUMExpr = "SUM(reward_count)"
-	MailAttachmentAliasCreatedAtSUMExpr   = "SUM(created_at)"
-	MailAttachmentAliasUpdatedAtSUMExpr   = "SUM(updated_at)"
+	MailAttachmentAliasIDSUMExpr          = "SUM(mail_attachment_alias.id)"
+	MailAttachmentAliasMailIDSUMExpr      = "SUM(mail_attachment_alias.mail_id)"
+	MailAttachmentAliasKindSUMExpr        = "SUM(mail_attachment_alias.kind)"
+	MailAttachmentAliasRewardIDSUMExpr    = "SUM(mail_attachment_alias.reward_id)"
+	MailAttachmentAliasRewardCountSUMExpr = "SUM(mail_attachment_alias.reward_count)"
+	MailAttachmentAliasCreatedAtSUMExpr   = "SUM(mail_attachment_alias.created_at)"
+	MailAttachmentAliasUpdatedAtSUMExpr   = "SUM(mail_attachment_alias.updated_at)"
 )
 
 const (
-	MailAttachmentIDAddExpr          = "id = id + ?"
+	MailAttachmentIDAVGExpr          = "AVG(id)"
+	MailAttachmentMailIDAVGExpr      = "AVG(mail_id)"
+	MailAttachmentKindAVGExpr        = "AVG(kind)"
+	MailAttachmentRewardIDAVGExpr    = "AVG(reward_id)"
+	MailAttachmentRewardCountAVGExpr = "AVG(reward_count)"
+	MailAttachmentCreatedAtAVGExpr   = "AVG(created_at)"
+	MailAttachmentUpdatedAtAVGExpr   = "AVG(updated_at)"
+)
+
+const (
+	MailAttachmentAliasIDAVGExpr          = "AVG(mail_attachment_alias.id)"
+	MailAttachmentAliasMailIDAVGExpr      = "AVG(mail_attachment_alias.mail_id)"
+	MailAttachmentAliasKindAVGExpr        = "AVG(mail_attachment_alias.kind)"
+	MailAttachmentAliasRewardIDAVGExpr    = "AVG(mail_attachment_alias.reward_id)"
+	MailAttachmentAliasRewardCountAVGExpr = "AVG(mail_attachment_alias.reward_count)"
+	MailAttachmentAliasCreatedAtAVGExpr   = "AVG(mail_attachment_alias.created_at)"
+	MailAttachmentAliasUpdatedAtAVGExpr   = "AVG(mail_attachment_alias.updated_at)"
+)
+
+const (
+	MailAttachmentIDMINExpr          = "MIN(id)"
+	MailAttachmentMailIDMINExpr      = "MIN(mail_id)"
+	MailAttachmentKindMINExpr        = "MIN(kind)"
+	MailAttachmentRewardIDMINExpr    = "MIN(reward_id)"
+	MailAttachmentRewardCountMINExpr = "MIN(reward_count)"
+	MailAttachmentCreatedAtMINExpr   = "MIN(created_at)"
+	MailAttachmentUpdatedAtMINExpr   = "MIN(updated_at)"
+)
+
+const (
+	MailAttachmentAliasIDMINExpr          = "MIN(mail_attachment_alias.id)"
+	MailAttachmentAliasMailIDMINExpr      = "MIN(mail_attachment_alias.mail_id)"
+	MailAttachmentAliasKindMINExpr        = "MIN(mail_attachment_alias.kind)"
+	MailAttachmentAliasRewardIDMINExpr    = "MIN(mail_attachment_alias.reward_id)"
+	MailAttachmentAliasRewardCountMINExpr = "MIN(mail_attachment_alias.reward_count)"
+	MailAttachmentAliasCreatedAtMINExpr   = "MIN(mail_attachment_alias.created_at)"
+	MailAttachmentAliasUpdatedAtMINExpr   = "MIN(mail_attachment_alias.updated_at)"
+)
+
+const (
+	MailAttachmentIDMAXExpr          = "MAX(id)"
+	MailAttachmentMailIDMAXExpr      = "MAX(mail_id)"
+	MailAttachmentKindMAXExpr        = "MAX(kind)"
+	MailAttachmentRewardIDMAXExpr    = "MAX(reward_id)"
+	MailAttachmentRewardCountMAXExpr = "MAX(reward_count)"
+	MailAttachmentCreatedAtMAXExpr   = "MAX(created_at)"
+	MailAttachmentUpdatedAtMAXExpr   = "MAX(updated_at)"
+)
+
+const (
+	MailAttachmentAliasIDMAXExpr          = "MAX(mail_attachment_alias.id)"
+	MailAttachmentAliasMailIDMAXExpr      = "MAX(mail_attachment_alias.mail_id)"
+	MailAttachmentAliasKindMAXExpr        = "MAX(mail_attachment_alias.kind)"
+	MailAttachmentAliasRewardIDMAXExpr    = "MAX(mail_attachment_alias.reward_id)"
+	MailAttachmentAliasRewardCountMAXExpr = "MAX(mail_attachment_alias.reward_count)"
+	MailAttachmentAliasCreatedAtMAXExpr   = "MAX(mail_attachment_alias.created_at)"
+	MailAttachmentAliasUpdatedAtMAXExpr   = "MAX(mail_attachment_alias.updated_at)"
+)
+
+const (
 	MailAttachmentMailIDAddExpr      = "mail_id = mail_id + ?"
 	MailAttachmentKindAddExpr        = "kind = kind + ?"
 	MailAttachmentRewardIDAddExpr    = "reward_id = reward_id + ?"
@@ -217,17 +276,15 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDAddExpr          = "id = id + ?"
-	MailAttachmentAliasMailIDAddExpr      = "mail_id = mail_id + ?"
-	MailAttachmentAliasKindAddExpr        = "kind = kind + ?"
-	MailAttachmentAliasRewardIDAddExpr    = "reward_id = reward_id + ?"
-	MailAttachmentAliasRewardCountAddExpr = "reward_count = reward_count + ?"
-	MailAttachmentAliasCreatedAtAddExpr   = "created_at = created_at + ?"
-	MailAttachmentAliasUpdatedAtAddExpr   = "updated_at = updated_at + ?"
+	MailAttachmentAliasMailIDAddExpr      = "mail_attachment_alias.mail_id = mail_attachment_alias.mail_id + ?"
+	MailAttachmentAliasKindAddExpr        = "mail_attachment_alias.kind = mail_attachment_alias.kind + ?"
+	MailAttachmentAliasRewardIDAddExpr    = "mail_attachment_alias.reward_id = mail_attachment_alias.reward_id + ?"
+	MailAttachmentAliasRewardCountAddExpr = "mail_attachment_alias.reward_count = mail_attachment_alias.reward_count + ?"
+	MailAttachmentAliasCreatedAtAddExpr   = "mail_attachment_alias.created_at = mail_attachment_alias.created_at + ?"
+	MailAttachmentAliasUpdatedAtAddExpr   = "mail_attachment_alias.updated_at = mail_attachment_alias.updated_at + ?"
 )
 
 const (
-	MailAttachmentIDSubExpr          = "id = id - ?"
 	MailAttachmentMailIDSubExpr      = "mail_id = mail_id - ?"
 	MailAttachmentKindSubExpr        = "kind = kind - ?"
 	MailAttachmentRewardIDSubExpr    = "reward_id = reward_id - ?"
@@ -237,17 +294,15 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDSubExpr          = "id = id - ?"
-	MailAttachmentAliasMailIDSubExpr      = "mail_id = mail_id - ?"
-	MailAttachmentAliasKindSubExpr        = "kind = kind - ?"
-	MailAttachmentAliasRewardIDSubExpr    = "reward_id = reward_id - ?"
-	MailAttachmentAliasRewardCountSubExpr = "reward_count = reward_count - ?"
-	MailAttachmentAliasCreatedAtSubExpr   = "created_at = created_at - ?"
-	MailAttachmentAliasUpdatedAtSubExpr   = "updated_at = updated_at - ?"
+	MailAttachmentAliasMailIDSubExpr      = "mail_attachment_alias.mail_id = mail_attachment_alias.mail_id - ?"
+	MailAttachmentAliasKindSubExpr        = "mail_attachment_alias.kind = mail_attachment_alias.kind - ?"
+	MailAttachmentAliasRewardIDSubExpr    = "mail_attachment_alias.reward_id = mail_attachment_alias.reward_id - ?"
+	MailAttachmentAliasRewardCountSubExpr = "mail_attachment_alias.reward_count = mail_attachment_alias.reward_count - ?"
+	MailAttachmentAliasCreatedAtSubExpr   = "mail_attachment_alias.created_at = mail_attachment_alias.created_at - ?"
+	MailAttachmentAliasUpdatedAtSubExpr   = "mail_attachment_alias.updated_at = mail_attachment_alias.updated_at - ?"
 )
 
 const (
-	MailAttachmentIDAddLeastExpr          = "id = LEAST(id + ?, ?)"
 	MailAttachmentMailIDAddLeastExpr      = "mail_id = LEAST(mail_id + ?, ?)"
 	MailAttachmentKindAddLeastExpr        = "kind = LEAST(kind + ?, ?)"
 	MailAttachmentRewardIDAddLeastExpr    = "reward_id = LEAST(reward_id + ?, ?)"
@@ -257,17 +312,15 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDAddLeastExpr          = "id = LEAST(id + ?, ?)"
-	MailAttachmentAliasMailIDAddLeastExpr      = "mail_id = LEAST(mail_id + ?, ?)"
-	MailAttachmentAliasKindAddLeastExpr        = "kind = LEAST(kind + ?, ?)"
-	MailAttachmentAliasRewardIDAddLeastExpr    = "reward_id = LEAST(reward_id + ?, ?)"
-	MailAttachmentAliasRewardCountAddLeastExpr = "reward_count = LEAST(reward_count + ?, ?)"
-	MailAttachmentAliasCreatedAtAddLeastExpr   = "created_at = LEAST(created_at + ?, ?)"
-	MailAttachmentAliasUpdatedAtAddLeastExpr   = "updated_at = LEAST(updated_at + ?, ?)"
+	MailAttachmentAliasMailIDAddLeastExpr      = "mail_attachment_alias.mail_id = LEAST(mail_attachment_alias.mail_id + ?, ?)"
+	MailAttachmentAliasKindAddLeastExpr        = "mail_attachment_alias.kind = LEAST(mail_attachment_alias.kind + ?, ?)"
+	MailAttachmentAliasRewardIDAddLeastExpr    = "mail_attachment_alias.reward_id = LEAST(mail_attachment_alias.reward_id + ?, ?)"
+	MailAttachmentAliasRewardCountAddLeastExpr = "mail_attachment_alias.reward_count = LEAST(mail_attachment_alias.reward_count + ?, ?)"
+	MailAttachmentAliasCreatedAtAddLeastExpr   = "mail_attachment_alias.created_at = LEAST(mail_attachment_alias.created_at + ?, ?)"
+	MailAttachmentAliasUpdatedAtAddLeastExpr   = "mail_attachment_alias.updated_at = LEAST(mail_attachment_alias.updated_at + ?, ?)"
 )
 
 const (
-	MailAttachmentIDSubGreatestExpr          = "id = GREATEST(id - ?, ?)"
 	MailAttachmentMailIDSubGreatestExpr      = "mail_id = GREATEST(mail_id - ?, ?)"
 	MailAttachmentKindSubGreatestExpr        = "kind = GREATEST(kind - ?, ?)"
 	MailAttachmentRewardIDSubGreatestExpr    = "reward_id = GREATEST(reward_id - ?, ?)"
@@ -277,17 +330,15 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDSubGreatestExpr          = "id = GREATEST(id - ?, ?)"
-	MailAttachmentAliasMailIDSubGreatestExpr      = "mail_id = GREATEST(mail_id - ?, ?)"
-	MailAttachmentAliasKindSubGreatestExpr        = "kind = GREATEST(kind - ?, ?)"
-	MailAttachmentAliasRewardIDSubGreatestExpr    = "reward_id = GREATEST(reward_id - ?, ?)"
-	MailAttachmentAliasRewardCountSubGreatestExpr = "reward_count = GREATEST(reward_count - ?, ?)"
-	MailAttachmentAliasCreatedAtSubGreatestExpr   = "created_at = GREATEST(created_at - ?, ?)"
-	MailAttachmentAliasUpdatedAtSubGreatestExpr   = "updated_at = GREATEST(updated_at - ?, ?)"
+	MailAttachmentAliasMailIDSubGreatestExpr      = "mail_attachment_alias.mail_id = GREATEST(mail_attachment_alias.mail_id - ?, ?)"
+	MailAttachmentAliasKindSubGreatestExpr        = "mail_attachment_alias.kind = GREATEST(mail_attachment_alias.kind - ?, ?)"
+	MailAttachmentAliasRewardIDSubGreatestExpr    = "mail_attachment_alias.reward_id = GREATEST(mail_attachment_alias.reward_id - ?, ?)"
+	MailAttachmentAliasRewardCountSubGreatestExpr = "mail_attachment_alias.reward_count = GREATEST(mail_attachment_alias.reward_count - ?, ?)"
+	MailAttachmentAliasCreatedAtSubGreatestExpr   = "mail_attachment_alias.created_at = GREATEST(mail_attachment_alias.created_at - ?, ?)"
+	MailAttachmentAliasUpdatedAtSubGreatestExpr   = "mail_attachment_alias.updated_at = GREATEST(mail_attachment_alias.updated_at - ?, ?)"
 )
 
 const (
-	MailAttachmentIDClampExpr          = "id = LEAST(GREATEST(id + ?, ?), ?)"
 	MailAttachmentMailIDClampExpr      = "mail_id = LEAST(GREATEST(mail_id + ?, ?), ?)"
 	MailAttachmentKindClampExpr        = "kind = LEAST(GREATEST(kind + ?, ?), ?)"
 	MailAttachmentRewardIDClampExpr    = "reward_id = LEAST(GREATEST(reward_id + ?, ?), ?)"
@@ -297,13 +348,12 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDClampExpr          = "id = LEAST(GREATEST(id + ?, ?), ?)"
-	MailAttachmentAliasMailIDClampExpr      = "mail_id = LEAST(GREATEST(mail_id + ?, ?), ?)"
-	MailAttachmentAliasKindClampExpr        = "kind = LEAST(GREATEST(kind + ?, ?), ?)"
-	MailAttachmentAliasRewardIDClampExpr    = "reward_id = LEAST(GREATEST(reward_id + ?, ?), ?)"
-	MailAttachmentAliasRewardCountClampExpr = "reward_count = LEAST(GREATEST(reward_count + ?, ?), ?)"
-	MailAttachmentAliasCreatedAtClampExpr   = "created_at = LEAST(GREATEST(created_at + ?, ?), ?)"
-	MailAttachmentAliasUpdatedAtClampExpr   = "updated_at = LEAST(GREATEST(updated_at + ?, ?), ?)"
+	MailAttachmentAliasMailIDClampExpr      = "mail_attachment_alias.mail_id = LEAST(GREATEST(mail_attachment_alias.mail_id + ?, ?), ?)"
+	MailAttachmentAliasKindClampExpr        = "mail_attachment_alias.kind = LEAST(GREATEST(mail_attachment_alias.kind + ?, ?), ?)"
+	MailAttachmentAliasRewardIDClampExpr    = "mail_attachment_alias.reward_id = LEAST(GREATEST(mail_attachment_alias.reward_id + ?, ?), ?)"
+	MailAttachmentAliasRewardCountClampExpr = "mail_attachment_alias.reward_count = LEAST(GREATEST(mail_attachment_alias.reward_count + ?, ?), ?)"
+	MailAttachmentAliasCreatedAtClampExpr   = "mail_attachment_alias.created_at = LEAST(GREATEST(mail_attachment_alias.created_at + ?, ?), ?)"
+	MailAttachmentAliasUpdatedAtClampExpr   = "mail_attachment_alias.updated_at = LEAST(GREATEST(mail_attachment_alias.updated_at + ?, ?), ?)"
 )
 
 const (

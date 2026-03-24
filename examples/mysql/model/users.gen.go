@@ -176,47 +176,35 @@ const (
 )
 
 const (
-	UserAliasIDSUMExpr = "SUM(id)"
+	UserAliasIDSUMExpr = "SUM(users_alias.id)"
 )
 
 const (
-	UserIDAddExpr = "id = id + ?"
+	UserIDAVGExpr = "AVG(id)"
 )
 
 const (
-	UserAliasIDAddExpr = "id = id + ?"
+	UserAliasIDAVGExpr = "AVG(users_alias.id)"
 )
 
 const (
-	UserIDSubExpr = "id = id - ?"
+	UserIDMINExpr        = "MIN(id)"
+	UserCreatedAtMINExpr = "MIN(created_at)"
 )
 
 const (
-	UserAliasIDSubExpr = "id = id - ?"
+	UserAliasIDMINExpr        = "MIN(users_alias.id)"
+	UserAliasCreatedAtMINExpr = "MIN(users_alias.created_at)"
 )
 
 const (
-	UserIDAddLeastExpr = "id = LEAST(id + ?, ?)"
+	UserIDMAXExpr        = "MAX(id)"
+	UserCreatedAtMAXExpr = "MAX(created_at)"
 )
 
 const (
-	UserAliasIDAddLeastExpr = "id = LEAST(id + ?, ?)"
-)
-
-const (
-	UserIDSubGreatestExpr = "id = GREATEST(id - ?, ?)"
-)
-
-const (
-	UserAliasIDSubGreatestExpr = "id = GREATEST(id - ?, ?)"
-)
-
-const (
-	UserIDClampExpr = "id = LEAST(GREATEST(id + ?, ?), ?)"
-)
-
-const (
-	UserAliasIDClampExpr = "id = LEAST(GREATEST(id + ?, ?), ?)"
+	UserAliasIDMAXExpr        = "MAX(users_alias.id)"
+	UserAliasCreatedAtMAXExpr = "MAX(users_alias.created_at)"
 )
 
 const (
@@ -265,6 +253,62 @@ const (
 const (
 	UserAliasIDNotBetween        = "users_alias.id NOT BETWEEN ? AND ?"
 	UserAliasCreatedAtNotBetween = "users_alias.created_at NOT BETWEEN ? AND ?"
+)
+
+const (
+	UserCreatedAtDateExpr = "DATE(created_at)"
+)
+
+const (
+	UserAliasCreatedAtDateExpr = "DATE(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtYearExpr = "YEAR(created_at)"
+)
+
+const (
+	UserAliasCreatedAtYearExpr = "YEAR(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtMonthExpr = "MONTH(created_at)"
+)
+
+const (
+	UserAliasCreatedAtMonthExpr = "MONTH(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtDayExpr = "DAY(created_at)"
+)
+
+const (
+	UserAliasCreatedAtDayExpr = "DAY(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtHourExpr = "HOUR(created_at)"
+)
+
+const (
+	UserAliasCreatedAtHourExpr = "HOUR(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtMinuteExpr = "MINUTE(created_at)"
+)
+
+const (
+	UserAliasCreatedAtMinuteExpr = "MINUTE(users_alias.created_at)"
+)
+
+const (
+	UserCreatedAtSecondExpr = "SECOND(created_at)"
+)
+
+const (
+	UserAliasCreatedAtSecondExpr = "SECOND(users_alias.created_at)"
 )
 
 const (

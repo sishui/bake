@@ -239,80 +239,120 @@ const (
 )
 
 const (
-	MailAliasIDSUMExpr                  = "SUM(id)"
-	MailAliasUIDSUMExpr                 = "SUM(uid)"
-	MailAliasStatusSUMExpr              = "SUM(status)"
-	MailAliasCustomHasAttachmentSUMExpr = "SUM(has_attachment)"
+	MailAliasIDSUMExpr                  = "SUM(mail_alias.id)"
+	MailAliasUIDSUMExpr                 = "SUM(mail_alias.uid)"
+	MailAliasStatusSUMExpr              = "SUM(mail_alias.status)"
+	MailAliasCustomHasAttachmentSUMExpr = "SUM(mail_alias.has_attachment)"
 )
 
 const (
-	MailIDAddExpr                  = "id = id + ?"
+	MailIDAVGExpr                  = "AVG(id)"
+	MailUIDAVGExpr                 = "AVG(uid)"
+	MailStatusAVGExpr              = "AVG(status)"
+	MailCustomHasAttachmentAVGExpr = "AVG(has_attachment)"
+)
+
+const (
+	MailAliasIDAVGExpr                  = "AVG(mail_alias.id)"
+	MailAliasUIDAVGExpr                 = "AVG(mail_alias.uid)"
+	MailAliasStatusAVGExpr              = "AVG(mail_alias.status)"
+	MailAliasCustomHasAttachmentAVGExpr = "AVG(mail_alias.has_attachment)"
+)
+
+const (
+	MailIDMINExpr                  = "MIN(id)"
+	MailUIDMINExpr                 = "MIN(uid)"
+	MailStatusMINExpr              = "MIN(status)"
+	MailCustomHasAttachmentMINExpr = "MIN(has_attachment)"
+	MailCreatedAtMINExpr           = "MIN(created_at)"
+	MailUpdatedAtMINExpr           = "MIN(updated_at)"
+)
+
+const (
+	MailAliasIDMINExpr                  = "MIN(mail_alias.id)"
+	MailAliasUIDMINExpr                 = "MIN(mail_alias.uid)"
+	MailAliasStatusMINExpr              = "MIN(mail_alias.status)"
+	MailAliasCustomHasAttachmentMINExpr = "MIN(mail_alias.has_attachment)"
+	MailAliasCreatedAtMINExpr           = "MIN(mail_alias.created_at)"
+	MailAliasUpdatedAtMINExpr           = "MIN(mail_alias.updated_at)"
+)
+
+const (
+	MailIDMAXExpr                  = "MAX(id)"
+	MailUIDMAXExpr                 = "MAX(uid)"
+	MailStatusMAXExpr              = "MAX(status)"
+	MailCustomHasAttachmentMAXExpr = "MAX(has_attachment)"
+	MailCreatedAtMAXExpr           = "MAX(created_at)"
+	MailUpdatedAtMAXExpr           = "MAX(updated_at)"
+)
+
+const (
+	MailAliasIDMAXExpr                  = "MAX(mail_alias.id)"
+	MailAliasUIDMAXExpr                 = "MAX(mail_alias.uid)"
+	MailAliasStatusMAXExpr              = "MAX(mail_alias.status)"
+	MailAliasCustomHasAttachmentMAXExpr = "MAX(mail_alias.has_attachment)"
+	MailAliasCreatedAtMAXExpr           = "MAX(mail_alias.created_at)"
+	MailAliasUpdatedAtMAXExpr           = "MAX(mail_alias.updated_at)"
+)
+
+const (
 	MailUIDAddExpr                 = "uid = uid + ?"
 	MailStatusAddExpr              = "status = status + ?"
 	MailCustomHasAttachmentAddExpr = "has_attachment = has_attachment + ?"
 )
 
 const (
-	MailAliasIDAddExpr                  = "id = id + ?"
-	MailAliasUIDAddExpr                 = "uid = uid + ?"
-	MailAliasStatusAddExpr              = "status = status + ?"
-	MailAliasCustomHasAttachmentAddExpr = "has_attachment = has_attachment + ?"
+	MailAliasUIDAddExpr                 = "mail_alias.uid = mail_alias.uid + ?"
+	MailAliasStatusAddExpr              = "mail_alias.status = mail_alias.status + ?"
+	MailAliasCustomHasAttachmentAddExpr = "mail_alias.has_attachment = mail_alias.has_attachment + ?"
 )
 
 const (
-	MailIDSubExpr                  = "id = id - ?"
 	MailUIDSubExpr                 = "uid = uid - ?"
 	MailStatusSubExpr              = "status = status - ?"
 	MailCustomHasAttachmentSubExpr = "has_attachment = has_attachment - ?"
 )
 
 const (
-	MailAliasIDSubExpr                  = "id = id - ?"
-	MailAliasUIDSubExpr                 = "uid = uid - ?"
-	MailAliasStatusSubExpr              = "status = status - ?"
-	MailAliasCustomHasAttachmentSubExpr = "has_attachment = has_attachment - ?"
+	MailAliasUIDSubExpr                 = "mail_alias.uid = mail_alias.uid - ?"
+	MailAliasStatusSubExpr              = "mail_alias.status = mail_alias.status - ?"
+	MailAliasCustomHasAttachmentSubExpr = "mail_alias.has_attachment = mail_alias.has_attachment - ?"
 )
 
 const (
-	MailIDAddLeastExpr                  = "id = LEAST(id + ?, ?)"
 	MailUIDAddLeastExpr                 = "uid = LEAST(uid + ?, ?)"
 	MailStatusAddLeastExpr              = "status = LEAST(status + ?, ?)"
 	MailCustomHasAttachmentAddLeastExpr = "has_attachment = LEAST(has_attachment + ?, ?)"
 )
 
 const (
-	MailAliasIDAddLeastExpr                  = "id = LEAST(id + ?, ?)"
-	MailAliasUIDAddLeastExpr                 = "uid = LEAST(uid + ?, ?)"
-	MailAliasStatusAddLeastExpr              = "status = LEAST(status + ?, ?)"
-	MailAliasCustomHasAttachmentAddLeastExpr = "has_attachment = LEAST(has_attachment + ?, ?)"
+	MailAliasUIDAddLeastExpr                 = "mail_alias.uid = LEAST(mail_alias.uid + ?, ?)"
+	MailAliasStatusAddLeastExpr              = "mail_alias.status = LEAST(mail_alias.status + ?, ?)"
+	MailAliasCustomHasAttachmentAddLeastExpr = "mail_alias.has_attachment = LEAST(mail_alias.has_attachment + ?, ?)"
 )
 
 const (
-	MailIDSubGreatestExpr                  = "id = GREATEST(id - ?, ?)"
 	MailUIDSubGreatestExpr                 = "uid = GREATEST(uid - ?, ?)"
 	MailStatusSubGreatestExpr              = "status = GREATEST(status - ?, ?)"
 	MailCustomHasAttachmentSubGreatestExpr = "has_attachment = GREATEST(has_attachment - ?, ?)"
 )
 
 const (
-	MailAliasIDSubGreatestExpr                  = "id = GREATEST(id - ?, ?)"
-	MailAliasUIDSubGreatestExpr                 = "uid = GREATEST(uid - ?, ?)"
-	MailAliasStatusSubGreatestExpr              = "status = GREATEST(status - ?, ?)"
-	MailAliasCustomHasAttachmentSubGreatestExpr = "has_attachment = GREATEST(has_attachment - ?, ?)"
+	MailAliasUIDSubGreatestExpr                 = "mail_alias.uid = GREATEST(mail_alias.uid - ?, ?)"
+	MailAliasStatusSubGreatestExpr              = "mail_alias.status = GREATEST(mail_alias.status - ?, ?)"
+	MailAliasCustomHasAttachmentSubGreatestExpr = "mail_alias.has_attachment = GREATEST(mail_alias.has_attachment - ?, ?)"
 )
 
 const (
-	MailIDClampExpr                  = "id = LEAST(GREATEST(id + ?, ?), ?)"
 	MailUIDClampExpr                 = "uid = LEAST(GREATEST(uid + ?, ?), ?)"
 	MailStatusClampExpr              = "status = LEAST(GREATEST(status + ?, ?), ?)"
 	MailCustomHasAttachmentClampExpr = "has_attachment = LEAST(GREATEST(has_attachment + ?, ?), ?)"
 )
 
 const (
-	MailAliasIDClampExpr                  = "id = LEAST(GREATEST(id + ?, ?), ?)"
-	MailAliasUIDClampExpr                 = "uid = LEAST(GREATEST(uid + ?, ?), ?)"
-	MailAliasStatusClampExpr              = "status = LEAST(GREATEST(status + ?, ?), ?)"
-	MailAliasCustomHasAttachmentClampExpr = "has_attachment = LEAST(GREATEST(has_attachment + ?, ?), ?)"
+	MailAliasUIDClampExpr                 = "mail_alias.uid = LEAST(GREATEST(mail_alias.uid + ?, ?), ?)"
+	MailAliasStatusClampExpr              = "mail_alias.status = LEAST(GREATEST(mail_alias.status + ?, ?), ?)"
+	MailAliasCustomHasAttachmentClampExpr = "mail_alias.has_attachment = LEAST(GREATEST(mail_alias.has_attachment + ?, ?), ?)"
 )
 
 const (
@@ -393,6 +433,76 @@ const (
 	MailAliasCustomHasAttachmentNotBetween = "mail_alias.has_attachment NOT BETWEEN ? AND ?"
 	MailAliasCreatedAtNotBetween           = "mail_alias.created_at NOT BETWEEN ? AND ?"
 	MailAliasUpdatedAtNotBetween           = "mail_alias.updated_at NOT BETWEEN ? AND ?"
+)
+
+const (
+	MailCreatedAtDateExpr = "DATE(created_at)"
+	MailUpdatedAtDateExpr = "DATE(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtDateExpr = "DATE(mail_alias.created_at)"
+	MailAliasUpdatedAtDateExpr = "DATE(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtYearExpr = "YEAR(created_at)"
+	MailUpdatedAtYearExpr = "YEAR(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtYearExpr = "YEAR(mail_alias.created_at)"
+	MailAliasUpdatedAtYearExpr = "YEAR(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtMonthExpr = "MONTH(created_at)"
+	MailUpdatedAtMonthExpr = "MONTH(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtMonthExpr = "MONTH(mail_alias.created_at)"
+	MailAliasUpdatedAtMonthExpr = "MONTH(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtDayExpr = "DAY(created_at)"
+	MailUpdatedAtDayExpr = "DAY(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtDayExpr = "DAY(mail_alias.created_at)"
+	MailAliasUpdatedAtDayExpr = "DAY(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtHourExpr = "HOUR(created_at)"
+	MailUpdatedAtHourExpr = "HOUR(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtHourExpr = "HOUR(mail_alias.created_at)"
+	MailAliasUpdatedAtHourExpr = "HOUR(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtMinuteExpr = "MINUTE(created_at)"
+	MailUpdatedAtMinuteExpr = "MINUTE(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtMinuteExpr = "MINUTE(mail_alias.created_at)"
+	MailAliasUpdatedAtMinuteExpr = "MINUTE(mail_alias.updated_at)"
+)
+
+const (
+	MailCreatedAtSecondExpr = "SECOND(created_at)"
+	MailUpdatedAtSecondExpr = "SECOND(updated_at)"
+)
+
+const (
+	MailAliasCreatedAtSecondExpr = "SECOND(mail_alias.created_at)"
+	MailAliasUpdatedAtSecondExpr = "SECOND(mail_alias.updated_at)"
 )
 
 const (

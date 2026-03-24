@@ -560,21 +560,132 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDSUMExpr             = "SUM(id)"
-	TestAllTypeAliasTinyIntValSUMExpr     = "SUM(tiny_int_val)"
-	TestAllTypeAliasSmallIntValSUMExpr    = "SUM(small_int_val)"
-	TestAllTypeAliasMediumIntValSUMExpr   = "SUM(medium_int_val)"
-	TestAllTypeAliasIntValSUMExpr         = "SUM(int_val)"
-	TestAllTypeAliasBigIntValSUMExpr      = "SUM(big_int_val)"
-	TestAllTypeAliasDecimalValSUMExpr     = "SUM(decimal_val)"
-	TestAllTypeAliasFloatValSUMExpr       = "SUM(float_val)"
-	TestAllTypeAliasDoubleValSUMExpr      = "SUM(double_val)"
-	TestAllTypeAliasYearValSUMExpr        = "SUM(year_val)"
-	TestAllTypeAliasNullableIntValSUMExpr = "SUM(nullable_int_val)"
+	TestAllTypeAliasIDSUMExpr             = "SUM(test_all_types_alias.id)"
+	TestAllTypeAliasTinyIntValSUMExpr     = "SUM(test_all_types_alias.tiny_int_val)"
+	TestAllTypeAliasSmallIntValSUMExpr    = "SUM(test_all_types_alias.small_int_val)"
+	TestAllTypeAliasMediumIntValSUMExpr   = "SUM(test_all_types_alias.medium_int_val)"
+	TestAllTypeAliasIntValSUMExpr         = "SUM(test_all_types_alias.int_val)"
+	TestAllTypeAliasBigIntValSUMExpr      = "SUM(test_all_types_alias.big_int_val)"
+	TestAllTypeAliasDecimalValSUMExpr     = "SUM(test_all_types_alias.decimal_val)"
+	TestAllTypeAliasFloatValSUMExpr       = "SUM(test_all_types_alias.float_val)"
+	TestAllTypeAliasDoubleValSUMExpr      = "SUM(test_all_types_alias.double_val)"
+	TestAllTypeAliasYearValSUMExpr        = "SUM(test_all_types_alias.year_val)"
+	TestAllTypeAliasNullableIntValSUMExpr = "SUM(test_all_types_alias.nullable_int_val)"
 )
 
 const (
-	TestAllTypeIDAddExpr             = "id = id + ?"
+	TestAllTypeIDAVGExpr             = "AVG(id)"
+	TestAllTypeTinyIntValAVGExpr     = "AVG(tiny_int_val)"
+	TestAllTypeSmallIntValAVGExpr    = "AVG(small_int_val)"
+	TestAllTypeMediumIntValAVGExpr   = "AVG(medium_int_val)"
+	TestAllTypeIntValAVGExpr         = "AVG(int_val)"
+	TestAllTypeBigIntValAVGExpr      = "AVG(big_int_val)"
+	TestAllTypeDecimalValAVGExpr     = "AVG(decimal_val)"
+	TestAllTypeFloatValAVGExpr       = "AVG(float_val)"
+	TestAllTypeDoubleValAVGExpr      = "AVG(double_val)"
+	TestAllTypeYearValAVGExpr        = "AVG(year_val)"
+	TestAllTypeNullableIntValAVGExpr = "AVG(nullable_int_val)"
+)
+
+const (
+	TestAllTypeAliasIDAVGExpr             = "AVG(test_all_types_alias.id)"
+	TestAllTypeAliasTinyIntValAVGExpr     = "AVG(test_all_types_alias.tiny_int_val)"
+	TestAllTypeAliasSmallIntValAVGExpr    = "AVG(test_all_types_alias.small_int_val)"
+	TestAllTypeAliasMediumIntValAVGExpr   = "AVG(test_all_types_alias.medium_int_val)"
+	TestAllTypeAliasIntValAVGExpr         = "AVG(test_all_types_alias.int_val)"
+	TestAllTypeAliasBigIntValAVGExpr      = "AVG(test_all_types_alias.big_int_val)"
+	TestAllTypeAliasDecimalValAVGExpr     = "AVG(test_all_types_alias.decimal_val)"
+	TestAllTypeAliasFloatValAVGExpr       = "AVG(test_all_types_alias.float_val)"
+	TestAllTypeAliasDoubleValAVGExpr      = "AVG(test_all_types_alias.double_val)"
+	TestAllTypeAliasYearValAVGExpr        = "AVG(test_all_types_alias.year_val)"
+	TestAllTypeAliasNullableIntValAVGExpr = "AVG(test_all_types_alias.nullable_int_val)"
+)
+
+const (
+	TestAllTypeIDMINExpr             = "MIN(id)"
+	TestAllTypeTinyIntValMINExpr     = "MIN(tiny_int_val)"
+	TestAllTypeSmallIntValMINExpr    = "MIN(small_int_val)"
+	TestAllTypeMediumIntValMINExpr   = "MIN(medium_int_val)"
+	TestAllTypeIntValMINExpr         = "MIN(int_val)"
+	TestAllTypeBigIntValMINExpr      = "MIN(big_int_val)"
+	TestAllTypeDecimalValMINExpr     = "MIN(decimal_val)"
+	TestAllTypeFloatValMINExpr       = "MIN(float_val)"
+	TestAllTypeDoubleValMINExpr      = "MIN(double_val)"
+	TestAllTypeDateValMINExpr        = "MIN(date_val)"
+	TestAllTypeTimeValMINExpr        = "MIN(time_val)"
+	TestAllTypeDatetimeValMINExpr    = "MIN(datetime_val)"
+	TestAllTypeTimestampValMINExpr   = "MIN(timestamp_val)"
+	TestAllTypeYearValMINExpr        = "MIN(year_val)"
+	TestAllTypeNullableIntValMINExpr = "MIN(nullable_int_val)"
+	TestAllTypeCreatedAtMINExpr      = "MIN(created_at)"
+	TestAllTypeUpdatedAtMINExpr      = "MIN(updated_at)"
+	TestAllTypeDeletedAtMINExpr      = "MIN(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasIDMINExpr             = "MIN(test_all_types_alias.id)"
+	TestAllTypeAliasTinyIntValMINExpr     = "MIN(test_all_types_alias.tiny_int_val)"
+	TestAllTypeAliasSmallIntValMINExpr    = "MIN(test_all_types_alias.small_int_val)"
+	TestAllTypeAliasMediumIntValMINExpr   = "MIN(test_all_types_alias.medium_int_val)"
+	TestAllTypeAliasIntValMINExpr         = "MIN(test_all_types_alias.int_val)"
+	TestAllTypeAliasBigIntValMINExpr      = "MIN(test_all_types_alias.big_int_val)"
+	TestAllTypeAliasDecimalValMINExpr     = "MIN(test_all_types_alias.decimal_val)"
+	TestAllTypeAliasFloatValMINExpr       = "MIN(test_all_types_alias.float_val)"
+	TestAllTypeAliasDoubleValMINExpr      = "MIN(test_all_types_alias.double_val)"
+	TestAllTypeAliasDateValMINExpr        = "MIN(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValMINExpr        = "MIN(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValMINExpr    = "MIN(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValMINExpr   = "MIN(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasYearValMINExpr        = "MIN(test_all_types_alias.year_val)"
+	TestAllTypeAliasNullableIntValMINExpr = "MIN(test_all_types_alias.nullable_int_val)"
+	TestAllTypeAliasCreatedAtMINExpr      = "MIN(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtMINExpr      = "MIN(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtMINExpr      = "MIN(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeIDMAXExpr             = "MAX(id)"
+	TestAllTypeTinyIntValMAXExpr     = "MAX(tiny_int_val)"
+	TestAllTypeSmallIntValMAXExpr    = "MAX(small_int_val)"
+	TestAllTypeMediumIntValMAXExpr   = "MAX(medium_int_val)"
+	TestAllTypeIntValMAXExpr         = "MAX(int_val)"
+	TestAllTypeBigIntValMAXExpr      = "MAX(big_int_val)"
+	TestAllTypeDecimalValMAXExpr     = "MAX(decimal_val)"
+	TestAllTypeFloatValMAXExpr       = "MAX(float_val)"
+	TestAllTypeDoubleValMAXExpr      = "MAX(double_val)"
+	TestAllTypeDateValMAXExpr        = "MAX(date_val)"
+	TestAllTypeTimeValMAXExpr        = "MAX(time_val)"
+	TestAllTypeDatetimeValMAXExpr    = "MAX(datetime_val)"
+	TestAllTypeTimestampValMAXExpr   = "MAX(timestamp_val)"
+	TestAllTypeYearValMAXExpr        = "MAX(year_val)"
+	TestAllTypeNullableIntValMAXExpr = "MAX(nullable_int_val)"
+	TestAllTypeCreatedAtMAXExpr      = "MAX(created_at)"
+	TestAllTypeUpdatedAtMAXExpr      = "MAX(updated_at)"
+	TestAllTypeDeletedAtMAXExpr      = "MAX(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasIDMAXExpr             = "MAX(test_all_types_alias.id)"
+	TestAllTypeAliasTinyIntValMAXExpr     = "MAX(test_all_types_alias.tiny_int_val)"
+	TestAllTypeAliasSmallIntValMAXExpr    = "MAX(test_all_types_alias.small_int_val)"
+	TestAllTypeAliasMediumIntValMAXExpr   = "MAX(test_all_types_alias.medium_int_val)"
+	TestAllTypeAliasIntValMAXExpr         = "MAX(test_all_types_alias.int_val)"
+	TestAllTypeAliasBigIntValMAXExpr      = "MAX(test_all_types_alias.big_int_val)"
+	TestAllTypeAliasDecimalValMAXExpr     = "MAX(test_all_types_alias.decimal_val)"
+	TestAllTypeAliasFloatValMAXExpr       = "MAX(test_all_types_alias.float_val)"
+	TestAllTypeAliasDoubleValMAXExpr      = "MAX(test_all_types_alias.double_val)"
+	TestAllTypeAliasDateValMAXExpr        = "MAX(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValMAXExpr        = "MAX(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValMAXExpr    = "MAX(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValMAXExpr   = "MAX(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasYearValMAXExpr        = "MAX(test_all_types_alias.year_val)"
+	TestAllTypeAliasNullableIntValMAXExpr = "MAX(test_all_types_alias.nullable_int_val)"
+	TestAllTypeAliasCreatedAtMAXExpr      = "MAX(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtMAXExpr      = "MAX(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtMAXExpr      = "MAX(test_all_types_alias.deleted_at)"
+)
+
+const (
 	TestAllTypeTinyIntValAddExpr     = "tiny_int_val = tiny_int_val + ?"
 	TestAllTypeSmallIntValAddExpr    = "small_int_val = small_int_val + ?"
 	TestAllTypeMediumIntValAddExpr   = "medium_int_val = medium_int_val + ?"
@@ -588,21 +699,19 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDAddExpr             = "id = id + ?"
-	TestAllTypeAliasTinyIntValAddExpr     = "tiny_int_val = tiny_int_val + ?"
-	TestAllTypeAliasSmallIntValAddExpr    = "small_int_val = small_int_val + ?"
-	TestAllTypeAliasMediumIntValAddExpr   = "medium_int_val = medium_int_val + ?"
-	TestAllTypeAliasIntValAddExpr         = "int_val = int_val + ?"
-	TestAllTypeAliasBigIntValAddExpr      = "big_int_val = big_int_val + ?"
-	TestAllTypeAliasDecimalValAddExpr     = "decimal_val = decimal_val + ?"
-	TestAllTypeAliasFloatValAddExpr       = "float_val = float_val + ?"
-	TestAllTypeAliasDoubleValAddExpr      = "double_val = double_val + ?"
-	TestAllTypeAliasYearValAddExpr        = "year_val = year_val + ?"
-	TestAllTypeAliasNullableIntValAddExpr = "nullable_int_val = nullable_int_val + ?"
+	TestAllTypeAliasTinyIntValAddExpr     = "test_all_types_alias.tiny_int_val = test_all_types_alias.tiny_int_val + ?"
+	TestAllTypeAliasSmallIntValAddExpr    = "test_all_types_alias.small_int_val = test_all_types_alias.small_int_val + ?"
+	TestAllTypeAliasMediumIntValAddExpr   = "test_all_types_alias.medium_int_val = test_all_types_alias.medium_int_val + ?"
+	TestAllTypeAliasIntValAddExpr         = "test_all_types_alias.int_val = test_all_types_alias.int_val + ?"
+	TestAllTypeAliasBigIntValAddExpr      = "test_all_types_alias.big_int_val = test_all_types_alias.big_int_val + ?"
+	TestAllTypeAliasDecimalValAddExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val + ?"
+	TestAllTypeAliasFloatValAddExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val + ?"
+	TestAllTypeAliasDoubleValAddExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val + ?"
+	TestAllTypeAliasYearValAddExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val + ?"
+	TestAllTypeAliasNullableIntValAddExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val + ?"
 )
 
 const (
-	TestAllTypeIDSubExpr             = "id = id - ?"
 	TestAllTypeTinyIntValSubExpr     = "tiny_int_val = tiny_int_val - ?"
 	TestAllTypeSmallIntValSubExpr    = "small_int_val = small_int_val - ?"
 	TestAllTypeMediumIntValSubExpr   = "medium_int_val = medium_int_val - ?"
@@ -616,21 +725,19 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDSubExpr             = "id = id - ?"
-	TestAllTypeAliasTinyIntValSubExpr     = "tiny_int_val = tiny_int_val - ?"
-	TestAllTypeAliasSmallIntValSubExpr    = "small_int_val = small_int_val - ?"
-	TestAllTypeAliasMediumIntValSubExpr   = "medium_int_val = medium_int_val - ?"
-	TestAllTypeAliasIntValSubExpr         = "int_val = int_val - ?"
-	TestAllTypeAliasBigIntValSubExpr      = "big_int_val = big_int_val - ?"
-	TestAllTypeAliasDecimalValSubExpr     = "decimal_val = decimal_val - ?"
-	TestAllTypeAliasFloatValSubExpr       = "float_val = float_val - ?"
-	TestAllTypeAliasDoubleValSubExpr      = "double_val = double_val - ?"
-	TestAllTypeAliasYearValSubExpr        = "year_val = year_val - ?"
-	TestAllTypeAliasNullableIntValSubExpr = "nullable_int_val = nullable_int_val - ?"
+	TestAllTypeAliasTinyIntValSubExpr     = "test_all_types_alias.tiny_int_val = test_all_types_alias.tiny_int_val - ?"
+	TestAllTypeAliasSmallIntValSubExpr    = "test_all_types_alias.small_int_val = test_all_types_alias.small_int_val - ?"
+	TestAllTypeAliasMediumIntValSubExpr   = "test_all_types_alias.medium_int_val = test_all_types_alias.medium_int_val - ?"
+	TestAllTypeAliasIntValSubExpr         = "test_all_types_alias.int_val = test_all_types_alias.int_val - ?"
+	TestAllTypeAliasBigIntValSubExpr      = "test_all_types_alias.big_int_val = test_all_types_alias.big_int_val - ?"
+	TestAllTypeAliasDecimalValSubExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val - ?"
+	TestAllTypeAliasFloatValSubExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val - ?"
+	TestAllTypeAliasDoubleValSubExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val - ?"
+	TestAllTypeAliasYearValSubExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val - ?"
+	TestAllTypeAliasNullableIntValSubExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val - ?"
 )
 
 const (
-	TestAllTypeIDAddLeastExpr             = "id = LEAST(id + ?, ?)"
 	TestAllTypeTinyIntValAddLeastExpr     = "tiny_int_val = LEAST(tiny_int_val + ?, ?)"
 	TestAllTypeSmallIntValAddLeastExpr    = "small_int_val = LEAST(small_int_val + ?, ?)"
 	TestAllTypeMediumIntValAddLeastExpr   = "medium_int_val = LEAST(medium_int_val + ?, ?)"
@@ -644,21 +751,19 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDAddLeastExpr             = "id = LEAST(id + ?, ?)"
-	TestAllTypeAliasTinyIntValAddLeastExpr     = "tiny_int_val = LEAST(tiny_int_val + ?, ?)"
-	TestAllTypeAliasSmallIntValAddLeastExpr    = "small_int_val = LEAST(small_int_val + ?, ?)"
-	TestAllTypeAliasMediumIntValAddLeastExpr   = "medium_int_val = LEAST(medium_int_val + ?, ?)"
-	TestAllTypeAliasIntValAddLeastExpr         = "int_val = LEAST(int_val + ?, ?)"
-	TestAllTypeAliasBigIntValAddLeastExpr      = "big_int_val = LEAST(big_int_val + ?, ?)"
-	TestAllTypeAliasDecimalValAddLeastExpr     = "decimal_val = LEAST(decimal_val + ?, ?)"
-	TestAllTypeAliasFloatValAddLeastExpr       = "float_val = LEAST(float_val + ?, ?)"
-	TestAllTypeAliasDoubleValAddLeastExpr      = "double_val = LEAST(double_val + ?, ?)"
-	TestAllTypeAliasYearValAddLeastExpr        = "year_val = LEAST(year_val + ?, ?)"
-	TestAllTypeAliasNullableIntValAddLeastExpr = "nullable_int_val = LEAST(nullable_int_val + ?, ?)"
+	TestAllTypeAliasTinyIntValAddLeastExpr     = "test_all_types_alias.tiny_int_val = LEAST(test_all_types_alias.tiny_int_val + ?, ?)"
+	TestAllTypeAliasSmallIntValAddLeastExpr    = "test_all_types_alias.small_int_val = LEAST(test_all_types_alias.small_int_val + ?, ?)"
+	TestAllTypeAliasMediumIntValAddLeastExpr   = "test_all_types_alias.medium_int_val = LEAST(test_all_types_alias.medium_int_val + ?, ?)"
+	TestAllTypeAliasIntValAddLeastExpr         = "test_all_types_alias.int_val = LEAST(test_all_types_alias.int_val + ?, ?)"
+	TestAllTypeAliasBigIntValAddLeastExpr      = "test_all_types_alias.big_int_val = LEAST(test_all_types_alias.big_int_val + ?, ?)"
+	TestAllTypeAliasDecimalValAddLeastExpr     = "test_all_types_alias.decimal_val = LEAST(test_all_types_alias.decimal_val + ?, ?)"
+	TestAllTypeAliasFloatValAddLeastExpr       = "test_all_types_alias.float_val = LEAST(test_all_types_alias.float_val + ?, ?)"
+	TestAllTypeAliasDoubleValAddLeastExpr      = "test_all_types_alias.double_val = LEAST(test_all_types_alias.double_val + ?, ?)"
+	TestAllTypeAliasYearValAddLeastExpr        = "test_all_types_alias.year_val = LEAST(test_all_types_alias.year_val + ?, ?)"
+	TestAllTypeAliasNullableIntValAddLeastExpr = "test_all_types_alias.nullable_int_val = LEAST(test_all_types_alias.nullable_int_val + ?, ?)"
 )
 
 const (
-	TestAllTypeIDSubGreatestExpr             = "id = GREATEST(id - ?, ?)"
 	TestAllTypeTinyIntValSubGreatestExpr     = "tiny_int_val = GREATEST(tiny_int_val - ?, ?)"
 	TestAllTypeSmallIntValSubGreatestExpr    = "small_int_val = GREATEST(small_int_val - ?, ?)"
 	TestAllTypeMediumIntValSubGreatestExpr   = "medium_int_val = GREATEST(medium_int_val - ?, ?)"
@@ -672,21 +777,19 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDSubGreatestExpr             = "id = GREATEST(id - ?, ?)"
-	TestAllTypeAliasTinyIntValSubGreatestExpr     = "tiny_int_val = GREATEST(tiny_int_val - ?, ?)"
-	TestAllTypeAliasSmallIntValSubGreatestExpr    = "small_int_val = GREATEST(small_int_val - ?, ?)"
-	TestAllTypeAliasMediumIntValSubGreatestExpr   = "medium_int_val = GREATEST(medium_int_val - ?, ?)"
-	TestAllTypeAliasIntValSubGreatestExpr         = "int_val = GREATEST(int_val - ?, ?)"
-	TestAllTypeAliasBigIntValSubGreatestExpr      = "big_int_val = GREATEST(big_int_val - ?, ?)"
-	TestAllTypeAliasDecimalValSubGreatestExpr     = "decimal_val = GREATEST(decimal_val - ?, ?)"
-	TestAllTypeAliasFloatValSubGreatestExpr       = "float_val = GREATEST(float_val - ?, ?)"
-	TestAllTypeAliasDoubleValSubGreatestExpr      = "double_val = GREATEST(double_val - ?, ?)"
-	TestAllTypeAliasYearValSubGreatestExpr        = "year_val = GREATEST(year_val - ?, ?)"
-	TestAllTypeAliasNullableIntValSubGreatestExpr = "nullable_int_val = GREATEST(nullable_int_val - ?, ?)"
+	TestAllTypeAliasTinyIntValSubGreatestExpr     = "test_all_types_alias.tiny_int_val = GREATEST(test_all_types_alias.tiny_int_val - ?, ?)"
+	TestAllTypeAliasSmallIntValSubGreatestExpr    = "test_all_types_alias.small_int_val = GREATEST(test_all_types_alias.small_int_val - ?, ?)"
+	TestAllTypeAliasMediumIntValSubGreatestExpr   = "test_all_types_alias.medium_int_val = GREATEST(test_all_types_alias.medium_int_val - ?, ?)"
+	TestAllTypeAliasIntValSubGreatestExpr         = "test_all_types_alias.int_val = GREATEST(test_all_types_alias.int_val - ?, ?)"
+	TestAllTypeAliasBigIntValSubGreatestExpr      = "test_all_types_alias.big_int_val = GREATEST(test_all_types_alias.big_int_val - ?, ?)"
+	TestAllTypeAliasDecimalValSubGreatestExpr     = "test_all_types_alias.decimal_val = GREATEST(test_all_types_alias.decimal_val - ?, ?)"
+	TestAllTypeAliasFloatValSubGreatestExpr       = "test_all_types_alias.float_val = GREATEST(test_all_types_alias.float_val - ?, ?)"
+	TestAllTypeAliasDoubleValSubGreatestExpr      = "test_all_types_alias.double_val = GREATEST(test_all_types_alias.double_val - ?, ?)"
+	TestAllTypeAliasYearValSubGreatestExpr        = "test_all_types_alias.year_val = GREATEST(test_all_types_alias.year_val - ?, ?)"
+	TestAllTypeAliasNullableIntValSubGreatestExpr = "test_all_types_alias.nullable_int_val = GREATEST(test_all_types_alias.nullable_int_val - ?, ?)"
 )
 
 const (
-	TestAllTypeIDClampExpr             = "id = LEAST(GREATEST(id + ?, ?), ?)"
 	TestAllTypeTinyIntValClampExpr     = "tiny_int_val = LEAST(GREATEST(tiny_int_val + ?, ?), ?)"
 	TestAllTypeSmallIntValClampExpr    = "small_int_val = LEAST(GREATEST(small_int_val + ?, ?), ?)"
 	TestAllTypeMediumIntValClampExpr   = "medium_int_val = LEAST(GREATEST(medium_int_val + ?, ?), ?)"
@@ -700,17 +803,16 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDClampExpr             = "id = LEAST(GREATEST(id + ?, ?), ?)"
-	TestAllTypeAliasTinyIntValClampExpr     = "tiny_int_val = LEAST(GREATEST(tiny_int_val + ?, ?), ?)"
-	TestAllTypeAliasSmallIntValClampExpr    = "small_int_val = LEAST(GREATEST(small_int_val + ?, ?), ?)"
-	TestAllTypeAliasMediumIntValClampExpr   = "medium_int_val = LEAST(GREATEST(medium_int_val + ?, ?), ?)"
-	TestAllTypeAliasIntValClampExpr         = "int_val = LEAST(GREATEST(int_val + ?, ?), ?)"
-	TestAllTypeAliasBigIntValClampExpr      = "big_int_val = LEAST(GREATEST(big_int_val + ?, ?), ?)"
-	TestAllTypeAliasDecimalValClampExpr     = "decimal_val = LEAST(GREATEST(decimal_val + ?, ?), ?)"
-	TestAllTypeAliasFloatValClampExpr       = "float_val = LEAST(GREATEST(float_val + ?, ?), ?)"
-	TestAllTypeAliasDoubleValClampExpr      = "double_val = LEAST(GREATEST(double_val + ?, ?), ?)"
-	TestAllTypeAliasYearValClampExpr        = "year_val = LEAST(GREATEST(year_val + ?, ?), ?)"
-	TestAllTypeAliasNullableIntValClampExpr = "nullable_int_val = LEAST(GREATEST(nullable_int_val + ?, ?), ?)"
+	TestAllTypeAliasTinyIntValClampExpr     = "test_all_types_alias.tiny_int_val = LEAST(GREATEST(test_all_types_alias.tiny_int_val + ?, ?), ?)"
+	TestAllTypeAliasSmallIntValClampExpr    = "test_all_types_alias.small_int_val = LEAST(GREATEST(test_all_types_alias.small_int_val + ?, ?), ?)"
+	TestAllTypeAliasMediumIntValClampExpr   = "test_all_types_alias.medium_int_val = LEAST(GREATEST(test_all_types_alias.medium_int_val + ?, ?), ?)"
+	TestAllTypeAliasIntValClampExpr         = "test_all_types_alias.int_val = LEAST(GREATEST(test_all_types_alias.int_val + ?, ?), ?)"
+	TestAllTypeAliasBigIntValClampExpr      = "test_all_types_alias.big_int_val = LEAST(GREATEST(test_all_types_alias.big_int_val + ?, ?), ?)"
+	TestAllTypeAliasDecimalValClampExpr     = "test_all_types_alias.decimal_val = LEAST(GREATEST(test_all_types_alias.decimal_val + ?, ?), ?)"
+	TestAllTypeAliasFloatValClampExpr       = "test_all_types_alias.float_val = LEAST(GREATEST(test_all_types_alias.float_val + ?, ?), ?)"
+	TestAllTypeAliasDoubleValClampExpr      = "test_all_types_alias.double_val = LEAST(GREATEST(test_all_types_alias.double_val + ?, ?), ?)"
+	TestAllTypeAliasYearValClampExpr        = "test_all_types_alias.year_val = LEAST(GREATEST(test_all_types_alias.year_val + ?, ?), ?)"
+	TestAllTypeAliasNullableIntValClampExpr = "test_all_types_alias.nullable_int_val = LEAST(GREATEST(test_all_types_alias.nullable_int_val + ?, ?), ?)"
 )
 
 const (
@@ -1043,6 +1145,146 @@ const (
 	TestAllTypeAliasCreatedAtNotBetween      = "test_all_types_alias.created_at NOT BETWEEN ? AND ?"
 	TestAllTypeAliasUpdatedAtNotBetween      = "test_all_types_alias.updated_at NOT BETWEEN ? AND ?"
 	TestAllTypeAliasDeletedAtNotBetween      = "test_all_types_alias.deleted_at NOT BETWEEN ? AND ?"
+)
+
+const (
+	TestAllTypeDateValDateExpr      = "DATE(date_val)"
+	TestAllTypeTimeValDateExpr      = "DATE(time_val)"
+	TestAllTypeDatetimeValDateExpr  = "DATE(datetime_val)"
+	TestAllTypeTimestampValDateExpr = "DATE(timestamp_val)"
+	TestAllTypeCreatedAtDateExpr    = "DATE(created_at)"
+	TestAllTypeUpdatedAtDateExpr    = "DATE(updated_at)"
+	TestAllTypeDeletedAtDateExpr    = "DATE(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValDateExpr      = "DATE(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValDateExpr      = "DATE(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValDateExpr  = "DATE(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValDateExpr = "DATE(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtDateExpr    = "DATE(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtDateExpr    = "DATE(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtDateExpr    = "DATE(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValYearExpr      = "YEAR(date_val)"
+	TestAllTypeTimeValYearExpr      = "YEAR(time_val)"
+	TestAllTypeDatetimeValYearExpr  = "YEAR(datetime_val)"
+	TestAllTypeTimestampValYearExpr = "YEAR(timestamp_val)"
+	TestAllTypeCreatedAtYearExpr    = "YEAR(created_at)"
+	TestAllTypeUpdatedAtYearExpr    = "YEAR(updated_at)"
+	TestAllTypeDeletedAtYearExpr    = "YEAR(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValYearExpr      = "YEAR(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValYearExpr      = "YEAR(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValYearExpr  = "YEAR(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValYearExpr = "YEAR(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtYearExpr    = "YEAR(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtYearExpr    = "YEAR(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtYearExpr    = "YEAR(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValMonthExpr      = "MONTH(date_val)"
+	TestAllTypeTimeValMonthExpr      = "MONTH(time_val)"
+	TestAllTypeDatetimeValMonthExpr  = "MONTH(datetime_val)"
+	TestAllTypeTimestampValMonthExpr = "MONTH(timestamp_val)"
+	TestAllTypeCreatedAtMonthExpr    = "MONTH(created_at)"
+	TestAllTypeUpdatedAtMonthExpr    = "MONTH(updated_at)"
+	TestAllTypeDeletedAtMonthExpr    = "MONTH(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValMonthExpr      = "MONTH(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValMonthExpr      = "MONTH(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValMonthExpr  = "MONTH(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValMonthExpr = "MONTH(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtMonthExpr    = "MONTH(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtMonthExpr    = "MONTH(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtMonthExpr    = "MONTH(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValDayExpr      = "DAY(date_val)"
+	TestAllTypeTimeValDayExpr      = "DAY(time_val)"
+	TestAllTypeDatetimeValDayExpr  = "DAY(datetime_val)"
+	TestAllTypeTimestampValDayExpr = "DAY(timestamp_val)"
+	TestAllTypeCreatedAtDayExpr    = "DAY(created_at)"
+	TestAllTypeUpdatedAtDayExpr    = "DAY(updated_at)"
+	TestAllTypeDeletedAtDayExpr    = "DAY(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValDayExpr      = "DAY(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValDayExpr      = "DAY(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValDayExpr  = "DAY(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValDayExpr = "DAY(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtDayExpr    = "DAY(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtDayExpr    = "DAY(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtDayExpr    = "DAY(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValHourExpr      = "HOUR(date_val)"
+	TestAllTypeTimeValHourExpr      = "HOUR(time_val)"
+	TestAllTypeDatetimeValHourExpr  = "HOUR(datetime_val)"
+	TestAllTypeTimestampValHourExpr = "HOUR(timestamp_val)"
+	TestAllTypeCreatedAtHourExpr    = "HOUR(created_at)"
+	TestAllTypeUpdatedAtHourExpr    = "HOUR(updated_at)"
+	TestAllTypeDeletedAtHourExpr    = "HOUR(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValHourExpr      = "HOUR(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValHourExpr      = "HOUR(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValHourExpr  = "HOUR(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValHourExpr = "HOUR(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtHourExpr    = "HOUR(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtHourExpr    = "HOUR(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtHourExpr    = "HOUR(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValMinuteExpr      = "MINUTE(date_val)"
+	TestAllTypeTimeValMinuteExpr      = "MINUTE(time_val)"
+	TestAllTypeDatetimeValMinuteExpr  = "MINUTE(datetime_val)"
+	TestAllTypeTimestampValMinuteExpr = "MINUTE(timestamp_val)"
+	TestAllTypeCreatedAtMinuteExpr    = "MINUTE(created_at)"
+	TestAllTypeUpdatedAtMinuteExpr    = "MINUTE(updated_at)"
+	TestAllTypeDeletedAtMinuteExpr    = "MINUTE(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValMinuteExpr      = "MINUTE(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValMinuteExpr      = "MINUTE(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValMinuteExpr  = "MINUTE(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValMinuteExpr = "MINUTE(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtMinuteExpr    = "MINUTE(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtMinuteExpr    = "MINUTE(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtMinuteExpr    = "MINUTE(test_all_types_alias.deleted_at)"
+)
+
+const (
+	TestAllTypeDateValSecondExpr      = "SECOND(date_val)"
+	TestAllTypeTimeValSecondExpr      = "SECOND(time_val)"
+	TestAllTypeDatetimeValSecondExpr  = "SECOND(datetime_val)"
+	TestAllTypeTimestampValSecondExpr = "SECOND(timestamp_val)"
+	TestAllTypeCreatedAtSecondExpr    = "SECOND(created_at)"
+	TestAllTypeUpdatedAtSecondExpr    = "SECOND(updated_at)"
+	TestAllTypeDeletedAtSecondExpr    = "SECOND(deleted_at)"
+)
+
+const (
+	TestAllTypeAliasDateValSecondExpr      = "SECOND(test_all_types_alias.date_val)"
+	TestAllTypeAliasTimeValSecondExpr      = "SECOND(test_all_types_alias.time_val)"
+	TestAllTypeAliasDatetimeValSecondExpr  = "SECOND(test_all_types_alias.datetime_val)"
+	TestAllTypeAliasTimestampValSecondExpr = "SECOND(test_all_types_alias.timestamp_val)"
+	TestAllTypeAliasCreatedAtSecondExpr    = "SECOND(test_all_types_alias.created_at)"
+	TestAllTypeAliasUpdatedAtSecondExpr    = "SECOND(test_all_types_alias.updated_at)"
+	TestAllTypeAliasDeletedAtSecondExpr    = "SECOND(test_all_types_alias.deleted_at)"
 )
 
 const (

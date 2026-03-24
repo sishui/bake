@@ -223,69 +223,103 @@ const (
 )
 
 const (
-	PostAliasIDSUMExpr     = "SUM(id)"
-	PostAliasUserIDSUMExpr = "SUM(user_id)"
-	PostAliasStatusSUMExpr = "SUM(status)"
+	PostAliasIDSUMExpr     = "SUM(posts_alias.id)"
+	PostAliasUserIDSUMExpr = "SUM(posts_alias.user_id)"
+	PostAliasStatusSUMExpr = "SUM(posts_alias.status)"
 )
 
 const (
-	PostIDAddExpr     = "id = id + ?"
+	PostIDAVGExpr     = "AVG(id)"
+	PostUserIDAVGExpr = "AVG(user_id)"
+	PostStatusAVGExpr = "AVG(status)"
+)
+
+const (
+	PostAliasIDAVGExpr     = "AVG(posts_alias.id)"
+	PostAliasUserIDAVGExpr = "AVG(posts_alias.user_id)"
+	PostAliasStatusAVGExpr = "AVG(posts_alias.status)"
+)
+
+const (
+	PostIDMINExpr        = "MIN(id)"
+	PostUserIDMINExpr    = "MIN(user_id)"
+	PostStatusMINExpr    = "MIN(status)"
+	PostCreatedAtMINExpr = "MIN(created_at)"
+	PostUpdatedAtMINExpr = "MIN(updated_at)"
+)
+
+const (
+	PostAliasIDMINExpr        = "MIN(posts_alias.id)"
+	PostAliasUserIDMINExpr    = "MIN(posts_alias.user_id)"
+	PostAliasStatusMINExpr    = "MIN(posts_alias.status)"
+	PostAliasCreatedAtMINExpr = "MIN(posts_alias.created_at)"
+	PostAliasUpdatedAtMINExpr = "MIN(posts_alias.updated_at)"
+)
+
+const (
+	PostIDMAXExpr        = "MAX(id)"
+	PostUserIDMAXExpr    = "MAX(user_id)"
+	PostStatusMAXExpr    = "MAX(status)"
+	PostCreatedAtMAXExpr = "MAX(created_at)"
+	PostUpdatedAtMAXExpr = "MAX(updated_at)"
+)
+
+const (
+	PostAliasIDMAXExpr        = "MAX(posts_alias.id)"
+	PostAliasUserIDMAXExpr    = "MAX(posts_alias.user_id)"
+	PostAliasStatusMAXExpr    = "MAX(posts_alias.status)"
+	PostAliasCreatedAtMAXExpr = "MAX(posts_alias.created_at)"
+	PostAliasUpdatedAtMAXExpr = "MAX(posts_alias.updated_at)"
+)
+
+const (
 	PostUserIDAddExpr = "user_id = user_id + ?"
 	PostStatusAddExpr = "status = status + ?"
 )
 
 const (
-	PostAliasIDAddExpr     = "id = id + ?"
-	PostAliasUserIDAddExpr = "user_id = user_id + ?"
-	PostAliasStatusAddExpr = "status = status + ?"
+	PostAliasUserIDAddExpr = "posts_alias.user_id = posts_alias.user_id + ?"
+	PostAliasStatusAddExpr = "posts_alias.status = posts_alias.status + ?"
 )
 
 const (
-	PostIDSubExpr     = "id = id - ?"
 	PostUserIDSubExpr = "user_id = user_id - ?"
 	PostStatusSubExpr = "status = status - ?"
 )
 
 const (
-	PostAliasIDSubExpr     = "id = id - ?"
-	PostAliasUserIDSubExpr = "user_id = user_id - ?"
-	PostAliasStatusSubExpr = "status = status - ?"
+	PostAliasUserIDSubExpr = "posts_alias.user_id = posts_alias.user_id - ?"
+	PostAliasStatusSubExpr = "posts_alias.status = posts_alias.status - ?"
 )
 
 const (
-	PostIDAddLeastExpr     = "id = LEAST(id + ?, ?)"
 	PostUserIDAddLeastExpr = "user_id = LEAST(user_id + ?, ?)"
 	PostStatusAddLeastExpr = "status = LEAST(status + ?, ?)"
 )
 
 const (
-	PostAliasIDAddLeastExpr     = "id = LEAST(id + ?, ?)"
-	PostAliasUserIDAddLeastExpr = "user_id = LEAST(user_id + ?, ?)"
-	PostAliasStatusAddLeastExpr = "status = LEAST(status + ?, ?)"
+	PostAliasUserIDAddLeastExpr = "posts_alias.user_id = LEAST(posts_alias.user_id + ?, ?)"
+	PostAliasStatusAddLeastExpr = "posts_alias.status = LEAST(posts_alias.status + ?, ?)"
 )
 
 const (
-	PostIDSubGreatestExpr     = "id = GREATEST(id - ?, ?)"
 	PostUserIDSubGreatestExpr = "user_id = GREATEST(user_id - ?, ?)"
 	PostStatusSubGreatestExpr = "status = GREATEST(status - ?, ?)"
 )
 
 const (
-	PostAliasIDSubGreatestExpr     = "id = GREATEST(id - ?, ?)"
-	PostAliasUserIDSubGreatestExpr = "user_id = GREATEST(user_id - ?, ?)"
-	PostAliasStatusSubGreatestExpr = "status = GREATEST(status - ?, ?)"
+	PostAliasUserIDSubGreatestExpr = "posts_alias.user_id = GREATEST(posts_alias.user_id - ?, ?)"
+	PostAliasStatusSubGreatestExpr = "posts_alias.status = GREATEST(posts_alias.status - ?, ?)"
 )
 
 const (
-	PostIDClampExpr     = "id = LEAST(GREATEST(id + ?, ?), ?)"
 	PostUserIDClampExpr = "user_id = LEAST(GREATEST(user_id + ?, ?), ?)"
 	PostStatusClampExpr = "status = LEAST(GREATEST(status + ?, ?), ?)"
 )
 
 const (
-	PostAliasIDClampExpr     = "id = LEAST(GREATEST(id + ?, ?), ?)"
-	PostAliasUserIDClampExpr = "user_id = LEAST(GREATEST(user_id + ?, ?), ?)"
-	PostAliasStatusClampExpr = "status = LEAST(GREATEST(status + ?, ?), ?)"
+	PostAliasUserIDClampExpr = "posts_alias.user_id = LEAST(GREATEST(posts_alias.user_id + ?, ?), ?)"
+	PostAliasStatusClampExpr = "posts_alias.status = LEAST(GREATEST(posts_alias.status + ?, ?), ?)"
 )
 
 const (
@@ -374,6 +408,76 @@ const (
 	PostAliasStatusNotBetween    = "posts_alias.status NOT BETWEEN ? AND ?"
 	PostAliasCreatedAtNotBetween = "posts_alias.created_at NOT BETWEEN ? AND ?"
 	PostAliasUpdatedAtNotBetween = "posts_alias.updated_at NOT BETWEEN ? AND ?"
+)
+
+const (
+	PostCreatedAtDateExpr = "DATE(created_at)"
+	PostUpdatedAtDateExpr = "DATE(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtDateExpr = "DATE(posts_alias.created_at)"
+	PostAliasUpdatedAtDateExpr = "DATE(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtYearExpr = "YEAR(created_at)"
+	PostUpdatedAtYearExpr = "YEAR(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtYearExpr = "YEAR(posts_alias.created_at)"
+	PostAliasUpdatedAtYearExpr = "YEAR(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtMonthExpr = "MONTH(created_at)"
+	PostUpdatedAtMonthExpr = "MONTH(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtMonthExpr = "MONTH(posts_alias.created_at)"
+	PostAliasUpdatedAtMonthExpr = "MONTH(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtDayExpr = "DAY(created_at)"
+	PostUpdatedAtDayExpr = "DAY(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtDayExpr = "DAY(posts_alias.created_at)"
+	PostAliasUpdatedAtDayExpr = "DAY(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtHourExpr = "HOUR(created_at)"
+	PostUpdatedAtHourExpr = "HOUR(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtHourExpr = "HOUR(posts_alias.created_at)"
+	PostAliasUpdatedAtHourExpr = "HOUR(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtMinuteExpr = "MINUTE(created_at)"
+	PostUpdatedAtMinuteExpr = "MINUTE(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtMinuteExpr = "MINUTE(posts_alias.created_at)"
+	PostAliasUpdatedAtMinuteExpr = "MINUTE(posts_alias.updated_at)"
+)
+
+const (
+	PostCreatedAtSecondExpr = "SECOND(created_at)"
+	PostUpdatedAtSecondExpr = "SECOND(updated_at)"
+)
+
+const (
+	PostAliasCreatedAtSecondExpr = "SECOND(posts_alias.created_at)"
+	PostAliasUpdatedAtSecondExpr = "SECOND(posts_alias.updated_at)"
 )
 
 const (
