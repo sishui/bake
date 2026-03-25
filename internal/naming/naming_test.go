@@ -162,6 +162,36 @@ func TestSnakeCased(t *testing.T) {
 			args: args{s: "word_WORD"},
 			want: "word_word",
 		},
+		{
+			name: "Should convert SimpleHTTPServer to simple_http_server",
+			args: args{s: "SimpleHTTPServer"},
+			want: "simple_http_server",
+		},
+		{
+			name: "Should convert HTTPServer to http_server",
+			args: args{s: "HTTPServer"},
+			want: "http_server",
+		},
+		{
+			name: "Should convert XMLParser to xml_parser",
+			args: args{s: "XMLParser"},
+			want: "xml_parser",
+		},
+		{
+			name: "Should convert APIResponse to api_response",
+			args: args{s: "APIResponse"},
+			want: "api_response",
+		},
+		{
+			name: "Should convert UserID to user_id",
+			args: args{s: "UserID"},
+			want: "user_id",
+		},
+		{
+			name: "Should convert getHTTPResponse to get_http_response",
+			args: args{s: "getHTTPResponse"},
+			want: "get_http_response",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

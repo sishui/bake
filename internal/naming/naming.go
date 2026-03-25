@@ -64,11 +64,15 @@ func ToSnakeCase(s string) string {
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if IsASCIIUpper(c) {
-			if i > 0 && i+1 < len(s) && (IsASCIILower(s[i-1]) || IsASCIILower(s[i+1])) {
-				r = append(r, '_', ToASCIILower(c))
-			} else {
-				r = append(r, ToASCIILower(c))
+			// Insert underscore before a new word boundary:
+			// 1. Upper after lower: "aA" -> "a_a"
+			// 2. Upper before lower at end of upper run: "HTTPServer" -> "http_server"
+			needUnderscore := i > 0 && (IsASCIILower(s[i-1]) ||
+				(i+1 < len(s) && IsASCIILower(s[i+1]) && IsASCIIUpper(s[i-1])))
+			if needUnderscore {
+				r = append(r, '_')
 			}
+			r = append(r, ToASCIILower(c))
 		} else {
 			r = append(r, c)
 		}
