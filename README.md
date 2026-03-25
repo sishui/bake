@@ -6,12 +6,24 @@ A database model code generator for Go. Generate ORM models from database schema
 
 - Supports MySQL and PostgreSQL databases
 - Automatic Go type mapping for database columns
-- Automatic foreign key detection and relation tag generation
+- Automatic foreign key detection and relation generation (belongs-to, has-many)
 - Customizable templates
 - Custom field names, types, comments, and tags
-- Table relationship support (has-many, has-one)
 - Naming conventions (snake_case, camelCase)
 - Timezone support for created_at, updated_at, deleted_at hooks
+
+### Generated Expressions
+
+| Category | Expressions | Description |
+|----------|-------------|-------------|
+| Comparison | `Eq`, `Neq`, `Gt`, `Gte`, `Lt`, `Lte` | Basic comparisons |
+| String | `Like`, `LikePrefix`, `LikeSuffix`, `LikeContain` | Pattern matching |
+| Numeric | `In`, `NotIn`, `Between`, `NotBetween` | Range operations |
+| Aggregate | `SUM`, `AVG`, `MIN`, `MAX` | Aggregate functions |
+| Arithmetic | `Add`, `Sub`, `AddLeast`, `SubGreatest`, `Clamp` | Arithmetic operations |
+| Time | `Date`, `Year`, `Month`, `Day`, `Hour`, `Minute`, `Second` | Time extraction |
+| Nullable | `IsNull`, `IsNotNull`, `Coalesce` | NULL handling |
+| Ordering | `Asc`, `Desc` | Sort order |
 
 ## Installation
 
@@ -136,6 +148,8 @@ type Model struct {
     MaxOrderedLength   int        // max ordered field length
     MaxEquatableLength int        // max equatable field length
     MaxRelationLength  int        // max relation field length
+    MaxArithmeticLength int       // max arithmetic field length
+    MaxTimeLength      int        // max time field length
 }
 
 type Field struct {
@@ -208,20 +222,31 @@ ALTER TABLE posts ADD CONSTRAINT fk_posts_user_id
 
 bake will automatically:
 
-1. Set `IsRelation = true` on the field
-2. Generate the bun relation tag: `bun:"user_id,rel:belongs-to,join:user_id=id"`
+1. On `posts` table: Generate `User *User` field with `rel:belongs-to`
+2. On `users` table: Generate `Posts []*Post` field with `rel:has-many`
 
 ### Generated Example
 
 For the `posts` table with `user_id` foreign key:
 
 ```go
+// Post struct
 type Post struct {
     bun.BaseModel `bun:"table:posts"`
     
-    ID        int32     `bun:"id,pk,autoincrement"`
-    UserID    int64     `bun:"user_id,rel:belongs-to,join:user_id=id" json:"user_id,omitempty"`
-    Title     string    `bun:"title,notnull" json:"title,omitempty"`
+    ID        int64     `bun:"id,pk,autoincrement"`
+    UserID    int64     `bun:"user_id,notnull"`
+    Title     string    `bun:"title,notnull"`
+    User      *User     `bun:"user,rel:belongs-to,join:user_id=id"`
+}
+
+// User struct (auto-generated reverse relation)
+type User struct {
+    bun.BaseModel `bun:"table:users"`
+    
+    ID    int64     `bun:"id,pk,autoincrement"`
+    Name  string    `bun:"name,notnull"`
+    Posts []*Post   `bun:"posts,rel:has-many,join:id=user_id"`
 }
 ```
 
