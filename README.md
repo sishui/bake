@@ -140,29 +140,29 @@ You can use custom templates. The following data is passed to templates:
 ```go
 type Model struct {
     Version                   string     // bake version
-    Module                    string     // module path
-    Package                   string     // package name
-    Imports                   [][]string // grouped imports
-    BunModel                  string     // bun.BaseModel
-    Table                     string     // table name
-    Model                     string     // model struct name
-    Alias                     string     // model alias
-    Comments                  []string   // model comments
-    Fields                    []*Field   // model fields
-    Timezone                  string     // timezone
-    CreatedAtType             string     // created_at field type
-    UpdatedAtType             string     // updated_at field type
-    DeletedAtType             string     // deleted_at field type
-    MaxFieldLength            int        // max field name length
-    MaxNullableLength         int        // max nullable field length
-    MaxStringLength           int        // max string field length
-    MaxNumericLength          int        // max numeric field length
-    MaxOrderedLength          int        // max ordered field length
-    MaxOrderedNonStringLength int        // max ordered non-string length (numeric + time)
-    MaxEquatableLength        int        // max equatable field length
-    MaxRelationLength         int        // max relation field length
-    MaxArithmeticLength       int        // max arithmetic field length
-    MaxTimeLength              int       // max time field length
+	Module                    string     // module path
+	Package                   string     // package name
+	Imports                   [][]string // imports
+	BunModel                  string     // bun.BaseModel
+	Table                     string     // table name
+	Model                     string     // model name
+	Alias                     string     // model alias
+	Comments                  []string   // model comments
+	Fields                    []*Field   // fields
+	Timezone                  string     // timezone
+	CreatedAtType             string     // created_at type
+	UpdatedAtType             string     // updated_at type
+	DeletedAtType             string     // deleted_at type
+	MaxFieldLength            int        // max field length
+	MaxNullableLength         int        // max nullable length
+	MaxStringLength           int        // max string length
+	MaxNumericLength          int        // max numeric length
+	MaxOrderedLength          int        // max ordered length
+	MaxOrderedNonStringLength int        // max ordered non-string length (numeric + time)
+	MaxEquatableLength        int        // max equatable length
+	MaxRelationLength         int        // max relation length
+	MaxArithmeticLength       int        // max arithmetic length (non-pk numeric)
+	MaxTimeLength             int        // max time length
 }
 
 type Field struct {
