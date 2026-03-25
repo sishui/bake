@@ -155,9 +155,6 @@ func (c *CustomField) Validate() error {
 	if c.Type == "" {
 		return errors.New("custom.fields.type is required")
 	}
-	if err := validateIdent(c.Type); err != nil {
-		return fmt.Errorf("custom.fields.type %w", err)
-	}
 	return nil
 }
 

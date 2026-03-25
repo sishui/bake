@@ -259,6 +259,38 @@ func TestCustomFieldValidate(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "empty type",
+			field: &CustomField{
+				Name: "CustomField",
+				Type: "CustomField",
+			},
+			wantErr: false,
+		},
+		{
+			name: "compound type decimal.Decimal",
+			field: &CustomField{
+				Name: "Amount",
+				Type: "decimal.Decimal",
+			},
+			wantErr: false,
+		},
+		{
+			name: "slice type []string",
+			field: &CustomField{
+				Name: "Tags",
+				Type: "[]string",
+			},
+			wantErr: false,
+		},
+		{
+			name: "pointer type *User",
+			field: &CustomField{
+				Name: "User",
+				Type: "*User",
+			},
+			wantErr: false,
+		},
 	}
 
 	for _, tt := range tests {
