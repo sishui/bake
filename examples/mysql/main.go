@@ -65,14 +65,31 @@ func main() {
 	for _, post := range posts {
 		fmt.Println(post.ID, post.Title, post.User.ID, post.User.Name)
 	}
-	var months []int
-	err = db.NewSelect().Model(&posts).
-		ColumnExpr(model.UserCreatedAtMonthExpr).
-		Scan(ctx, &months)
+	date, err := selectDate(ctx, db, model.UserTableName, model.UserCreatedAtDateExpr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(date)
+	years, err := selectYMD(ctx, db, model.UserTableName, model.UserCreatedAtYearExpr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(years)
+	months, err := selectYMD(ctx, db, model.UserTableName, model.UserCreatedAtMonthExpr)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(months)
+	days, err := selectYMD(ctx, db, model.UserTableName, model.UserCreatedAtDayExpr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(days)
+	hours, err := selectYMD(ctx, db, model.UserTableName, model.UserCreatedAtHourExpr)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(hours)
 	fmt.Println("done")
 }
 
@@ -94,4 +111,28 @@ func newDB(ctx context.Context) *bun.DB {
 	db.SetConnMaxLifetime(time.Minute * 3)
 	client = client.WithQueryHook(bundebug.NewQueryHook(bundebug.WithEnabled(true), bundebug.WithVerbose(true)))
 	return client
+}
+
+func selectYMD(ctx context.Context, db *bun.DB, table string, expr string) ([]int, error) {
+	var n []int
+	err := db.NewSelect().
+		Table(table).
+		ColumnExpr(expr).
+		Scan(ctx, &n)
+	if err != nil {
+		return nil, err
+	}
+	return n, err
+}
+
+func selectDate(ctx context.Context, db *bun.DB, table string, expr string) ([]time.Time, error) {
+	var n []time.Time
+	err := db.NewSelect().
+		Table(table).
+		ColumnExpr(expr).
+		Scan(ctx, &n)
+	if err != nil {
+		return nil, err
+	}
+	return n, err
 }
