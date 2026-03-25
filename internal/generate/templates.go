@@ -90,6 +90,8 @@ func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir stri
 	}()
 	err = tmpl.Execute(file, data)
 	if err != nil {
+		file.Close()
+		os.Remove(fullPath)
 		return "", err
 	}
 	err = file.Sync()

@@ -196,7 +196,7 @@ func cleanDir(dir string) error {
 			return err
 		}
 		if strings.HasSuffix(path, "gen.go") || strings.HasSuffix(path, "gen_test.go") {
-			return os.RemoveAll(path)
+			return os.Remove(path)
 		}
 		return nil
 	})
