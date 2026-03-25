@@ -129,7 +129,7 @@ func newBunTag(c *schema.Column) *Tag {
 		if strings.Contains(columnDefault, `current_timestamp`) {
 			options = append(options, `default:`+columnDefault)
 		} else {
-			options = append(options, `default:'`+c.Default+`'`)
+			options = append(options, `default:'`+strings.ReplaceAll(c.Default, "'", "\\'")+`'`)
 		}
 	}
 	if c.Name == "deleted_at" {
