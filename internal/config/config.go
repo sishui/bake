@@ -245,6 +245,7 @@ func Parse(args Args) (*Config, error) {
 		}
 	} else {
 		if args.DSN != "" {
+			config.DB[0].Driver = detectDriver(args.DSN)
 			config.DB[0].DSN = args.DSN
 		}
 	}
