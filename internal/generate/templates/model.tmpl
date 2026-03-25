@@ -475,6 +475,23 @@ const (
 	{{- end}}
 {{- end}}
 )
+
+// COALESCE expressions (COALESCE(column, ?))
+const (
+{{- range $field := .Fields}}
+	{{- if $field.IsNullable }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "CoalesceExpr" $maxNullableLength }} = "COALESCE({{$field.ColumnName}}, ?)"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if $field.IsNullable }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "CoalesceExpr" $maxNullableLength }} = "COALESCE({{$alias}}.{{$field.ColumnName}}, ?)"
+	{{- end}}
+{{- end}}
+)
 {{- end}}
 
 {{- if gt $maxOrderedLength 0 -}}
