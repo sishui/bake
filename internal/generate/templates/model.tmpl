@@ -555,7 +555,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "YearExpr" $maxTimeLength }} = "YEAR({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "YearExpr" $maxTimeLength }} = "EXTRACT(YEAR FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -563,7 +563,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "YearExpr" $maxTimeLength }} = "YEAR({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "YearExpr" $maxTimeLength }} = "EXTRACT(YEAR FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -571,7 +571,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MonthExpr" $maxTimeLength }} = "MONTH({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MonthExpr" $maxTimeLength }} = "EXTRACT(MONTH FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -579,7 +579,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MonthExpr" $maxTimeLength }} = "MONTH({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MonthExpr" $maxTimeLength }} = "EXTRACT(MONTH FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -587,7 +587,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "DayExpr" $maxTimeLength }} = "DAY({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "DayExpr" $maxTimeLength }} = "EXTRACT(DAY FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -595,7 +595,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DayExpr" $maxTimeLength }} = "DAY({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DayExpr" $maxTimeLength }} = "EXTRACT(DAY FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -603,7 +603,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "HourExpr" $maxTimeLength }} = "HOUR({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "HourExpr" $maxTimeLength }} = "EXTRACT(HOUR FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -611,7 +611,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "HourExpr" $maxTimeLength }} = "HOUR({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "HourExpr" $maxTimeLength }} = "EXTRACT(HOUR FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -619,7 +619,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "MINUTE({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "EXTRACT(MINUTE FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -627,7 +627,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "MINUTE({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "EXTRACT(MINUTE FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -635,7 +635,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "SECOND({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "EXTRACT(SECOND FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -643,7 +643,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "SECOND({{$alias}}.{{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "EXTRACT(SECOND FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
