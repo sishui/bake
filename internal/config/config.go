@@ -31,14 +31,22 @@ type Config struct {
 }
 
 func (c *Config) Validate() error {
-	err := c.Output.Validate()
-	if err != nil {
+	if err := c.Template.Validate(); err != nil {
 		return err
 	}
 
+	if err := c.Output.Validate(); err != nil {
+		return err
+	}
+
+	for _, db := range c.DB {
+		if err := db.Validate(); err != nil {
+			return err
+		}
+	}
+
 	for _, o := range c.Objects {
-		err = o.Validate()
-		if err != nil {
+		if err := o.Validate(); err != nil {
 			return err
 		}
 	}
@@ -248,6 +256,16 @@ func Parse(args Args) (*Config, error) {
 	} else {
 		if args.DSN != "" {
 			config.DB[0].DSN = args.DSN
+		}
+	}
+	if config.Template == nil {
+		config.Template = &Template{
+			Model: "model",
+		}
+	}
+	if config.Log == nil {
+		config.Log = &Log{
+			Level: "info",
 		}
 	}
 	if args.Verbose {
