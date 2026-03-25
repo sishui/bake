@@ -266,7 +266,7 @@ func parse(filename string) (*Config, error) {
 	if env != "" && index != -1 {
 		actualFileName = fmt.Sprintf("%s.%s%s", filename[:index], env, filename[index:])
 	}
-	if _, err := os.Stat(actualFileName); !os.IsNotExist(err) {
+	if _, err := os.Stat(actualFileName); os.IsNotExist(err) {
 		actualFileName = filename
 	}
 	v := viper.New()
