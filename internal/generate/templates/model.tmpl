@@ -685,6 +685,7 @@ const (
 {{- end}}
 type {{.Model}} struct {
 	{{ .BunModel }} `bun:"table:{{.Table}},alias:{{.Alias}}"`
+	{{- "\n"}}
 	{{- range $field := .Fields}}
 	{{- if gt (len $field.Comments) 1}}
 	{{- range $comment := $field.Comments}}

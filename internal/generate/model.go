@@ -45,10 +45,10 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 		Comments: naming.SplitCommentLines(t.Comment),
 		Timezone: cfg.Timezone,
 	}
-	fields := make([]*Field, 0, len(t.Columns)+1)
+
 	customTable := db.Customs[t.Name]
 	m.applyCustom(customTable)
-	fields = append(fields, &Field{Name: m.BunModel})
+	fields := make([]*Field, 0, len(t.Columns)*2)
 	for _, c := range t.Columns {
 		f, err := NewField(c, customTable, db.Driver, initialisms)
 		if err != nil {
@@ -65,7 +65,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	}
 	fields = append(fields, newCustomFields(customTable, columns)...)
 	alignFields(groupFields(fields))
-	m.Fields = fields[1:]
+	m.Fields = fields
 	m.init()
 	return m, nil
 }
@@ -125,7 +125,6 @@ func (m *Model) init() {
 	}
 
 	m.Imports = groupImports(m.Package, imports...)
-	m.BunModel = naming.Align(m.BunModel, m.MaxFieldLength)
 }
 
 func (m *Model) applyCustom(customTable *config.CustomTable) {
@@ -168,9 +167,6 @@ func alignFields(groups [][]*Field) {
 		for j, field := range group {
 			group[j].AlignedName = naming.Align(field.Name, maxName)
 			group[j].AlignedType = naming.Align(field.Type, maxType)
-			if len(field.Comments) > 1 {
-				continue
-			}
 			group[j].AlignedTag = naming.Align(field.Tag, maxTag)
 		}
 	}
