@@ -68,23 +68,22 @@ ORDER BY
 
 const pgForeignKeyQuery = `
 SELECT
-  tc.constraint_name,
-  kcu.table_name,
-  kcu.column_name,
-  ccu.table_name AS referenced_table_name,
-  ccu.column_name AS referenced_column_name
-FROM
-  information_schema.table_constraints AS tc
-  JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name
-  AND tc.table_schema = kcu.table_schema
-  JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name
-  AND ccu.table_schema = tc.table_schema
-WHERE
-  tc.constraint_type = 'FOREIGN KEY'
-  AND tc.table_schema = $1
-ORDER BY
-  tc.constraint_name,
-  kcu.ordinal_position;
+  con.conname AS constraint_name,
+  rel.relname AS table_name,
+  att.attname AS column_name,
+  frel.relname AS referenced_table_name,
+  fatt.attname AS referenced_column_name
+FROM pg_constraint con
+JOIN pg_class rel ON rel.oid = con.conrelid
+JOIN pg_class frel ON frel.oid = con.confrelid
+JOIN unnest(con.conkey) WITH ORDINALITY AS cols(attnum, ord) ON TRUE
+JOIN pg_attribute att ON att.attrelid = rel.oid AND att.attnum = cols.attnum
+JOIN unnest(con.confkey) WITH ORDINALITY AS fcols(attnum, ord) ON cols.ord = fcols.ord
+JOIN pg_attribute fatt ON fatt.attrelid = frel.oid AND fatt.attnum = fcols.attnum
+WHERE con.contype = 'f'
+  AND rel.relnamespace = (
+    SELECT oid FROM pg_namespace WHERE nspname = $1
+  );
 `
 
 type postgres struct {
