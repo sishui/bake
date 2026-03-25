@@ -232,7 +232,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeSuffix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE ?%"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeSuffix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE %?"
 	{{- end}}
 {{- end}}
 )
