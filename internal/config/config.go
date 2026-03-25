@@ -146,15 +146,12 @@ type CustomField struct {
 }
 
 func (c *CustomField) Validate() error {
-	if c.Name == "" {
-		return errors.New("custom.fields.name is required")
+	if c.Name != "" {
+		if err := validateIdent(c.Name); err != nil {
+			return fmt.Errorf("custom.fields.name %w", err)
+		}
 	}
-	if err := validateIdent(c.Name); err != nil {
-		return fmt.Errorf("custom.fields.name %w", err)
-	}
-	if c.Type == "" {
-		return errors.New("custom.fields.type is required")
-	}
+
 	return nil
 }
 
@@ -200,12 +197,6 @@ type CustomTable struct {
 }
 
 func (c *CustomTable) Validate() error {
-	if c.Name == "" {
-		return errors.New("custom.table.name is required")
-	}
-	if len(c.Fields) == 0 {
-		return errors.New("custom.table.fields is required")
-	}
 	for _, field := range c.Fields {
 		if err := field.Validate(); err != nil {
 			return err

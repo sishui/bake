@@ -233,7 +233,7 @@ func TestCustomFieldValidate(t *testing.T) {
 				Name: "",
 				Type: "string",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "empty type",
@@ -241,7 +241,7 @@ func TestCustomFieldValidate(t *testing.T) {
 				Name: "CustomField",
 				Type: "",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "invalid name (number start)",
