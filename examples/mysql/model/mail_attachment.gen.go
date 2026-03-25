@@ -480,13 +480,14 @@ const (
 // user email attachment
 type MailAttachment struct {
 	bun.BaseModel `bun:"table:mail_attachment,alias:mail_attachment_alias"`
-	ID            int64  `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`    // pk
-	MailID        int64  `bun:"mail_id,notnull" json:"mail_id,omitempty"`           // email id
-	Kind          int8   `bun:"kind,notnull,default:'0'" json:"kind,omitempty"`     // attachment kind
-	RewardID      int64  `bun:"reward_id,notnull" json:"reward_id,omitempty"`       // attachment reward id
-	RewardCount   uint32 `bun:"reward_count,notnull" json:"reward_count,omitempty"` // attachment reward count (must > 0)
-	CreatedAt     int64  `bun:"created_at,notnull" json:"created_at,omitempty"`     // created at
-	UpdatedAt     int64  `bun:"updated_at,notnull" json:"updated_at,omitempty"`     // updated at
+
+	ID          int64  `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`    // pk
+	MailID      int64  `bun:"mail_id,notnull" json:"mail_id,omitempty"`           // email id
+	Kind        int8   `bun:"kind,notnull,default:'0'" json:"kind,omitempty"`     // attachment kind
+	RewardID    int64  `bun:"reward_id,notnull" json:"reward_id,omitempty"`       // attachment reward id
+	RewardCount uint32 `bun:"reward_count,notnull" json:"reward_count,omitempty"` // attachment reward count (must > 0)
+	CreatedAt   int64  `bun:"created_at,notnull" json:"created_at,omitempty"`     // created at
+	UpdatedAt   int64  `bun:"updated_at,notnull" json:"updated_at,omitempty"`     // updated at
 }
 
 func (m *MailAttachment) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

@@ -56,6 +56,13 @@ CREATE TABLE test_all_types (
   deleted_at TIMESTAMP(3)
 );
 
+COMMENT ON COLUMN "public"."test_all_types"."json_val" IS 'This is a JSON column
+with multiple lines of text
+This is a JSON column
+with multiple lines of text
+This is a JSON column
+with multiple lines of text';
+
 DROP TABLE IF EXISTS mail;
 
 CREATE TABLE mail (
@@ -124,7 +131,7 @@ VALUES (1001, 'Welcome', 'Welcome to the system', 0, 0),
 
 
 INSERT INTO mail_attachment (mail_id, kind, reward_id, reward_count, created_at, updated_at)
-VALUES 
+VALUES
     (2, 1, 1001, 10, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT),
     (2, 2, 2001, 5, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT),
     (2, 1, 3001, 1, EXTRACT(EPOCH FROM NOW())::BIGINT, EXTRACT(EPOCH FROM NOW())::BIGINT);

@@ -1063,6 +1063,71 @@ const (
 	TestAllTypeAliasDeletedAtIsNotNull      = "test_all_types_alias.deleted_at IS NOT NULL"
 )
 
+// COALESCE expressions (COALESCE(column, ?))
+const (
+	TestAllTypeTinyIntValCoalesceExpr     = "COALESCE(tiny_int_val, ?)"
+	TestAllTypeMediumIntValCoalesceExpr   = "COALESCE(medium_int_val, ?)"
+	TestAllTypeBigIntValCoalesceExpr      = "COALESCE(big_int_val, ?)"
+	TestAllTypeDecimalValCoalesceExpr     = "COALESCE(decimal_val, ?)"
+	TestAllTypeFloatValCoalesceExpr       = "COALESCE(float_val, ?)"
+	TestAllTypeDoubleValCoalesceExpr      = "COALESCE(double_val, ?)"
+	TestAllTypeCharValCoalesceExpr        = "COALESCE(char_val, ?)"
+	TestAllTypeVarcharValCoalesceExpr     = "COALESCE(varchar_val, ?)"
+	TestAllTypeTextValCoalesceExpr        = "COALESCE(text_val, ?)"
+	TestAllTypeMediumtextValCoalesceExpr  = "COALESCE(mediumtext_val, ?)"
+	TestAllTypeLongtextValCoalesceExpr    = "COALESCE(longtext_val, ?)"
+	TestAllTypeDateValCoalesceExpr        = "COALESCE(date_val, ?)"
+	TestAllTypeTimeValCoalesceExpr        = "COALESCE(time_val, ?)"
+	TestAllTypeDatetimeValCoalesceExpr    = "COALESCE(datetime_val, ?)"
+	TestAllTypeTimestampValCoalesceExpr   = "COALESCE(timestamp_val, ?)"
+	TestAllTypeYearValCoalesceExpr        = "COALESCE(year_val, ?)"
+	TestAllTypeBoolValCoalesceExpr        = "COALESCE(bool_val, ?)"
+	TestAllTypeEnumValCoalesceExpr        = "COALESCE(enum_val, ?)"
+	TestAllTypeSetValCoalesceExpr         = "COALESCE(set_val, ?)"
+	TestAllTypeBinaryValCoalesceExpr      = "COALESCE(binary_val, ?)"
+	TestAllTypeVarbinaryValCoalesceExpr   = "COALESCE(varbinary_val, ?)"
+	TestAllTypeBlobValCoalesceExpr        = "COALESCE(blob_val, ?)"
+	TestAllTypeMediumblobValCoalesceExpr  = "COALESCE(mediumblob_val, ?)"
+	TestAllTypeLongblobValCoalesceExpr    = "COALESCE(longblob_val, ?)"
+	TestAllTypeJsonValCoalesceExpr        = "COALESCE(json_val, ?)"
+	TestAllTypeBitValCoalesceExpr         = "COALESCE(bit_val, ?)"
+	TestAllTypeNullableIntValCoalesceExpr = "COALESCE(nullable_int_val, ?)"
+	TestAllTypeIgnoreValCoalesceExpr      = "COALESCE(ignore_val, ?)"
+	TestAllTypeDeletedAtCoalesceExpr      = "COALESCE(deleted_at, ?)"
+)
+
+const (
+	TestAllTypeAliasTinyIntValCoalesceExpr     = "COALESCE(test_all_types_alias.tiny_int_val, ?)"
+	TestAllTypeAliasMediumIntValCoalesceExpr   = "COALESCE(test_all_types_alias.medium_int_val, ?)"
+	TestAllTypeAliasBigIntValCoalesceExpr      = "COALESCE(test_all_types_alias.big_int_val, ?)"
+	TestAllTypeAliasDecimalValCoalesceExpr     = "COALESCE(test_all_types_alias.decimal_val, ?)"
+	TestAllTypeAliasFloatValCoalesceExpr       = "COALESCE(test_all_types_alias.float_val, ?)"
+	TestAllTypeAliasDoubleValCoalesceExpr      = "COALESCE(test_all_types_alias.double_val, ?)"
+	TestAllTypeAliasCharValCoalesceExpr        = "COALESCE(test_all_types_alias.char_val, ?)"
+	TestAllTypeAliasVarcharValCoalesceExpr     = "COALESCE(test_all_types_alias.varchar_val, ?)"
+	TestAllTypeAliasTextValCoalesceExpr        = "COALESCE(test_all_types_alias.text_val, ?)"
+	TestAllTypeAliasMediumtextValCoalesceExpr  = "COALESCE(test_all_types_alias.mediumtext_val, ?)"
+	TestAllTypeAliasLongtextValCoalesceExpr    = "COALESCE(test_all_types_alias.longtext_val, ?)"
+	TestAllTypeAliasDateValCoalesceExpr        = "COALESCE(test_all_types_alias.date_val, ?)"
+	TestAllTypeAliasTimeValCoalesceExpr        = "COALESCE(test_all_types_alias.time_val, ?)"
+	TestAllTypeAliasDatetimeValCoalesceExpr    = "COALESCE(test_all_types_alias.datetime_val, ?)"
+	TestAllTypeAliasTimestampValCoalesceExpr   = "COALESCE(test_all_types_alias.timestamp_val, ?)"
+	TestAllTypeAliasYearValCoalesceExpr        = "COALESCE(test_all_types_alias.year_val, ?)"
+	TestAllTypeAliasBoolValCoalesceExpr        = "COALESCE(test_all_types_alias.bool_val, ?)"
+	TestAllTypeAliasEnumValCoalesceExpr        = "COALESCE(test_all_types_alias.enum_val, ?)"
+	TestAllTypeAliasSetValCoalesceExpr         = "COALESCE(test_all_types_alias.set_val, ?)"
+	TestAllTypeAliasBinaryValCoalesceExpr      = "COALESCE(test_all_types_alias.binary_val, ?)"
+	TestAllTypeAliasVarbinaryValCoalesceExpr   = "COALESCE(test_all_types_alias.varbinary_val, ?)"
+	TestAllTypeAliasBlobValCoalesceExpr        = "COALESCE(test_all_types_alias.blob_val, ?)"
+	TestAllTypeAliasMediumblobValCoalesceExpr  = "COALESCE(test_all_types_alias.mediumblob_val, ?)"
+	TestAllTypeAliasLongblobValCoalesceExpr    = "COALESCE(test_all_types_alias.longblob_val, ?)"
+	TestAllTypeAliasJsonValCoalesceExpr        = "COALESCE(test_all_types_alias.json_val, ?)"
+	TestAllTypeAliasBitValCoalesceExpr         = "COALESCE(test_all_types_alias.bit_val, ?)"
+	TestAllTypeAliasNullableIntValCoalesceExpr = "COALESCE(test_all_types_alias.nullable_int_val, ?)"
+	TestAllTypeAliasIgnoreValCoalesceExpr      = "COALESCE(test_all_types_alias.ignore_val, ?)"
+	TestAllTypeAliasDeletedAtCoalesceExpr      = "COALESCE(test_all_types_alias.deleted_at, ?)"
+)
+
 const (
 	TestAllTypeIDBetween             = "id BETWEEN ? AND ?"
 	TestAllTypeTinyIntValBetween     = "tiny_int_val BETWEEN ? AND ?"
@@ -1409,41 +1474,48 @@ const (
 
 // TestAllType generates a model for the "test_all_types" table.
 type TestAllType struct {
-	bun.BaseModel  `bun:"table:test_all_types,alias:test_all_types_alias"`
-	ID             int64            `bun:"id,pk,notnull" form:"id" json:"id,omitempty" xml:"Id"`                                                       //
-	TinyIntVal     *int16           `bun:"tiny_int_val,notnull" form:"tiny_int_val" json:"tiny_int_val,omitempty" xml:"TinyIntVal"`                    //
-	SmallIntVal    int16            `bun:"small_int_val,notnull,default:'0'" form:"small_int_val" json:"small_int_val,omitempty" xml:"SmallIntVal"`    //
-	MediumIntVal   *int32           `bun:"medium_int_val,notnull" form:"medium_int_val" json:"medium_int_val,omitempty" xml:"MediumIntVal"`            //
-	IntVal         int32            `bun:"int_val,notnull,default:'0'" form:"int_val" json:"int_val,omitempty" xml:"IntVal"`                           //
-	BigIntVal      *int64           `bun:"big_int_val,notnull" form:"big_int_val" json:"big_int_val,omitempty" xml:"BigIntVal"`                        //
-	DecimalVal     *decimal.Decimal `bun:"decimal_val,notnull" form:"decimal_val" json:"decimal_val,omitempty" xml:"DecimalVal"`                       //
-	FloatVal       *float32         `bun:"float_val,notnull" form:"float_val" json:"float_val,omitempty" xml:"FloatVal"`                               //
-	DoubleVal      *float64         `bun:"double_val,notnull" form:"double_val" json:"double_val,omitempty" xml:"DoubleVal"`                           //
-	CharVal        *string          `bun:"char_val,notnull" form:"char_val" json:"char_val,omitempty" xml:"CharVal"`                                   //
-	VarcharVal     *string          `bun:"varchar_val,notnull" form:"varchar_val" json:"varchar_val,omitempty" xml:"VarcharVal"`                       //
-	TextVal        *string          `bun:"text_val,notnull" form:"text_val" json:"text_val,omitempty" xml:"TextVal"`                                   //
-	MediumtextVal  *string          `bun:"mediumtext_val,notnull" form:"mediumtext_val" json:"mediumtext_val,omitempty" xml:"MediumtextVal"`           //
-	LongtextVal    *string          `bun:"longtext_val,notnull" form:"longtext_val" json:"longtext_val,omitempty" xml:"LongtextVal"`                   //
-	DateVal        *time.Time       `bun:"date_val,notnull" form:"date_val" json:"date_val,omitempty" xml:"DateVal"`                                   //
-	TimeVal        *time.Time       `bun:"time_val,notnull" form:"time_val" json:"time_val,omitempty" xml:"TimeVal"`                                   //
-	DatetimeVal    *time.Time       `bun:"datetime_val,notnull" form:"datetime_val" json:"datetime_val,omitempty" xml:"DatetimeVal"`                   //
-	TimestampVal   *time.Time       `bun:"timestamp_val,notnull" form:"timestamp_val" json:"timestamp_val,omitempty" xml:"TimestampVal"`               //
-	YearVal        *int16           `bun:"year_val,notnull" form:"year_val" json:"year_val,omitempty" xml:"YearVal"`                                   //
-	BoolVal        *bool            `bun:"bool_val,notnull" form:"bool_val" json:"bool_val,omitempty" xml:"BoolVal"`                                   //
-	EnumVal        *string          `bun:"enum_val,notnull" form:"enum_val" json:"enum_val,omitempty" xml:"EnumVal"`                                   //
-	SetVal         *string          `bun:"set_val,notnull" form:"set_val" json:"set_val,omitempty" xml:"SetVal"`                                       //
-	BinaryVal      []byte           `bun:"binary_val,notnull" form:"binary_val" json:"binary_val,omitempty" xml:"BinaryVal"`                           //
-	VarbinaryVal   []byte           `bun:"varbinary_val,notnull" form:"varbinary_val" json:"varbinary_val,omitempty" xml:"VarbinaryVal"`               //
-	BlobVal        []byte           `bun:"blob_val,notnull" form:"blob_val" json:"blob_val,omitempty" xml:"BlobVal"`                                   //
-	MediumblobVal  []byte           `bun:"mediumblob_val,notnull" form:"mediumblob_val" json:"mediumblob_val,omitempty" xml:"MediumblobVal"`           //
-	LongblobVal    []byte           `bun:"longblob_val,notnull" form:"longblob_val" json:"longblob_val,omitempty" xml:"LongblobVal"`                   //
-	JsonVal        json.RawMessage  `bun:"json_val,notnull" form:"json_val" json:"json_val,omitempty" xml:"JsonVal"`                                   //
-	BitVal         []byte           `bun:"bit_val,notnull" form:"bit_val" json:"bit_val,omitempty" xml:"BitVal"`                                       //
-	NullableIntVal *int32           `bun:"nullable_int_val,notnull" form:"nullable_int_val" json:"nullable_int_val,omitempty" xml:"NullableIntVal"`    //
-	IgnoreVal      *string          `bun:"ignore_val,notnull" form:"ignore_val" json:"ignore_val,omitempty" xml:"IgnoreVal"`                           //
-	CreatedAt      time.Time        `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty" xml:"CreatedAt"` //
-	UpdatedAt      time.Time        `bun:"updated_at,notnull,default:current_timestamp" form:"updated_at" json:"updated_at,omitempty" xml:"UpdatedAt"` //
-	DeletedAt      *time.Time       `bun:"deleted_at,notnull,soft_delete" form:"deleted_at" json:"-" xml:"DeletedAt"`                                  //
+	bun.BaseModel `bun:"table:test_all_types,alias:test_all_types_alias"`
+
+	ID            int64            `bun:"id,pk,notnull" form:"id" json:"id,omitempty" xml:"Id"`                                                    //
+	TinyIntVal    *int16           `bun:"tiny_int_val,notnull" form:"tiny_int_val" json:"tiny_int_val,omitempty" xml:"TinyIntVal"`                 //
+	SmallIntVal   int16            `bun:"small_int_val,notnull,default:'0'" form:"small_int_val" json:"small_int_val,omitempty" xml:"SmallIntVal"` //
+	MediumIntVal  *int32           `bun:"medium_int_val,notnull" form:"medium_int_val" json:"medium_int_val,omitempty" xml:"MediumIntVal"`         //
+	IntVal        int32            `bun:"int_val,notnull,default:'0'" form:"int_val" json:"int_val,omitempty" xml:"IntVal"`                        //
+	BigIntVal     *int64           `bun:"big_int_val,notnull" form:"big_int_val" json:"big_int_val,omitempty" xml:"BigIntVal"`                     //
+	DecimalVal    *decimal.Decimal `bun:"decimal_val,notnull" form:"decimal_val" json:"decimal_val,omitempty" xml:"DecimalVal"`                    //
+	FloatVal      *float32         `bun:"float_val,notnull" form:"float_val" json:"float_val,omitempty" xml:"FloatVal"`                            //
+	DoubleVal     *float64         `bun:"double_val,notnull" form:"double_val" json:"double_val,omitempty" xml:"DoubleVal"`                        //
+	CharVal       *string          `bun:"char_val,notnull" form:"char_val" json:"char_val,omitempty" xml:"CharVal"`                                //
+	VarcharVal    *string          `bun:"varchar_val,notnull" form:"varchar_val" json:"varchar_val,omitempty" xml:"VarcharVal"`                    //
+	TextVal       *string          `bun:"text_val,notnull" form:"text_val" json:"text_val,omitempty" xml:"TextVal"`                                //
+	MediumtextVal *string          `bun:"mediumtext_val,notnull" form:"mediumtext_val" json:"mediumtext_val,omitempty" xml:"MediumtextVal"`        //
+	LongtextVal   *string          `bun:"longtext_val,notnull" form:"longtext_val" json:"longtext_val,omitempty" xml:"LongtextVal"`                //
+	DateVal       *time.Time       `bun:"date_val,notnull" form:"date_val" json:"date_val,omitempty" xml:"DateVal"`                                //
+	TimeVal       *time.Time       `bun:"time_val,notnull" form:"time_val" json:"time_val,omitempty" xml:"TimeVal"`                                //
+	DatetimeVal   *time.Time       `bun:"datetime_val,notnull" form:"datetime_val" json:"datetime_val,omitempty" xml:"DatetimeVal"`                //
+	TimestampVal  *time.Time       `bun:"timestamp_val,notnull" form:"timestamp_val" json:"timestamp_val,omitempty" xml:"TimestampVal"`            //
+	YearVal       *int16           `bun:"year_val,notnull" form:"year_val" json:"year_val,omitempty" xml:"YearVal"`                                //
+	BoolVal       *bool            `bun:"bool_val,notnull" form:"bool_val" json:"bool_val,omitempty" xml:"BoolVal"`                                //
+	EnumVal       *string          `bun:"enum_val,notnull" form:"enum_val" json:"enum_val,omitempty" xml:"EnumVal"`                                //
+	SetVal        *string          `bun:"set_val,notnull" form:"set_val" json:"set_val,omitempty" xml:"SetVal"`                                    //
+	BinaryVal     []byte           `bun:"binary_val,notnull" form:"binary_val" json:"binary_val,omitempty" xml:"BinaryVal"`                        //
+	VarbinaryVal  []byte           `bun:"varbinary_val,notnull" form:"varbinary_val" json:"varbinary_val,omitempty" xml:"VarbinaryVal"`            //
+	BlobVal       []byte           `bun:"blob_val,notnull" form:"blob_val" json:"blob_val,omitempty" xml:"BlobVal"`                                //
+	MediumblobVal []byte           `bun:"mediumblob_val,notnull" form:"mediumblob_val" json:"mediumblob_val,omitempty" xml:"MediumblobVal"`        //
+	LongblobVal   []byte           `bun:"longblob_val,notnull" form:"longblob_val" json:"longblob_val,omitempty" xml:"LongblobVal"`                //
+	// This is a JSON column
+	// with multiple lines of text
+	// This is a JSON column
+	// with multiple lines of text
+	// This is a JSON column
+	// with multiple lines of text
+	JsonVal        json.RawMessage `bun:"json_val,notnull" form:"json_val" json:"json_val,omitempty" xml:"JsonVal"`
+	BitVal         []byte          `bun:"bit_val,notnull" form:"bit_val" json:"bit_val,omitempty" xml:"BitVal"`                                       //
+	NullableIntVal *int32          `bun:"nullable_int_val,notnull" form:"nullable_int_val" json:"nullable_int_val,omitempty" xml:"NullableIntVal"`    //
+	IgnoreVal      *string         `bun:"ignore_val,notnull" form:"ignore_val" json:"ignore_val,omitempty" xml:"IgnoreVal"`                           //
+	CreatedAt      time.Time       `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty" xml:"CreatedAt"` //
+	UpdatedAt      time.Time       `bun:"updated_at,notnull,default:current_timestamp" form:"updated_at" json:"updated_at,omitempty" xml:"UpdatedAt"` //
+	DeletedAt      *time.Time      `bun:"deleted_at,notnull,soft_delete" form:"deleted_at" json:"-" xml:"DeletedAt"`                                  //
 }
 
 func (m *TestAllType) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

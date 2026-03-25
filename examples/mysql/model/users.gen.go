@@ -343,11 +343,12 @@ const (
 // 用户表
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
-	ID            int64     `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty"`                                     //
-	Name          string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                                // 用户名
-	Email         string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                             // 邮箱
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
-	Posts         []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                              //
+
+	ID        int64     `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty"`                                     //
+	Name      string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                                // 用户名
+	Email     string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                             // 邮箱
+	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
+	Posts     []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                              //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

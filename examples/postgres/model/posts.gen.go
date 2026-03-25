@@ -378,6 +378,15 @@ const (
 	PostAliasContentIsNotNull = "posts_alias.content IS NOT NULL"
 )
 
+// COALESCE expressions (COALESCE(column, ?))
+const (
+	PostContentCoalesceExpr = "COALESCE(content, ?)"
+)
+
+const (
+	PostAliasContentCoalesceExpr = "COALESCE(posts_alias.content, ?)"
+)
+
 const (
 	PostIDBetween        = "id BETWEEN ? AND ?"
 	PostUserIDBetween    = "user_id BETWEEN ? AND ?"
@@ -523,14 +532,15 @@ const (
 // Post generates a model for the "posts" table.
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
-	ID            int64     `bun:"id,pk,notnull" json:"id,omitempty" xml:"id"`                                                //
-	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                    //
-	Title         string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                          //
-	Content       *string   `bun:"content,notnull" json:"content,omitempty" xml:"content"`                                    //
-	Status        int16     `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                           //
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty" xml:"created_at"` //
-	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at,omitempty" xml:"updated_at"` //
-	User          *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                           //
+
+	ID        int64     `bun:"id,pk,notnull" json:"id,omitempty" xml:"id"`                                                //
+	UserID    int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                    //
+	Title     string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                          //
+	Content   *string   `bun:"content,notnull" json:"content,omitempty" xml:"content"`                                    //
+	Status    int16     `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                           //
+	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty" xml:"created_at"` //
+	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at,omitempty" xml:"updated_at"` //
+	User      *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                           //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

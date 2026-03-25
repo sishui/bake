@@ -65,6 +65,14 @@ func main() {
 	for _, post := range posts {
 		fmt.Println(post.ID, post.Title, post.User.ID, post.User.Name)
 	}
+	var months []int
+	err = db.NewSelect().Model(&posts).
+		ColumnExpr(model.UserCreatedAtMonthExpr).
+		Scan(ctx, &months)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(months)
 	fmt.Println("done")
 }
 

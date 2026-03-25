@@ -552,7 +552,8 @@ const (
 // Mail generates a model for the "mail" table.
 // user email
 type Mail struct {
-	bun.BaseModel       `bun:"table:mail,alias:mail_alias"`
+	bun.BaseModel `bun:"table:mail,alias:mail_alias"`
+
 	ID                  int64             `bun:"id,pk,autoincrement,notnull" form:"" json:"id,omitempty"`                             // pk
 	UID                 int64             `bun:"uid,notnull" form:"" json:"uid,omitempty"`                                            // user id
 	Subject             string            `bun:"subject,notnull" form:"" json:"subject,omitempty"`                                    // email subject

@@ -342,11 +342,12 @@ const (
 // User generates a model for the "users" table.
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
-	ID            int64     `bun:"id,pk,notnull" form:"id" json:"id,omitempty"`                                                //
-	Name          string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                             //
-	Email         string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                          //
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty"` //
-	Posts         []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                           //
+
+	ID        int64     `bun:"id,pk,notnull" form:"id" json:"id,omitempty"`                                                //
+	Name      string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                             //
+	Email     string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                          //
+	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty"` //
+	Posts     []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                           //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

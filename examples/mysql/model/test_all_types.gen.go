@@ -1055,6 +1055,71 @@ const (
 	TestAllTypeAliasDeletedAtIsNotNull      = "test_all_types_alias.deleted_at IS NOT NULL"
 )
 
+// COALESCE expressions (COALESCE(column, ?))
+const (
+	TestAllTypeTinyIntValCoalesceExpr     = "COALESCE(tiny_int_val, ?)"
+	TestAllTypeMediumIntValCoalesceExpr   = "COALESCE(medium_int_val, ?)"
+	TestAllTypeBigIntValCoalesceExpr      = "COALESCE(big_int_val, ?)"
+	TestAllTypeDecimalValCoalesceExpr     = "COALESCE(decimal_val, ?)"
+	TestAllTypeFloatValCoalesceExpr       = "COALESCE(float_val, ?)"
+	TestAllTypeDoubleValCoalesceExpr      = "COALESCE(double_val, ?)"
+	TestAllTypeCharValCoalesceExpr        = "COALESCE(char_val, ?)"
+	TestAllTypeVarcharValCoalesceExpr     = "COALESCE(varchar_val, ?)"
+	TestAllTypeTextValCoalesceExpr        = "COALESCE(text_val, ?)"
+	TestAllTypeMediumtextValCoalesceExpr  = "COALESCE(mediumtext_val, ?)"
+	TestAllTypeLongtextValCoalesceExpr    = "COALESCE(longtext_val, ?)"
+	TestAllTypeDateValCoalesceExpr        = "COALESCE(date_val, ?)"
+	TestAllTypeTimeValCoalesceExpr        = "COALESCE(time_val, ?)"
+	TestAllTypeDatetimeValCoalesceExpr    = "COALESCE(datetime_val, ?)"
+	TestAllTypeTimestampValCoalesceExpr   = "COALESCE(timestamp_val, ?)"
+	TestAllTypeYearValCoalesceExpr        = "COALESCE(year_val, ?)"
+	TestAllTypeBoolValCoalesceExpr        = "COALESCE(bool_val, ?)"
+	TestAllTypeEnumValCoalesceExpr        = "COALESCE(enum_val, ?)"
+	TestAllTypeSetValCoalesceExpr         = "COALESCE(set_val, ?)"
+	TestAllTypeBinaryValCoalesceExpr      = "COALESCE(binary_val, ?)"
+	TestAllTypeVarbinaryValCoalesceExpr   = "COALESCE(varbinary_val, ?)"
+	TestAllTypeBlobValCoalesceExpr        = "COALESCE(blob_val, ?)"
+	TestAllTypeMediumblobValCoalesceExpr  = "COALESCE(mediumblob_val, ?)"
+	TestAllTypeLongblobValCoalesceExpr    = "COALESCE(longblob_val, ?)"
+	TestAllTypeJsonValCoalesceExpr        = "COALESCE(json_val, ?)"
+	TestAllTypeBitValCoalesceExpr         = "COALESCE(bit_val, ?)"
+	TestAllTypeNullableIntValCoalesceExpr = "COALESCE(nullable_int_val, ?)"
+	TestAllTypeIgnoreValCoalesceExpr      = "COALESCE(ignore_val, ?)"
+	TestAllTypeDeletedAtCoalesceExpr      = "COALESCE(deleted_at, ?)"
+)
+
+const (
+	TestAllTypeAliasTinyIntValCoalesceExpr     = "COALESCE(test_all_types_alias.tiny_int_val, ?)"
+	TestAllTypeAliasMediumIntValCoalesceExpr   = "COALESCE(test_all_types_alias.medium_int_val, ?)"
+	TestAllTypeAliasBigIntValCoalesceExpr      = "COALESCE(test_all_types_alias.big_int_val, ?)"
+	TestAllTypeAliasDecimalValCoalesceExpr     = "COALESCE(test_all_types_alias.decimal_val, ?)"
+	TestAllTypeAliasFloatValCoalesceExpr       = "COALESCE(test_all_types_alias.float_val, ?)"
+	TestAllTypeAliasDoubleValCoalesceExpr      = "COALESCE(test_all_types_alias.double_val, ?)"
+	TestAllTypeAliasCharValCoalesceExpr        = "COALESCE(test_all_types_alias.char_val, ?)"
+	TestAllTypeAliasVarcharValCoalesceExpr     = "COALESCE(test_all_types_alias.varchar_val, ?)"
+	TestAllTypeAliasTextValCoalesceExpr        = "COALESCE(test_all_types_alias.text_val, ?)"
+	TestAllTypeAliasMediumtextValCoalesceExpr  = "COALESCE(test_all_types_alias.mediumtext_val, ?)"
+	TestAllTypeAliasLongtextValCoalesceExpr    = "COALESCE(test_all_types_alias.longtext_val, ?)"
+	TestAllTypeAliasDateValCoalesceExpr        = "COALESCE(test_all_types_alias.date_val, ?)"
+	TestAllTypeAliasTimeValCoalesceExpr        = "COALESCE(test_all_types_alias.time_val, ?)"
+	TestAllTypeAliasDatetimeValCoalesceExpr    = "COALESCE(test_all_types_alias.datetime_val, ?)"
+	TestAllTypeAliasTimestampValCoalesceExpr   = "COALESCE(test_all_types_alias.timestamp_val, ?)"
+	TestAllTypeAliasYearValCoalesceExpr        = "COALESCE(test_all_types_alias.year_val, ?)"
+	TestAllTypeAliasBoolValCoalesceExpr        = "COALESCE(test_all_types_alias.bool_val, ?)"
+	TestAllTypeAliasEnumValCoalesceExpr        = "COALESCE(test_all_types_alias.enum_val, ?)"
+	TestAllTypeAliasSetValCoalesceExpr         = "COALESCE(test_all_types_alias.set_val, ?)"
+	TestAllTypeAliasBinaryValCoalesceExpr      = "COALESCE(test_all_types_alias.binary_val, ?)"
+	TestAllTypeAliasVarbinaryValCoalesceExpr   = "COALESCE(test_all_types_alias.varbinary_val, ?)"
+	TestAllTypeAliasBlobValCoalesceExpr        = "COALESCE(test_all_types_alias.blob_val, ?)"
+	TestAllTypeAliasMediumblobValCoalesceExpr  = "COALESCE(test_all_types_alias.mediumblob_val, ?)"
+	TestAllTypeAliasLongblobValCoalesceExpr    = "COALESCE(test_all_types_alias.longblob_val, ?)"
+	TestAllTypeAliasJsonValCoalesceExpr        = "COALESCE(test_all_types_alias.json_val, ?)"
+	TestAllTypeAliasBitValCoalesceExpr         = "COALESCE(test_all_types_alias.bit_val, ?)"
+	TestAllTypeAliasNullableIntValCoalesceExpr = "COALESCE(test_all_types_alias.nullable_int_val, ?)"
+	TestAllTypeAliasIgnoreValCoalesceExpr      = "COALESCE(test_all_types_alias.ignore_val, ?)"
+	TestAllTypeAliasDeletedAtCoalesceExpr      = "COALESCE(test_all_types_alias.deleted_at, ?)"
+)
+
 const (
 	TestAllTypeIDBetween             = "id BETWEEN ? AND ?"
 	TestAllTypeTinyIntValBetween     = "tiny_int_val BETWEEN ? AND ?"
@@ -1401,7 +1466,8 @@ const (
 
 // TestAllType generates a model for the "test_all_types" table.
 type TestAllType struct {
-	bun.BaseModel  `bun:"table:test_all_types,alias:test_all_types_alias"`
+	bun.BaseModel `bun:"table:test_all_types,alias:test_all_types_alias"`
+
 	ID            int32            `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty" xml:"Id"`                                       //
 	TinyIntVal    *int8            `bun:"tiny_int_val,nullzero" form:"tiny_int_val" json:"tiny_int_val,omitempty" xml:"TinyIntVal"`                 //
 	SmallIntVal   int16            `bun:"small_int_val,notnull,default:'0'" form:"small_int_val" json:"small_int_val,omitempty" xml:"SmallIntVal"`  //
@@ -1435,7 +1501,7 @@ type TestAllType struct {
 	// with multiple lines of text
 	// This is a JSON column
 	// with multiple lines of text
-	JsonVal        json.RawMessage 
+	JsonVal        json.RawMessage `bun:"json_val,nullzero" form:"json_val" json:"json_val,omitempty" xml:"JsonVal"`                                    
 	BitVal         []byte          `bun:"bit_val,nullzero" form:"bit_val" json:"bit_val,omitempty" xml:"BitVal"`                                         //
 	NullableIntVal *int32          `bun:"nullable_int_val,nullzero" form:"nullable_int_val" json:"nullable_int_val,omitempty" xml:"NullableIntVal"`      //
 	IgnoreVal      *string         `bun:"ignore_val,nullzero" form:"ignore_val" json:"ignore_val,omitempty" xml:"IgnoreVal"`                             //

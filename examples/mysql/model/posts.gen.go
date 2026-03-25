@@ -378,6 +378,15 @@ const (
 	PostAliasContentIsNotNull = "posts_alias.content IS NOT NULL"
 )
 
+// COALESCE expressions (COALESCE(column, ?))
+const (
+	PostContentCoalesceExpr = "COALESCE(content, ?)"
+)
+
+const (
+	PostAliasContentCoalesceExpr = "COALESCE(posts_alias.content, ?)"
+)
+
 const (
 	PostIDBetween        = "id BETWEEN ? AND ?"
 	PostUserIDBetween    = "user_id BETWEEN ? AND ?"
@@ -524,14 +533,15 @@ const (
 // 文章表
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
-	ID            int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty" xml:"id"`                                     //
-	UserID        int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                       // 用户ID
-	Title         string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                             // 标题
-	Content       *string   `bun:"content,nullzero" json:"content,omitempty" xml:"content"`                                      // 内容
-	Status        int8      `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                              // 状态: 0=草稿, 1=发布
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty" xml:"created_at"` // 创建时间
-	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty" xml:"updated_at"` // 更新时间
-	User          *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                              //
+
+	ID        int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty" xml:"id"`                                     //
+	UserID    int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                       // 用户ID
+	Title     string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                             // 标题
+	Content   *string   `bun:"content,nullzero" json:"content,omitempty" xml:"content"`                                      // 内容
+	Status    int8      `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                              // 状态: 0=草稿, 1=发布
+	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty" xml:"created_at"` // 创建时间
+	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty" xml:"updated_at"` // 更新时间
+	User      *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                              //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
