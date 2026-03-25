@@ -2,7 +2,6 @@
 package naming
 
 import (
-	"regexp"
 	"strings"
 
 	"github.com/fatih/camelcase"
@@ -12,8 +11,6 @@ import (
 )
 
 const aliasSuffix = "_alias"
-
-var variantSanitizeRegex = regexp.MustCompile(`[^a-zA-Z\d\-_]`)
 
 func IsASCIIUpper(c byte) bool {
 	return c >= 'A' && c <= 'Z'
