@@ -18,16 +18,16 @@ import (
 var dirRegex = regexp.MustCompile(`^[a-zA-Z0-9._/-]+$`)
 
 type Config struct {
-	Version     string          `mapstructure:"-"`
-	Filename    string          `mapstructure:"-"`
-	Log         *Log            `mapstructure:"log"`
-	Singular    []string        `mapstructure:"singular"`
-	Initialisms []string        `mapstructure:"initialisms"`
-	Timezone    string          `mapstructure:"timezone"`
-	Template    *Template       `mapstructure:"template"`
-	Output      *Output         `mapstructure:"output"`
-	Objects     []*CustomObject `mapstructure:"objects"`
-	DB          []*DB           `mapstructure:"db"`
+	Version      string          `mapstructure:"-"`
+	Filename     string          `mapstructure:"-"`
+	Log          *Log            `mapstructure:"log"`
+	Uncountables []string        `mapstructure:"uncountables"`
+	Initialisms  []string        `mapstructure:"initialisms"`
+	Timezone     string          `mapstructure:"timezone"`
+	Template     *Template       `mapstructure:"template"`
+	Output       *Output         `mapstructure:"output"`
+	Objects      []*CustomObject `mapstructure:"objects"`
+	DB           []*DB           `mapstructure:"db"`
 }
 
 func (c *Config) Validate() error {
@@ -299,7 +299,7 @@ func parse(filename string) (*Config, error) {
 		return nil, err
 	}
 	config.Filename = actualFileName
-	inflection.AddUncountable(config.Singular...)
+	inflection.AddUncountable(config.Uncountables...)
 	return &config, nil
 }
 
