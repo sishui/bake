@@ -46,6 +46,7 @@ const (
 {{ $maxNullableLength := .MaxNullableLength -}}
 {{ $maxRelationLength := .MaxRelationLength -}}
 {{ $maxOrderedLength := .MaxOrderedLength -}}
+{{ $maxOrderedNonStringLength := .MaxOrderedNonStringLength -}}
 {{ $maxStringLength := .MaxStringLength -}}
 {{ $maxNumericLength := .MaxNumericLength -}}
 {{ $maxEquatableLength := .MaxEquatableLength -}}
@@ -124,12 +125,12 @@ const (
 {{- end}}
 )
 
-{{- if gt $maxOrderedLength 0 -}}
+{{- if gt $maxOrderedNonStringLength 0 -}}
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Gt" $maxOrderedLength }} = "{{$field.ColumnName}} > ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Gt" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} > ?"
 	{{- end}}
 {{- end}}
 )
@@ -137,7 +138,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gt" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} > ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gt" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} > ?"
 	{{- end}}
 {{- end}}
 )
@@ -145,7 +146,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Gte" $maxOrderedLength }} = "{{$field.ColumnName}} >= ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Gte" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} >= ?"
 	{{- end}}
 {{- end}}
 )
@@ -153,7 +154,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gte" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} >= ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gte" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} >= ?"
 	{{- end}}
 {{- end}}
 )
@@ -161,7 +162,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Lt" $maxOrderedLength }} = "{{$field.ColumnName}} < ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Lt" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} < ?"
 	{{- end}}
 {{- end}}
 )
@@ -169,7 +170,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lt" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} < ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lt" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} < ?"
 	{{- end}}
 {{- end}}
 )
@@ -177,7 +178,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Lte" $maxOrderedLength }} = "{{$field.ColumnName}} <= ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Lte" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} <= ?"
 	{{- end}}
 {{- end}}
 )
@@ -185,7 +186,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lte" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} <= ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lte" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} <= ?"
 	{{- end}}
 {{- end}}
 )
@@ -498,12 +499,12 @@ const (
 )
 {{- end}}
 
-{{- if gt $maxOrderedLength 0 -}}
+{{- if gt $maxOrderedNonStringLength 0 -}}
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Between" $maxOrderedLength }} = "{{$field.ColumnName}} BETWEEN ? AND ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Between" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} BETWEEN ? AND ?"
 	{{- end}}
 {{- end}}
 )
@@ -511,7 +512,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Between" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} BETWEEN ? AND ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Between" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} BETWEEN ? AND ?"
 	{{- end}}
 {{- end}}
 )
@@ -519,7 +520,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "NotBetween" $maxOrderedLength }} = "{{$field.ColumnName}} NOT BETWEEN ? AND ?"
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "NotBetween" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} NOT BETWEEN ? AND ?"
 	{{- end}}
 {{- end}}
 )
@@ -527,7 +528,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "NotBetween" $maxOrderedLength }} = "{{$alias}}.{{$field.ColumnName}} NOT BETWEEN ? AND ?"
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "NotBetween" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} NOT BETWEEN ? AND ?"
 	{{- end}}
 {{- end}}
 )

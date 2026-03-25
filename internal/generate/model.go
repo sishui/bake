@@ -26,9 +26,10 @@ type Model struct {
 	MaxFieldLength      int        // max field length
 	MaxNullableLength   int        // max nullable length
 	MaxStringLength     int        // max string length
-	MaxNumericLength    int        // max numeric length
-	MaxOrderedLength    int        // max ordered length
-	MaxEquatableLength  int        // max equatable length
+	MaxNumericLength         int        // max numeric length
+	MaxOrderedLength         int        // max ordered length
+	MaxOrderedNonStringLength int       // max ordered non-string length (numeric + time)
+	MaxEquatableLength       int        // max equatable length
 	MaxRelationLength   int        // max relation length
 	MaxArithmeticLength int        // max arithmetic length (non-pk numeric)
 	MaxTimeLength       int        // max time length
@@ -99,6 +100,7 @@ func (m *Model) init() {
 		case types.KindNumeric:
 			m.MaxNumericLength = max(m.MaxNumericLength, nameLen)
 			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
+			m.MaxOrderedNonStringLength = max(m.MaxOrderedNonStringLength, nameLen)
 			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
 			if !f.IsPrimary {
 				m.MaxArithmeticLength = max(m.MaxArithmeticLength, nameLen)
@@ -106,6 +108,7 @@ func (m *Model) init() {
 
 		case types.KindTime:
 			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
+			m.MaxOrderedNonStringLength = max(m.MaxOrderedNonStringLength, nameLen)
 			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
 			m.MaxTimeLength = max(m.MaxTimeLength, nameLen)
 
