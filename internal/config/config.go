@@ -248,9 +248,11 @@ func Parse(args Args) (*Config, error) {
 		if args.DSN == "" {
 			return nil, errors.New("db.dsn is required: set via config file or --dsn flag")
 		}
+		driver := detectDriver(args.DSN)
 		config.DB = []*DB{
 			{
-				DSN: args.DSN,
+				Driver: driver,
+				DSN:    args.DSN,
 			},
 		}
 	} else {
@@ -343,4 +345,11 @@ func validateIdent(name string) error {
 		return fmt.Errorf("identifier cannot be keyword: %s", name)
 	}
 	return nil
+}
+
+func detectDriver(dsn string) string {
+	if strings.HasPrefix(dsn, "postgres://") || strings.HasPrefix(dsn, "postgresql://") {
+		return "postgres"
+	}
+	return "mysql"
 }
