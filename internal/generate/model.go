@@ -10,6 +10,7 @@ import (
 
 type Model struct {
 	Version             string     // bake version
+	Module              string     // module path
 	Package             string     // package name
 	Imports             [][]string // imports
 	BunModel            string     // bun.BaseModel
@@ -36,6 +37,7 @@ type Model struct {
 func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms map[string]string) (*Model, error) {
 	m := &Model{
 		Version:  cfg.Version,
+		Module:   cfg.Output.Module,
 		Package:  cfg.Output.Package,
 		Imports:  nil,
 		BunModel: "bun.BaseModel",
@@ -124,7 +126,7 @@ func (m *Model) init() {
 		}
 	}
 
-	m.Imports = groupImports(m.Package, imports...)
+	m.Imports = groupImports(m.Module, imports...)
 }
 
 func (m *Model) applyCustom(customTable *config.CustomTable) {
