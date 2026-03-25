@@ -59,7 +59,9 @@ const (
 
 const (
 {{- range $field := .Fields}}
+	{{- if not $field.IsRelation }}
 	{{- "\n\t" }}{{$model}}{{ align $field.Name $maxFieldLength }} = "{{$field.ColumnName}}"
+	{{- end }}
 {{- end}}
 )
 
@@ -76,7 +78,9 @@ const (
 
 const (
 {{- range $field := .Fields}}
+	{{- if not $field.IsRelation }}
 	{{- "\n\t" }}{{$model}}Alias{{ align $field.Name $maxFieldLength }} = "{{$alias}}.{{$field.ColumnName}}"
+	{{- end }}
 {{- end}}
 )
 
