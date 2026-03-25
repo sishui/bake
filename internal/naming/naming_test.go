@@ -394,6 +394,21 @@ func TestPadRight(t *testing.T) {
 			args: args{"test", -1},
 			want: "test",
 		},
+		{
+			name: "Should align by rune width for multibyte chars",
+			args: args{"用户", 6},
+			want: "用户    ",
+		},
+		{
+			name: "Should align mixed ascii and multibyte chars",
+			args: args{"ab名", 6},
+			want: "ab名   ",
+		},
+		{
+			name: "Should not pad if rune count equals maxN",
+			args: args{"用户名", 3},
+			want: "用户名",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

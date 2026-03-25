@@ -3,6 +3,7 @@ package naming
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"github.com/fatih/camelcase"
 	"github.com/jinzhu/inflection"
@@ -150,10 +151,10 @@ func Align(s string, maxN int) string {
 	if maxN <= 0 {
 		return s
 	}
-	if len(s) >= maxN {
+	if utf8.RuneCountInString(s) >= maxN {
 		return s
 	}
-	return s + strings.Repeat(" ", maxN-len(s))
+	return s + strings.Repeat(" ", maxN-utf8.RuneCountInString(s))
 }
 
 func Concat(a, b string, maxN int) string {
@@ -161,10 +162,11 @@ func Concat(a, b string, maxN int) string {
 	if maxN <= 0 {
 		return s
 	}
-	if maxN-len(a) <= 0 {
+	n := utf8.RuneCountInString(a)
+	if maxN-n <= 0 {
 		return s
 	}
-	return s + strings.Repeat(" ", maxN-len(a))
+	return s + strings.Repeat(" ", maxN-n)
 }
 
 func normalize(word string, initialisms map[string]string) string {
