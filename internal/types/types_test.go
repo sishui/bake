@@ -356,7 +356,7 @@ func TestPostgresDescFunc(t *testing.T) {
 				ColumnType: "_text",
 				Nullable:   "NO",
 			},
-			want:    Desc{Type: "[]string", Kind: KindStruct},
+			want:    Desc{Type: "[]string", Kind: KindArray},
 			wantErr: false,
 		},
 		{
@@ -366,7 +366,7 @@ func TestPostgresDescFunc(t *testing.T) {
 				ColumnType: "_int4",
 				Nullable:   "NO",
 			},
-			want:    Desc{Type: "[]int32", Kind: KindStruct},
+			want:    Desc{Type: "[]int32", Kind: KindArray},
 			wantErr: false,
 		},
 		{

@@ -102,7 +102,7 @@ func newArrayDesc(c *schema.Column) (Desc, error) {
 	}
 	return Desc{
 		Type:    typ,
-		Kind:    KindStruct,
+		Kind:    KindArray,
 		Imports: imports,
 	}, nil
 }
