@@ -193,6 +193,8 @@ func customTagName(fieldName string, tagName string) string {
 		return naming.ToSnakeCase(fieldName)
 	case "$CamelCase":
 		return naming.ToCamelCase(fieldName)
+	case "":
+		return fieldName
 	default:
 		return tagName
 	}
