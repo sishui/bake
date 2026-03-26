@@ -84,14 +84,18 @@ func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir stri
 		return "", err
 	}
 	defer func() {
-		if err := file.Close(); err != nil {
-			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", err)
+		if closeErr := file.Close(); closeErr != nil {
+			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", closeErr)
+		}
+		if err == nil {
+			return
+		}
+		if removeErr := os.Remove(fullPath); removeErr != nil {
+			slog.ErrorContext(ctx, "remove file", "file", fullPath, "error", removeErr)
 		}
 	}()
 	err = tmpl.Execute(file, data)
 	if err != nil {
-		file.Close()
-		os.Remove(fullPath)
 		return "", err
 	}
 	err = file.Sync()
