@@ -329,7 +329,7 @@ type User struct {
 	Name      string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                             //
 	Email     string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                          //
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty"` //
-	Posts     []*Post   `bun:"Posts,join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                     //
+	Posts     []*Post   `bun:"posts,join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                     //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

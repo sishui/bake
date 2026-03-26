@@ -281,7 +281,7 @@ func newRelationField(customTable *config.CustomTable, fieldName, fieldType stri
 		fieldType = customField.Type
 	}
 	if len(customField.Tags) > 0 {
-		tags.Add(newCustomTags(fieldName, customField.Tags...)...)
+		tags.Add(newCustomTags(name, customField.Tags...)...)
 	}
 	return &Field{
 		Name:       fieldName,

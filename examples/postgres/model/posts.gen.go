@@ -534,7 +534,7 @@ type Post struct {
 	Status    int16     `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                           //
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at,omitempty" xml:"created_at"` //
 	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at,omitempty" xml:"updated_at"` //
-	User      *User     `bun:"User,join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                      //
+	User      *User     `bun:"user,join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                      //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
