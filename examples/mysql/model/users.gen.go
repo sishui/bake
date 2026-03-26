@@ -170,22 +170,6 @@ const (
 )
 
 const (
-	UserIDSUMExpr = "SUM(id)"
-)
-
-const (
-	UserAliasIDSUMExpr = "SUM(users_alias.id)"
-)
-
-const (
-	UserIDAVGExpr = "AVG(id)"
-)
-
-const (
-	UserAliasIDAVGExpr = "AVG(users_alias.id)"
-)
-
-const (
 	UserIDMINExpr        = "MIN(id)"
 	UserCreatedAtMINExpr = "MIN(created_at)"
 )
@@ -346,7 +330,7 @@ type User struct {
 	Name      string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                                // 用户名
 	Email     string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                             // 邮箱
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
-	Posts     []*Post   `bun:"join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                              //
+	Posts     []*Post   `bun:"Posts,join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                        //
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

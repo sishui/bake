@@ -215,25 +215,21 @@ const (
 )
 
 const (
-	PostIDSUMExpr     = "SUM(id)"
 	PostUserIDSUMExpr = "SUM(user_id)"
 	PostStatusSUMExpr = "SUM(status)"
 )
 
 const (
-	PostAliasIDSUMExpr     = "SUM(posts_alias.id)"
 	PostAliasUserIDSUMExpr = "SUM(posts_alias.user_id)"
 	PostAliasStatusSUMExpr = "SUM(posts_alias.status)"
 )
 
 const (
-	PostIDAVGExpr     = "AVG(id)"
 	PostUserIDAVGExpr = "AVG(user_id)"
 	PostStatusAVGExpr = "AVG(status)"
 )
 
 const (
-	PostAliasIDAVGExpr     = "AVG(posts_alias.id)"
 	PostAliasUserIDAVGExpr = "AVG(posts_alias.user_id)"
 	PostAliasStatusAVGExpr = "AVG(posts_alias.status)"
 )
@@ -539,7 +535,7 @@ type Post struct {
 	Status    int8      `bun:"status,notnull,default:'0'" json:"status,omitempty" xml:"status"`                              // 状态: 0=草稿, 1=发布
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty" xml:"created_at"` // 创建时间
 	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty" xml:"updated_at"` // 更新时间
-	User      *User     `bun:"join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                              //
+	User      *User     `bun:"User,join:user_id=id,rel:belongs-to" json:"user,omitempty" xml:"user"`                         //
 }
 
 func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

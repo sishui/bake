@@ -230,28 +230,24 @@ const (
 )
 
 const (
-	MailIDSUMExpr                  = "SUM(id)"
 	MailUIDSUMExpr                 = "SUM(uid)"
 	MailStatusSUMExpr              = "SUM(status)"
 	MailCustomHasAttachmentSUMExpr = "SUM(has_attachment)"
 )
 
 const (
-	MailAliasIDSUMExpr                  = "SUM(mail_alias.id)"
 	MailAliasUIDSUMExpr                 = "SUM(mail_alias.uid)"
 	MailAliasStatusSUMExpr              = "SUM(mail_alias.status)"
 	MailAliasCustomHasAttachmentSUMExpr = "SUM(mail_alias.has_attachment)"
 )
 
 const (
-	MailIDAVGExpr                  = "AVG(id)"
 	MailUIDAVGExpr                 = "AVG(uid)"
 	MailStatusAVGExpr              = "AVG(status)"
 	MailCustomHasAttachmentAVGExpr = "AVG(has_attachment)"
 )
 
 const (
-	MailAliasIDAVGExpr                  = "AVG(mail_alias.id)"
 	MailAliasUIDAVGExpr                 = "AVG(mail_alias.uid)"
 	MailAliasStatusAVGExpr              = "AVG(mail_alias.status)"
 	MailAliasCustomHasAttachmentAVGExpr = "AVG(mail_alias.has_attachment)"
@@ -551,15 +547,15 @@ const (
 type Mail struct {
 	bun.BaseModel `bun:"table:mail,alias:mail_alias"`
 
-	ID                  int64             `bun:"id,pk,notnull" form:"" json:"id,omitempty"`                                        //
-	UID                 int64             `bun:"uid,notnull" form:"" json:"uid,omitempty"`                                         //
-	Subject             string            `bun:"subject,notnull" form:"" json:"subject,omitempty"`                                 //
-	Content             string            `bun:"content,notnull" form:"" json:"content,omitempty"`                                 //
-	Status              int16             `bun:"status,notnull,default:'0'" form:"" json:"status,omitempty"`                       //
-	CustomHasAttachment int16             `bun:"has_attachment,notnull,default:'0'" form:"" json:"#has_attachment,omitempty"`      //
-	CreatedAt           time.Time         `bun:"created_at,notnull,default:current_timestamp" form:"" json:"created_at,omitempty"` //
-	UpdatedAt           time.Time         `bun:"updated_at,notnull,default:current_timestamp" form:"" json:"updated_at,omitempty"` //
-	Attachments         []*MailAttachment `bun:"rel:has-many,join:id=mail_id" form:"" json:"attachments,omitempty"`                // email attachments
+	ID                  int64             `bun:"id,pk,notnull" form:"id" json:"id,omitempty"`                                                //
+	UID                 int64             `bun:"uid,notnull" form:"uid" json:"uid,omitempty"`                                                //
+	Subject             string            `bun:"subject,notnull" form:"subject" json:"subject,omitempty"`                                    //
+	Content             string            `bun:"content,notnull" form:"content" json:"content,omitempty"`                                    //
+	Status              int16             `bun:"status,notnull,default:'0'" form:"status" json:"status,omitempty"`                           //
+	CustomHasAttachment int16             `bun:"has_attachment,notnull,default:'0'" form:"has_attachment" json:"#has_attachment,omitempty"`  //
+	CreatedAt           time.Time         `bun:"created_at,notnull,default:current_timestamp" form:"created_at" json:"created_at,omitempty"` //
+	UpdatedAt           time.Time         `bun:"updated_at,notnull,default:current_timestamp" form:"updated_at" json:"updated_at,omitempty"` //
+	Attachments         []*MailAttachment `bun:"attachments,rel:has-many,join:id=mail_id" form:"attachments" json:"attachments,omitempty"`   // email attachments
 }
 
 func (m *Mail) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

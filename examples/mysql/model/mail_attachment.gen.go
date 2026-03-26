@@ -187,7 +187,6 @@ const (
 )
 
 const (
-	MailAttachmentIDSUMExpr          = "SUM(id)"
 	MailAttachmentMailIDSUMExpr      = "SUM(mail_id)"
 	MailAttachmentKindSUMExpr        = "SUM(kind)"
 	MailAttachmentRewardIDSUMExpr    = "SUM(reward_id)"
@@ -197,7 +196,6 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDSUMExpr          = "SUM(mail_attachment_alias.id)"
 	MailAttachmentAliasMailIDSUMExpr      = "SUM(mail_attachment_alias.mail_id)"
 	MailAttachmentAliasKindSUMExpr        = "SUM(mail_attachment_alias.kind)"
 	MailAttachmentAliasRewardIDSUMExpr    = "SUM(mail_attachment_alias.reward_id)"
@@ -207,7 +205,6 @@ const (
 )
 
 const (
-	MailAttachmentIDAVGExpr          = "AVG(id)"
 	MailAttachmentMailIDAVGExpr      = "AVG(mail_id)"
 	MailAttachmentKindAVGExpr        = "AVG(kind)"
 	MailAttachmentRewardIDAVGExpr    = "AVG(reward_id)"
@@ -217,7 +214,6 @@ const (
 )
 
 const (
-	MailAttachmentAliasIDAVGExpr          = "AVG(mail_attachment_alias.id)"
 	MailAttachmentAliasMailIDAVGExpr      = "AVG(mail_attachment_alias.mail_id)"
 	MailAttachmentAliasKindAVGExpr        = "AVG(mail_attachment_alias.kind)"
 	MailAttachmentAliasRewardIDAVGExpr    = "AVG(mail_attachment_alias.reward_id)"

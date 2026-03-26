@@ -538,7 +538,6 @@ const (
 )
 
 const (
-	TestAllTypeIDSUMExpr             = "SUM(id)"
 	TestAllTypeTinyIntValSUMExpr     = "SUM(tiny_int_val)"
 	TestAllTypeSmallIntValSUMExpr    = "SUM(small_int_val)"
 	TestAllTypeMediumIntValSUMExpr   = "SUM(medium_int_val)"
@@ -552,7 +551,6 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDSUMExpr             = "SUM(test_all_types_alias.id)"
 	TestAllTypeAliasTinyIntValSUMExpr     = "SUM(test_all_types_alias.tiny_int_val)"
 	TestAllTypeAliasSmallIntValSUMExpr    = "SUM(test_all_types_alias.small_int_val)"
 	TestAllTypeAliasMediumIntValSUMExpr   = "SUM(test_all_types_alias.medium_int_val)"
@@ -566,7 +564,6 @@ const (
 )
 
 const (
-	TestAllTypeIDAVGExpr             = "AVG(id)"
 	TestAllTypeTinyIntValAVGExpr     = "AVG(tiny_int_val)"
 	TestAllTypeSmallIntValAVGExpr    = "AVG(small_int_val)"
 	TestAllTypeMediumIntValAVGExpr   = "AVG(medium_int_val)"
@@ -580,7 +577,6 @@ const (
 )
 
 const (
-	TestAllTypeAliasIDAVGExpr             = "AVG(test_all_types_alias.id)"
 	TestAllTypeAliasTinyIntValAVGExpr     = "AVG(test_all_types_alias.tiny_int_val)"
 	TestAllTypeAliasSmallIntValAVGExpr    = "AVG(test_all_types_alias.small_int_val)"
 	TestAllTypeAliasMediumIntValAVGExpr   = "AVG(test_all_types_alias.medium_int_val)"
