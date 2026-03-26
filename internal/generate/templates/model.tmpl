@@ -259,36 +259,36 @@ const (
 )
 {{- end}}
 
-{{- if gt $maxNumericLength 0 -}}
+{{- if gt $maxArithmeticLength 0 -}}
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SUMExpr" $maxNumericLength }} = "SUM({{$field.ColumnName}})"
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SUMExpr" $maxArithmeticLength }} = "SUM({{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SUMExpr" $maxNumericLength }} = "SUM({{$alias}}.{{$field.ColumnName}})"
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SUMExpr" $maxArithmeticLength }} = "SUM({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AVGExpr" $maxNumericLength }} = "AVG({{$field.ColumnName}})"
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AVGExpr" $maxArithmeticLength }} = "AVG({{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "NUMERIC" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AVGExpr" $maxNumericLength }} = "AVG({{$alias}}.{{$field.ColumnName}})"
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AVGExpr" $maxArithmeticLength }} = "AVG({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
