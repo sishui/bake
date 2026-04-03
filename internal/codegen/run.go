@@ -36,7 +36,7 @@ func Run(c *config.Config) error {
 	}
 
 	slog.DebugContext(ctx, "parsing templates", "dir", c.Template.Dir)
-	tmpl, err := parseTemplates(c.Template)
+	tmpl, err := parseTemplates(c.Template.Dir)
 	if err != nil {
 		return err
 	}

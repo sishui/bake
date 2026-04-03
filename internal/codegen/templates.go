@@ -9,10 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
-	"strings"
 	"text/template"
 
-	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 )
 
@@ -33,7 +31,7 @@ type templates struct {
 	templates map[string]*template.Template
 }
 
-func parseTemplates(cfg *config.Template) (*templates, error) {
+func parseTemplates(dir string) (*templates, error) {
 	files, err := templatesFS.ReadDir(templatesDir)
 	if err != nil {
 		return nil, err
@@ -41,23 +39,31 @@ func parseTemplates(cfg *config.Template) (*templates, error) {
 
 	result := make(map[string]*template.Template, len(files))
 	for _, file := range files {
-		tmpl, err := parseBuiltinTemplate(file)
+		tmpl, err := parseTemplate(templatesDir+"/"+file.Name(), templatesFS.ReadFile)
 		if err != nil {
 			return nil, err
 		}
 		result[tmpl.Name()] = tmpl
 	}
-	err = filepath.Walk(cfg.Dir, func(path string, info fs.FileInfo, err error) error {
+	if dir == "" {
+		return &templates{
+			templates: result,
+		}, nil
+	}
+	err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			if os.IsNotExist(err) {
 				return nil
 			}
 			return err
 		}
-		if !strings.HasSuffix(path, ".tmpl") {
+		if d.IsDir() {
 			return nil
 		}
-		tmpl, err := parseCustomTemplate(path)
+		if filepath.Ext(path) != ".tmpl" {
+			return nil
+		}
+		tmpl, err := parseTemplate(path, os.ReadFile)
 		if err != nil {
 			return err
 		}
@@ -105,24 +111,11 @@ func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir stri
 	return fullPath, nil
 }
 
-func parseBuiltinTemplate(file fs.DirEntry) (*template.Template, error) {
-	filename := templatesDir + "/" + file.Name()
-	buffer, err := templatesFS.ReadFile(filename)
+func parseTemplate(filename string, readBufferFunc func(filename string) ([]byte, error)) (*template.Template, error) {
+	buffer, err := readBufferFunc(filename)
 	if err != nil {
 		return nil, err
 	}
-	return parseTemplate(filename, buffer)
-}
-
-func parseCustomTemplate(filename string) (*template.Template, error) {
-	buffer, err := os.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	return parseTemplate(filename, buffer)
-}
-
-func parseTemplate(filename string, buffer []byte) (*template.Template, error) {
 	name := filepath.Base(filename)
 	name = name[:len(name)-len(filepath.Ext(name))]
 	tmpl, err := template.New(name).Funcs(templateFuncs).Parse(string(buffer))

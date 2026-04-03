@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	generate "github.com/sishui/bake/internal/codegen"
 	"github.com/sishui/bake/internal/config"
-	"github.com/sishui/bake/internal/generate"
 )
 
 func newRootCommand() *cobra.Command {
