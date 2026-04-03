@@ -149,7 +149,7 @@ func (m *Model) applyCustom(customTable *config.CustomTable) {
 
 func groupFields(fields []*Field) [][]*Field {
 	groups := make([][]*Field, 0, len(fields))
-	var current []*Field
+	current := make([]*Field, 0, len(fields))
 
 	for _, field := range fields {
 		if len(field.Comments) > 1 && len(current) > 0 {
