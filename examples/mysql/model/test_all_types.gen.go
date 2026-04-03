@@ -1497,7 +1497,7 @@ type TestAllType struct {
 	// with multiple lines of text
 	// This is a JSON column
 	// with multiple lines of text
-	JsonVal        json.RawMessage `bun:"json_val,nullzero" form:"json_val" json:"json_val,omitempty" xml:"JsonVal"`                                    
+	JsonVal        json.RawMessage `bun:"json_val,nullzero" form:"json_val" json:"json_val,omitempty" xml:"JsonVal"`
 	BitVal         []byte          `bun:"bit_val,nullzero" form:"bit_val" json:"bit_val,omitempty" xml:"BitVal"`                                         //
 	NullableIntVal *int32          `bun:"nullable_int_val,nullzero" form:"nullable_int_val" json:"nullable_int_val,omitempty" xml:"NullableIntVal"`      //
 	IgnoreVal      *string         `bun:"ignore_val,nullzero" form:"ignore_val" json:"ignore_val,omitempty" xml:"IgnoreVal"`                             //

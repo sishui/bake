@@ -696,7 +696,7 @@ type {{.Model}} struct {
 	{{- range $comment := $field.Comments}}
 	// {{$comment}}
 	{{- end}}
-	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.AlignedTag}}
+	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.Tag}}
 	{{- else}}
 	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.AlignedTag}} //{{ if gt (len .Comments) 0 -}} {{ " " }}{{ index .Comments 0 -}}{{ end }}
 	{{- end}}
