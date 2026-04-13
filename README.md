@@ -139,7 +139,8 @@ You can use custom templates. The following data is passed to templates:
 
 ```go
 type Model struct {
-    Version                   string     // bake version
+	Version                   string     // bake version
+	Driver                    string     // database driver (mysql, postgres)
 	Module                    string     // module path
 	Package                   string     // package name
 	Imports                   [][]string // imports

@@ -1,11 +1,10 @@
 package generate
 
 import (
-	"context"
+	"bytes"
 	"embed"
 	"fmt"
 	"io/fs"
-	"log/slog"
 	"os"
 	"path/filepath"
 	"slices"
@@ -45,12 +44,20 @@ func parseTemplates(dir string) (*templates, error) {
 		}
 		result[tmpl.Name()] = tmpl
 	}
-	if dir == "" {
-		return &templates{
-			templates: result,
-		}, nil
+	result, err = parseCustomTemplates(dir, result)
+	if err != nil {
+		return nil, err
 	}
-	err = filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+	return &templates{
+		templates: result,
+	}, nil
+}
+
+func parseCustomTemplates(dir string, result map[string]*template.Template) (map[string]*template.Template, error) {
+	if dir == "" {
+		return result, nil
+	}
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			if os.IsNotExist(err) {
 				return nil
@@ -73,42 +80,20 @@ func parseTemplates(dir string) (*templates, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return &templates{
-		templates: result,
-	}, nil
+	return result, nil
 }
 
-func (t *templates) writeTo(ctx context.Context, tmplName string, outputDir string, filename string, data any) (string, error) {
+func (t *templates) render(tmplName string, data any) (*bytes.Buffer, error) {
 	tmpl, ok := t.templates[tmplName]
 	if !ok {
-		return "", fmt.Errorf("template %s not found", tmplName)
+		return nil, fmt.Errorf("template %s not found", tmplName)
 	}
-	fullPath := filepath.Join(outputDir, filename+".gen.go")
-	file, err := os.OpenFile(fullPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
+	var buffer bytes.Buffer
+	err := tmpl.Execute(&buffer, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil {
-			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", closeErr)
-		}
-		if err == nil {
-			return
-		}
-		if removeErr := os.Remove(fullPath); removeErr != nil {
-			slog.ErrorContext(ctx, "remove file", "file", fullPath, "error", removeErr)
-		}
-	}()
-	err = tmpl.Execute(file, data)
-	if err != nil {
-		return "", err
-	}
-	err = file.Sync()
-	if err != nil {
-		return "", err
-	}
-	return fullPath, nil
+	return &buffer, nil
 }
 
 func parseTemplate(filename string, readBufferFunc func(filename string) ([]byte, error)) (*template.Template, error) {

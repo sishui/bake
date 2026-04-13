@@ -2,6 +2,7 @@
 package generate
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"io/fs"
@@ -114,6 +115,32 @@ type result struct {
 	err      error
 }
 
+func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) result {
+	m, err := NewModel(table, db, c, initialisms)
+	if err != nil {
+		return result{err: err}
+	}
+	buffer, err := tmpl.render(c.Template.Model, m)
+	if err != nil {
+		return result{err: err}
+	}
+	filename, err := writeFile(ctx, c.Output.Dir, m.Table, buffer)
+	if err != nil {
+		return result{err: err}
+	}
+	slog.DebugContext(ctx, "generated model", "table", m.Table, "model", m.Model, "file", filename)
+	return result{model: m, filename: filename}
+}
+
+func sendResult(ctx context.Context, ch chan<- result, r result) bool {
+	select {
+	case <-ctx.Done():
+		return false
+	case ch <- r:
+		return true
+	}
+}
+
 func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) <-chan result {
 	results := make(chan result, len(tables))
 	var wg sync.WaitGroup
@@ -138,26 +165,9 @@ func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *
 			}
 
 			slog.DebugContext(ctx, "processing table", "name", table.Name, "columns", len(table.Columns))
-			m, err := NewModel(table, db, c, initialisms)
-			if err != nil {
-				select {
-				case <-ctx.Done():
-				case results <- result{err: err}:
-				}
+			r := processTable(ctx, table, db, c, tmpl, initialisms)
+			if !sendResult(ctx, results, r) {
 				return
-			}
-			filename, err := tmpl.writeTo(ctx, c.Template.Model, c.Output.Dir, m.Table, m)
-			if err != nil {
-				select {
-				case <-ctx.Done():
-				case results <- result{err: err}:
-				}
-				return
-			}
-			slog.DebugContext(ctx, "generated model", "table", m.Table, "model", m.Model, "file", filename)
-			select {
-			case <-ctx.Done():
-			case results <- result{model: m, filename: filename}:
 			}
 		}(table)
 	}
@@ -200,4 +210,32 @@ func cleanDir(dir string) error {
 		}
 		return nil
 	})
+}
+
+func writeFile(ctx context.Context, dir string, filename string, data *bytes.Buffer) (string, error) {
+	fullPath := filepath.Join(dir, filename+".gen.go")
+	file, err := os.OpenFile(fullPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
+	if err != nil {
+		return "", err
+	}
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", closeErr)
+		}
+		if err == nil {
+			return
+		}
+		if removeErr := os.Remove(fullPath); removeErr != nil {
+			slog.ErrorContext(ctx, "remove file", "file", fullPath, "error", removeErr)
+		}
+	}()
+	_, err = data.WriteTo(file)
+	if err != nil {
+		return "", err
+	}
+	err = file.Sync()
+	if err != nil {
+		return "", err
+	}
+	return fullPath, err
 }
