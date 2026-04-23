@@ -26,6 +26,8 @@ const (
 	TestAllTypeTableAlias = "test_all_types_alias"
 )
 
+const TestAllTypeTableNameAsAlias = "test_all_types AS test_all_types_alias"
+
 var (
 	TestAllTypeTableNameIdent  = bun.Ident("test_all_types")
 	TestAllTypeTableAliasIdent = bun.Ident("test_all_types_alias")

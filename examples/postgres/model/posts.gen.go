@@ -24,6 +24,8 @@ const (
 	PostTableAlias = "posts_alias"
 )
 
+const PostTableNameAsAlias = "posts AS posts_alias"
+
 var (
 	PostTableNameIdent  = bun.Ident("posts")
 	PostTableAliasIdent = bun.Ident("posts_alias")

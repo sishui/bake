@@ -24,6 +24,8 @@ const (
 	UserTableAlias = "users_alias"
 )
 
+const UserTableNameAsAlias = "users AS users_alias"
+
 var (
 	UserTableNameIdent  = bun.Ident("users")
 	UserTableAliasIdent = bun.Ident("users_alias")

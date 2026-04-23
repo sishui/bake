@@ -24,6 +24,8 @@ const (
 	MailTableAlias = "mail_alias"
 )
 
+const MailTableNameAsAlias = "mail AS mail_alias"
+
 var (
 	MailTableNameIdent  = bun.Ident("mail")
 	MailTableAliasIdent = bun.Ident("mail_alias")

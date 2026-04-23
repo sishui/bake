@@ -24,6 +24,8 @@ const (
 	MailAttachmentTableAlias = "mail_attachment_alias"
 )
 
+const MailAttachmentTableNameAsAlias = "mail_attachment AS mail_attachment_alias"
+
 var (
 	MailAttachmentTableNameIdent  = bun.Ident("mail_attachment")
 	MailAttachmentTableAliasIdent = bun.Ident("mail_attachment_alias")
