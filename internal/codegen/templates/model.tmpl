@@ -95,6 +95,14 @@ var (
 {{- end}}
 )
 
+var (
+{{- range $field := .Fields}}
+	{{- if not $field.IsCustom }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AliasIdent" $maxFieldLength }} = bun.Ident("{{$field.ColumnName}}")
+	{{- end}}
+{{- end}}
+)
+
 const (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
