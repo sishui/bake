@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/sishui/bake/internal/config"
+	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
 	"github.com/sishui/bake/internal/types"
 )
@@ -53,39 +54,36 @@ func TestFieldImports(t *testing.T) {
 }
 
 func TestFieldName(t *testing.T) {
+	n := naming.New()
 	tests := []struct {
-		name        string
-		col         *schema.Column
-		custom      *config.CustomField
-		initialisms map[string]string
-		want        string
+		name   string
+		col    *schema.Column
+		custom *config.CustomField
+		want   string
 	}{
 		{
-			name:        "no custom field",
-			col:         &schema.Column{Name: "user_name"},
-			custom:      nil,
-			initialisms: nil,
-			want:        "UserName",
+			name:   "no custom field",
+			col:    &schema.Column{Name: "user_name"},
+			custom: nil,
+			want:   "UserName",
 		},
 		{
-			name:        "with custom name",
-			col:         &schema.Column{Name: "user_name"},
-			custom:      &config.CustomField{Name: "Name"},
-			initialisms: nil,
-			want:        "Name",
+			name:   "with custom name",
+			col:    &schema.Column{Name: "user_name"},
+			custom: &config.CustomField{Name: "Name"},
+			want:   "Name",
 		},
 		{
-			name:        "custom field with empty name",
-			col:         &schema.Column{Name: "user_name"},
-			custom:      &config.CustomField{},
-			initialisms: nil,
-			want:        "UserName",
+			name:   "custom field with empty name",
+			col:    &schema.Column{Name: "user_name"},
+			custom: &config.CustomField{},
+			want:   "UserName",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := fieldName(tt.col, tt.custom, tt.initialisms)
+			got := fieldName(tt.col, tt.custom, n)
 			if got != tt.want {
 				t.Errorf("fieldName() = %v, want %v", got, tt.want)
 			}

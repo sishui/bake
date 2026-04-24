@@ -8,12 +8,7 @@ import (
 	"github.com/sishui/bake/internal/naming"
 )
 
-var initialisms = map[string]string{
-	"id":   "ID",
-	"ids":  "IDs",
-	"url":  "URL",
-	"urls": "URLs",
-}
+var initialisms = []string{"ID", "URL", "URI", "UUID", "IP"}
 
 func TestSingular(t *testing.T) {
 	type args struct {
@@ -275,6 +270,7 @@ func TestColumnNameToFieldName(t *testing.T) {
 	type args struct {
 		raw string
 	}
+	n := naming.New(initialisms...)
 	tests := []struct {
 		name string
 		args args
@@ -318,7 +314,7 @@ func TestColumnNameToFieldName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := naming.ColumnToField(tt.args.raw, initialisms); got != tt.want {
+			if got := n.ColumnToField(tt.args.raw); got != tt.want {
 				t.Errorf("ColumnNameToFieldName() = %v, want %v", got, tt.want)
 			}
 		})

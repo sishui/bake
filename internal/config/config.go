@@ -56,15 +56,6 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-func (c *Config) Naming() map[string]string {
-	result := make(map[string]string, len(c.Initialisms))
-	for _, s := range c.Initialisms {
-		result[strings.ToLower(s)] = s
-	}
-
-	return result
-}
-
 type Log struct {
 	Level string `koanf:"level"`
 	File  string `koanf:"file"`

@@ -24,7 +24,7 @@ type Field struct {
 	IsRelation  bool     // is relation
 }
 
-func NewField(c *schema.Column, customTable *config.CustomTable, driver string, initialisms map[string]string) (*Field, error) {
+func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming) (*Field, error) {
 	desc, err := types.NewDesc(driver, c)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 	}
 	return &Field{
 		Imports:    fieldImports(desc, customField),
-		Name:       fieldName(c, customField, initialisms),
+		Name:       fieldName(c, customField, n),
 		Type:       fieldType(desc, customField),
 		Tag:        fieldTags(c, customField, customTags).String(),
 		Comments:   naming.SplitCommentLines(c.Comment),
@@ -52,7 +52,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 	}, nil
 }
 
-func NewCustomField(fieldName string, customTable *config.CustomTable) *Field {
+func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming.Naming) *Field {
 	customField, ok := customTable.Fields[fieldName]
 	if !ok {
 		return nil
@@ -66,7 +66,7 @@ func NewCustomField(fieldName string, customTable *config.CustomTable) *Field {
 	tags.Add(newCustomTags(name, customField.Tags...)...)
 	field := &Field{
 		Imports:    nil,
-		Name:       naming.ColumnToField(name, nil),
+		Name:       n.ColumnToField(name),
 		Type:       customField.Type,
 		Tag:        tags.String(),
 		Comments:   naming.SplitCommentLines(customField.Comment),
@@ -83,11 +83,11 @@ func NewCustomField(fieldName string, customTable *config.CustomTable) *Field {
 	return field
 }
 
-func fieldName(c *schema.Column, customField *config.CustomField, initialisms map[string]string) string {
+func fieldName(c *schema.Column, customField *config.CustomField, naming *naming.Naming) string {
 	if customField == nil || customField.Name == "" {
-		return naming.ColumnToField(c.Name, initialisms)
+		return naming.ColumnToField(c.Name)
 	}
-	return naming.ColumnToField(customField.Name, initialisms)
+	return naming.ColumnToField(customField.Name)
 }
 
 func fieldType(desc types.Desc, customField *config.CustomField) string {
