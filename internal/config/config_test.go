@@ -189,30 +189,6 @@ func TestDBValidate(t *testing.T) {
 	}
 }
 
-func TestConfigNaming(t *testing.T) {
-	cfg := &Config{
-		Initialisms: []string{"ID", "URL", "API"},
-	}
-
-	result := cfg.Naming()
-
-	if len(result) != 3 {
-		t.Errorf("Naming() len = %d, want 3", len(result))
-	}
-
-	if result["id"] != "ID" {
-		t.Errorf("Naming() id = %v, want ID", result["id"])
-	}
-
-	if result["url"] != "URL" {
-		t.Errorf("Naming() url = %v, want URL", result["url"])
-	}
-
-	if result["api"] != "API" {
-		t.Errorf("Naming() api = %v, want API", result["api"])
-	}
-}
-
 func TestCustomFieldValidate(t *testing.T) {
 	tests := []struct {
 		name    string

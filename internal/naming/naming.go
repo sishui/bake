@@ -13,6 +13,47 @@ import (
 
 const aliasSuffix = "_alias"
 
+type Naming struct {
+	initialisms map[string]string
+}
+
+func New(initialisms ...string) *Naming {
+	result := make(map[string]string, len(initialisms))
+	for _, s := range initialisms {
+		result[strings.ToLower(s)] = s
+	}
+
+	return &Naming{
+		initialisms: result,
+	}
+}
+
+func (n *Naming) ColumnToField(s string) string {
+	if s == "" {
+		panic("empty column name")
+	}
+	parts := camelcase.Split(ToCamelCase(NormalizeIdentifier(s)))
+
+	var b strings.Builder
+	for _, w := range parts {
+		b.WriteString(n.normalize(w))
+	}
+	return b.String()
+}
+
+func (n *Naming) normalize(word string) string {
+	if word == "" {
+		return ""
+	}
+	lower := strings.ToLower(word)
+
+	if v, ok := n.initialisms[lower]; ok {
+		return v
+	}
+
+	return strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
+}
+
 func IsASCIIUpper(c byte) bool {
 	return c >= 'A' && c <= 'Z'
 }
@@ -123,19 +164,6 @@ func StructToReceiver(s string) string {
 	return strings.ToLower(s[:1])
 }
 
-func ColumnToField(s string, initialisms map[string]string) string {
-	if s == "" {
-		panic("empty column name")
-	}
-	parts := camelcase.Split(ToCamelCase(NormalizeIdentifier(s)))
-
-	var b strings.Builder
-	for _, w := range parts {
-		b.WriteString(normalize(w, initialisms))
-	}
-	return b.String()
-}
-
 func SplitCommentLines(s string) []string {
 	if s == "" {
 		return nil
@@ -167,17 +195,4 @@ func Concat(a, b string, maxN int) string {
 		return s
 	}
 	return s + strings.Repeat(" ", maxN-n)
-}
-
-func normalize(word string, initialisms map[string]string) string {
-	if word == "" {
-		return ""
-	}
-	lower := strings.ToLower(word)
-
-	if v, ok := initialisms[lower]; ok {
-		return v
-	}
-
-	return strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
 }

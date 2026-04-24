@@ -35,7 +35,7 @@ type Model struct {
 	MaxTimeLength             int        // max time length
 }
 
-func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms map[string]string) (*Model, error) {
+func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Naming) (*Model, error) {
 	m := &Model{
 		Version:  cfg.Version,
 		Module:   cfg.Output.Module,
@@ -53,7 +53,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	m.applyCustom(customTable)
 	fields := make([]*Field, 0, len(t.Columns)*2)
 	for _, c := range t.Columns {
-		f, err := NewField(c, customTable, db.Driver, initialisms)
+		f, err := NewField(c, customTable, db.Driver, n)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +66,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, initialisms ma
 	for _, f := range fields {
 		columns[f.ColumnName] = struct{}{}
 	}
-	fields = append(fields, newCustomFields(customTable, columns)...)
+	fields = append(fields, newCustomFields(customTable, columns, n)...)
 	alignFields(groupFields(fields))
 	m.Fields = fields
 	m.init()
@@ -190,7 +190,7 @@ func maxFieldAttr(fields []*Field) (int, int, int) {
 	return maxName, maxType, maxTag
 }
 
-func newCustomFields(customTable *config.CustomTable, columns map[string]struct{}) []*Field {
+func newCustomFields(customTable *config.CustomTable, columns map[string]struct{}, n *naming.Naming) []*Field {
 	if customTable == nil {
 		return nil
 	}
@@ -202,7 +202,7 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 		if field.Name == "" && field.Type == "" && !field.Relation {
 			continue
 		}
-		f := NewCustomField(k, customTable)
+		f := NewCustomField(k, customTable, n)
 		if f != nil { // defensive: avoid nil element
 			results = append(results, f)
 		}

@@ -18,6 +18,7 @@ import (
 
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/logger"
+	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
 )
 
@@ -59,12 +60,12 @@ func Run(c *config.Config) error {
 }
 
 func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
-	initialisms := c.Naming()
+	nm := naming.New(c.Initialisms...)
 	totalTables := 0
 
 	for _, db := range c.DB {
 		slog.DebugContext(ctx, "processing database", "driver", db.Driver, "schema", db.Schema)
-		count, err := generate(ctx, db, c, tmpl, initialisms)
+		count, err := generate(ctx, db, c, tmpl, nm)
 		if err != nil {
 			return 0, err
 		}
@@ -73,13 +74,13 @@ func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
 	return totalTables, nil
 }
 
-func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) (int, error) {
+func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templates, nm *naming.Naming) (int, error) {
 	tables, err := loadSchema(ctx, db)
 	if err != nil {
 		return 0, err
 	}
 
-	results := processTablesConcurrently(ctx, tables, db, c, tmpl, initialisms)
+	results := processTablesConcurrently(ctx, tables, db, c, tmpl, nm)
 
 	errs := collectErrors(results)
 	if len(errs) > 0 {
@@ -115,8 +116,8 @@ type result struct {
 	err      error
 }
 
-func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) result {
-	m, err := NewModel(table, db, c, initialisms)
+func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *config.Config, tmpl *templates, nm *naming.Naming) result {
+	m, err := NewModel(table, db, c, nm)
 	if err != nil {
 		return result{err: err}
 	}
@@ -141,7 +142,7 @@ func sendResult(ctx context.Context, ch chan<- result, r result) bool {
 	}
 }
 
-func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *config.DB, c *config.Config, tmpl *templates, initialisms map[string]string) <-chan result {
+func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *config.DB, c *config.Config, tmpl *templates, nm *naming.Naming) <-chan result {
 	results := make(chan result, len(tables))
 	var wg sync.WaitGroup
 	limiter := semaphore.NewWeighted(int64(runtime.NumCPU() * 4))
@@ -165,7 +166,7 @@ func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *
 			}
 
 			slog.DebugContext(ctx, "processing table", "name", table.Name, "columns", len(table.Columns))
-			r := processTable(ctx, table, db, c, tmpl, initialisms)
+			r := processTable(ctx, table, db, c, tmpl, nm)
 			if !sendResult(ctx, results, r) {
 				return
 			}
