@@ -11,23 +11,25 @@ import (
 	"strings"
 
 	"github.com/jinzhu/inflection"
-	"github.com/spf13/viper"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
+	"github.com/knadh/koanf/v2"
 	"golang.org/x/mod/module"
 )
 
 var dirRegex = regexp.MustCompile(`^[a-zA-Z0-9._/-]+$`)
 
 type Config struct {
-	Version      string          `mapstructure:"-"`
-	Filename     string          `mapstructure:"-"`
-	Log          *Log            `mapstructure:"log"`
-	Uncountables []string        `mapstructure:"uncountables"`
-	Initialisms  []string        `mapstructure:"initialisms"`
-	Timezone     string          `mapstructure:"timezone"`
-	Template     *Template       `mapstructure:"template"`
-	Output       *Output         `mapstructure:"output"`
-	Objects      []*CustomObject `mapstructure:"objects"`
-	DB           []*DB           `mapstructure:"db"`
+	Version      string          `koanf:"-"`
+	Filename     string          `koanf:"-"`
+	Log          *Log            `koanf:"log"`
+	Uncountables []string        `koanf:"uncountables"`
+	Initialisms  []string        `koanf:"initialisms"`
+	Timezone     string          `koanf:"timezone"`
+	Template     *Template       `koanf:"template"`
+	Output       *Output         `koanf:"output"`
+	Objects      []*CustomObject `koanf:"objects"`
+	DB           []*DB           `koanf:"db"`
 }
 
 func (c *Config) Validate() error {
@@ -64,13 +66,13 @@ func (c *Config) Naming() map[string]string {
 }
 
 type Log struct {
-	Level string `mapstructure:"level"`
-	File  string `mapstructure:"file"`
+	Level string `koanf:"level"`
+	File  string `koanf:"file"`
 }
 
 type Template struct {
-	Dir   string `mapstructure:"dir"`
-	Model string `mapstructure:"model"`
+	Dir   string `koanf:"dir"`
+	Model string `koanf:"model"`
 }
 
 func (t *Template) Validate() error {
@@ -82,9 +84,9 @@ func (t *Template) Validate() error {
 }
 
 type Output struct {
-	Dir     string `mapstructure:"dir"`
-	Package string `mapstructure:"package"`
-	Module  string `mapstructure:"module"`
+	Dir     string `koanf:"dir"`
+	Package string `koanf:"package"`
+	Module  string `koanf:"module"`
 }
 
 func (o *Output) Validate() error {
@@ -107,15 +109,15 @@ func (o *Output) Validate() error {
 }
 
 type Replacement struct {
-	From string `mapstructure:"from"`
-	To   string `mapstructure:"to"`
+	From string `koanf:"from"`
+	To   string `koanf:"to"`
 }
 
 type CustomObject struct {
-	Name    string         `mapstructure:"name"`
-	Comment string         `mapstructure:"comment"`
-	Fields  []*CustomField `mapstructure:"fields"`
-	Tags    []*Tag         `mapstructure:"tags"`
+	Name    string         `koanf:"name"`
+	Comment string         `koanf:"comment"`
+	Fields  []*CustomField `koanf:"fields"`
+	Tags    []*Tag         `koanf:"tags"`
 }
 
 func (c *CustomObject) Validate() error {
@@ -137,12 +139,12 @@ func (c *CustomObject) Validate() error {
 }
 
 type CustomField struct {
-	Import   string `mapstructure:"import"`
-	Name     string `mapstructure:"name"`
-	Type     string `mapstructure:"type"`
-	Relation bool   `mapstructure:"relation"` // true for relation
-	Tags     []*Tag `mapstructure:"tags"`
-	Comment  string `mapstructure:"comment"`
+	Import   string `koanf:"import"`
+	Name     string `koanf:"name"`
+	Type     string `koanf:"type"`
+	Relation bool   `koanf:"relation"` // true for relation
+	Tags     []*Tag `koanf:"tags"`
+	Comment  string `koanf:"comment"`
 }
 
 func (c *CustomField) Validate() error {
@@ -156,12 +158,12 @@ func (c *CustomField) Validate() error {
 }
 
 type DB struct {
-	Driver   string                  `mapstructure:"driver"`
-	DSN      string                  `mapstructure:"dsn"`
-	Schema   string                  `mapstructure:"schema"`
-	Included []string                `mapstructure:"included"`
-	Excluded []string                `mapstructure:"excluded"`
-	Customs  map[string]*CustomTable `mapstructure:"customs"`
+	Driver   string                  `koanf:"driver"`
+	DSN      string                  `koanf:"dsn"`
+	Schema   string                  `koanf:"schema"`
+	Included []string                `koanf:"included"`
+	Excluded []string                `koanf:"excluded"`
+	Customs  map[string]*CustomTable `koanf:"customs"`
 }
 
 func (d *DB) Validate() error {
@@ -189,11 +191,11 @@ func (d *DB) Validate() error {
 }
 
 type CustomTable struct {
-	Name    string                  `mapstructure:"table"`
-	Alias   string                  `mapstructure:"alias"`
-	Comment string                  `mapstructure:"comment"`
-	Fields  map[string]*CustomField `mapstructure:"fields"`
-	Tags    []*Tag                  `mapstructure:"tags"`
+	Name    string                  `koanf:"table"`
+	Alias   string                  `koanf:"alias"`
+	Comment string                  `koanf:"comment"`
+	Fields  map[string]*CustomField `koanf:"fields"`
+	Tags    []*Tag                  `koanf:"tags"`
 }
 
 func (c *CustomTable) Validate() error {
@@ -278,15 +280,12 @@ func parse(filename string) (*Config, error) {
 	if _, err := os.Stat(actualFileName); os.IsNotExist(err) {
 		actualFileName = filename
 	}
-	v := viper.New()
-	v.SetConfigFile(actualFileName)
-	v.AddConfigPath(".")
-	v.SetConfigType("yaml")
-	if err := v.ReadInConfig(); err != nil {
+	k := koanf.New(".")
+	if err := k.Load(file.Provider(actualFileName), yaml.Parser()); err != nil {
 		return nil, err
 	}
 	var config Config
-	if err := v.Unmarshal(&config); err != nil {
+	if err := k.Unmarshal("", &config); err != nil {
 		return nil, err
 	}
 	config.Filename = actualFileName
@@ -295,16 +294,22 @@ func parse(filename string) (*Config, error) {
 }
 
 func loadENV() (string, error) {
-	v := viper.New()
-	v.SetConfigFile(".env")
-	v.SetConfigType("env")
-	v.AddConfigPath(".")
-	v.AutomaticEnv()
-	err := v.ReadInConfig()
-	if err != nil && !os.IsNotExist(err) {
+	buffer, err := os.ReadFile(".env")
+	if os.IsNotExist(err) {
+		return "", nil
+	}
+	if err != nil {
 		return "", err
 	}
-	return v.GetString("env"), nil
+
+	for line := range strings.SplitSeq(string(buffer), "\n") {
+		line = strings.TrimSpace(line)
+		if after, ok := strings.CutPrefix(line, "env="); ok {
+			return after, nil
+		}
+	}
+
+	return "", nil
 }
 
 func validatePackage(name string) error {

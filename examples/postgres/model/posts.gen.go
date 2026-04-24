@@ -72,6 +72,16 @@ var (
 	PostUpdatedAtIdent = bun.Ident("updated_at")
 )
 
+var (
+	PostIDAliasIdent        = bun.Ident("id")
+	PostUserIDAliasIdent    = bun.Ident("user_id")
+	PostTitleAliasIdent     = bun.Ident("title")
+	PostContentAliasIdent   = bun.Ident("content")
+	PostStatusAliasIdent    = bun.Ident("status")
+	PostCreatedAtAliasIdent = bun.Ident("created_at")
+	PostUpdatedAtAliasIdent = bun.Ident("updated_at")
+)
+
 const (
 	PostIDEq        = "id = ?"
 	PostUserIDEq    = "user_id = ?"

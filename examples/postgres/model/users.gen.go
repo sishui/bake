@@ -63,6 +63,13 @@ var (
 	UserCreatedAtIdent = bun.Ident("created_at")
 )
 
+var (
+	UserIDAliasIdent        = bun.Ident("id")
+	UserNameAliasIdent      = bun.Ident("name")
+	UserEmailAliasIdent     = bun.Ident("email")
+	UserCreatedAtAliasIdent = bun.Ident("created_at")
+)
+
 const (
 	UserIDEq        = "id = ?"
 	UserNameEq      = "name = ?"

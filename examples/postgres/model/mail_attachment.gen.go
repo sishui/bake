@@ -68,6 +68,16 @@ var (
 	MailAttachmentUpdatedAtIdent   = bun.Ident("updated_at")
 )
 
+var (
+	MailAttachmentIDAliasIdent          = bun.Ident("id")
+	MailAttachmentMailIDAliasIdent      = bun.Ident("mail_id")
+	MailAttachmentKindAliasIdent        = bun.Ident("kind")
+	MailAttachmentRewardIDAliasIdent    = bun.Ident("reward_id")
+	MailAttachmentRewardCountAliasIdent = bun.Ident("reward_count")
+	MailAttachmentCreatedAtAliasIdent   = bun.Ident("created_at")
+	MailAttachmentUpdatedAtAliasIdent   = bun.Ident("updated_at")
+)
+
 const (
 	MailAttachmentIDEq          = "id = ?"
 	MailAttachmentMailIDEq      = "mail_id = ?"
