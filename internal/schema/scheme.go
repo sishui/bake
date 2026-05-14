@@ -51,11 +51,11 @@ func openDB(driver string, dsn string) (*sql.DB, error) {
 
 // shouldIncludeTable returns true if the table should be included based on config.
 func shouldIncludeTable(ctx context.Context, name string, cfg *config.DB) bool {
-	if slices.Index(cfg.Excluded, name) >= 0 {
+	if slices.Index(cfg.Exclude, name) >= 0 {
 		slog.DebugContext(ctx, "table", name, "excluded table")
 		return false
 	}
-	if len(cfg.Included) > 0 && slices.Index(cfg.Included, name) == -1 {
+	if len(cfg.Include) > 0 && slices.Index(cfg.Include, name) == -1 {
 		slog.DebugContext(ctx, "table", name, "skipping table")
 		return false
 	}

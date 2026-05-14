@@ -51,7 +51,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		Timezone: cfg.Timezone,
 	}
 
-	customTable := db.Customs[t.Name]
+	customTable := db.Custom[t.Name]
 	m.applyCustom(customTable)
 	fields := make([]*Field, 0, len(t.Columns)*2)
 	for _, c := range t.Columns {

@@ -149,12 +149,12 @@ func (c *CustomField) Validate() error {
 }
 
 type DB struct {
-	Driver   string                  `koanf:"driver"`
-	DSN      string                  `koanf:"dsn"`
-	Schema   string                  `koanf:"schema"`
-	Included []string                `koanf:"included"`
-	Excluded []string                `koanf:"excluded"`
-	Customs  map[string]*CustomTable `koanf:"customs"`
+	Driver  string                  `koanf:"driver"`
+	DSN     string                  `koanf:"dsn"`
+	Schema  string                  `koanf:"schema"`
+	Include []string                `koanf:"include"`
+	Exclude []string                `koanf:"exclude"`
+	Custom  map[string]*CustomTable `koanf:"custom"`
 }
 
 func (d *DB) Validate() error {
@@ -173,7 +173,7 @@ func (d *DB) Validate() error {
 	default:
 		return errors.New("db.driver must be mysql or postgres")
 	}
-	for _, custom := range d.Customs {
+	for _, custom := range d.Custom {
 		if err := custom.Validate(); err != nil {
 			return err
 		}
@@ -196,17 +196,6 @@ func (c *CustomTable) Validate() error {
 		}
 	}
 	return nil
-}
-
-func (c *CustomTable) CloseFields() map[string]*CustomField {
-	if c == nil {
-		return nil
-	}
-	fields := make(map[string]*CustomField, len(c.Fields))
-	for _, field := range c.Fields {
-		fields[field.Name] = field
-	}
-	return fields
 }
 
 func Parse(args Args) (*Config, error) {

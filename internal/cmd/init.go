@@ -41,8 +41,9 @@ output:
 db:
   - driver: "%s"
     dsn: "%s"%s
-    included: []
-    excluded: []
+    include: []
+    exclude: []
+    custom: {}
 `
 
 func NewInitCommand() *cobra.Command {
@@ -107,7 +108,7 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	} else {
 		schema = ""
 	}
-	content := fmt.Sprintf(defaultConfigContent, template, output, pkg, module, driver, dsn, schema)
+	content := fmt.Sprintf(defaultConfigContent[1:], template, output, pkg, module, driver, dsn, schema)
 	if err := os.WriteFile(defaultConfigFile, []byte(content), 0o644); err != nil {
 		return fmt.Errorf("write config file: %w", err)
 	}

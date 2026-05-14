@@ -1,13 +1,12 @@
-
 #go install github.com/sishui/bake/cmd/bake@latest
 #bake init
 
 log:
   file: ""
 
-uncountables: ["sms", "mms", "rls"]
+uncountables: [ "sms", "mms", "rls" ]
 
-initialisms: ["ID", "UID", "URL", "URI", "UUID", "IP"]
+initialisms: [ "ID", "UID", "URL", "URI", "UUID", "IP" ]
 
 timezone: ""
 
@@ -22,9 +21,9 @@ db:
   - driver: "postgres"
     dsn: "postgres://postgres:123456@127.0.0.1:5432/postgres?sslmode=disable"
     schema: "public"
-    included: []
-    excluded: []
-    customs:
+    include: [ ]
+    exclude: [ ]
+    custom:
       test_all_types:
         tags:
           - key: "form"
@@ -45,8 +44,8 @@ db:
                 options: [ "rel:has-many", "join:id=user_id" ]
       posts:
         tags:
-        - key: "xml"
-          name: "$SnakeCase"
+          - key: "xml"
+            name: "$SnakeCase"
         fields:
           user:
             type: "*User"

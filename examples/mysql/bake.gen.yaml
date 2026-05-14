@@ -6,7 +6,7 @@ log:
 
 singular: [ "sms", "mms", "rls" ]
 
-initialisms: ["ID", "UID", "URL", "URI", "UUID", "IP"]
+initialisms: [ "ID", "UID", "URL", "URI", "UUID", "IP" ]
 
 timezone: "UTC"
 
@@ -20,9 +20,9 @@ output:
 db:
   - driver: "mysql"
     dsn: "root:123456@tcp(127.0.0.1:3306)/bake?charset=utf8mb4&parseTime=True&loc=Local"
-    included: [ ]
-    excluded: [ ]
-    customs:
+    include: [ ]
+    exclude: [ ]
+    custom:
       test_all_types:
         tags:
           - key: "form"
@@ -43,8 +43,8 @@ db:
                 options: [ "rel:has-many", "join:id=user_id" ]
       posts:
         tags:
-        - key: "xml"
-          name: "$SnakeCase"
+          - key: "xml"
+            name: "$SnakeCase"
         fields:
           user:
             type: "*User"

@@ -56,8 +56,8 @@ func TestShouldIncludeTable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cfg := &config.DB{
-				Excluded: tt.excluded,
-				Included: tt.included,
+				Exclude: tt.excluded,
+				Include: tt.included,
 			}
 			got := shouldIncludeTable(context.Background(), tt.table, cfg)
 			if got != tt.want {
@@ -84,7 +84,7 @@ func TestAssignColumns(t *testing.T) {
 		},
 	}
 
-	assignColumns(tables, columns)
+	assignColumns(tables, columns, nil)
 
 	// Check users columns are sorted
 	if len(tables[0].Columns) != 3 {
