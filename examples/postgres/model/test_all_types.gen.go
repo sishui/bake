@@ -1566,8 +1566,6 @@ func (m *TestAllType) BeforeInsert(ctx context.Context, query *bun.InsertQuery) 
 
 func (m *TestAllType) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	now := time.Now()
-	if m.UpdatedAt.IsZero() {
-		m.UpdatedAt = now
-	}
+	m.UpdatedAt = now
 	return nil
 }

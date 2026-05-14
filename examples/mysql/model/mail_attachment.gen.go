@@ -499,7 +499,7 @@ type MailAttachment struct {
 }
 
 func (m *MailAttachment) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-	now := time.Now()
+	now := time.Now().UTC()
 	if m.CreatedAt == 0 {
 		m.CreatedAt = now.UnixMilli()
 	}
@@ -510,9 +510,7 @@ func (m *MailAttachment) BeforeInsert(ctx context.Context, query *bun.InsertQuer
 }
 
 func (m *MailAttachment) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
-	now := time.Now()
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = now.UnixMilli()
-	}
+	now := time.Now().UTC()
+	m.UpdatedAt = now.UnixMilli()
 	return nil
 }

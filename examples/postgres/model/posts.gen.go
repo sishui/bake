@@ -562,8 +562,6 @@ func (m *Post) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
 
 func (m *Post) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	now := time.Now()
-	if m.UpdatedAt.IsZero() {
-		m.UpdatedAt = now
-	}
+	m.UpdatedAt = now
 	return nil
 }

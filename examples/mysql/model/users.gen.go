@@ -343,7 +343,7 @@ type User struct {
 }
 
 func (m *User) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-	now := time.Now()
+	now := time.Now().UTC()
 	if m.CreatedAt.IsZero() {
 		m.CreatedAt = now
 	}

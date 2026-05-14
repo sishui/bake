@@ -8,6 +8,8 @@ singular: [ "sms", "mms", "rls" ]
 
 initialisms: ["ID", "UID", "URL", "URI", "UUID", "IP"]
 
+timezone: "UTC"
+
 template:
   dir: ""
   model: "model"

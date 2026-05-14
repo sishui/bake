@@ -510,8 +510,6 @@ func (m *MailAttachment) BeforeInsert(ctx context.Context, query *bun.InsertQuer
 
 func (m *MailAttachment) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	now := time.Now()
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = now.UnixMilli()
-	}
+	m.UpdatedAt = now.UnixMilli()
 	return nil
 }

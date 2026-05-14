@@ -573,7 +573,7 @@ type Mail struct {
 }
 
 func (m *Mail) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-	now := time.Now()
+	now := time.Now().UTC()
 	if m.CreatedAt.IsZero() {
 		m.CreatedAt = now
 	}
@@ -584,9 +584,7 @@ func (m *Mail) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
 }
 
 func (m *Mail) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
-	now := time.Now()
-	if m.UpdatedAt.IsZero() {
-		m.UpdatedAt = now
-	}
+	now := time.Now().UTC()
+	m.UpdatedAt = now
 	return nil
 }

@@ -809,31 +809,19 @@ func (m *{{.Model}}) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) e
 {{- end }}
 
 {{- if eq $updatedAtType "time.Time" }}
-	if m.UpdatedAt.IsZero() {
-		m.UpdatedAt = now
-	}
+	m.UpdatedAt = now
 {{- else if eq $updatedAtType "*time.Time" }}
-	if m.UpdatedAt == nil {
-		m.UpdatedAt = &now
-	}
+	m.UpdatedAt = &now
 {{- else if eq $updatedAtType "int64" }}
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = now.UnixMilli()
-	}
+	m.UpdatedAt = now.UnixMilli()
 {{- else if eq $updatedAtType "*int64" }}
-	if m.UpdatedAt == nil {
-		nowMs := now.UnixMilli()
-		m.UpdatedAt = &nowMs
-	}
+	nowMs := now.UnixMilli()
+	m.UpdatedAt = &nowMs
 {{- else if eq $updatedAtType "int32" }}
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = int32(now.Unix())
-	}
+	m.UpdatedAt = int32(now.Unix())
 {{- else if eq $updatedAtType "*int32" }}
-	if m.UpdatedAt == nil {
-		nowSec := int32(now.Unix())
-		m.UpdatedAt = &nowSec
-	}
+	nowSec := int32(now.Unix())
+	m.UpdatedAt = &nowSec
 {{- end }}
 {{- end }}
 	return nil
