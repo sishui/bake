@@ -2,6 +2,8 @@
 package generate
 
 import (
+	"sort"
+
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -207,6 +209,9 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 			results = append(results, f)
 		}
 	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Name < results[j].Name
+	})
 	return results
 }
 
