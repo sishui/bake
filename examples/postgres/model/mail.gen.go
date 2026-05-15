@@ -560,7 +560,7 @@ const (
 type Mail struct {
 	bun.BaseModel `bun:"table:mail,alias:mail_alias"`
 
-	ID                  int64             `bun:"id,pk,notnull" form:"id" json:"id,omitempty"`                                                //
+	ID                  int64             `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty"`                                  //
 	UID                 int64             `bun:"uid,notnull" form:"uid" json:"uid,omitempty"`                                                //
 	Subject             string            `bun:"subject,notnull" form:"subject" json:"subject,omitempty"`                                    //
 	Content             string            `bun:"content,notnull" form:"content" json:"content,omitempty"`                                    //

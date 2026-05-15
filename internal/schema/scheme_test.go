@@ -228,6 +228,102 @@ func TestColumnIsForeignKey(t *testing.T) {
 	}
 }
 
+func TestAssignColumns_CompositeUniqueIndex(t *testing.T) {
+	tables := []*Table{
+		{Name: "bookings"},
+	}
+	columns := map[string][]*Column{
+		"bookings": {
+			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
+			{Name: "start_at", OrdinalPosition: 2, Key: "MUL"},
+			{Name: "end_at", OrdinalPosition: 3},
+		},
+	}
+	indexes := []Index{
+		{Table: "bookings", NonUnique: 0, IndexName: "idx_unique_range", ColumnName: "start_at"},
+		{Table: "bookings", NonUnique: 0, IndexName: "idx_unique_range", ColumnName: "end_at"},
+	}
+
+	assignColumns(tables, columns, indexes)
+
+	startAt := tables[0].Columns[1]
+	if !startAt.IsUnique() {
+		t.Error("start_at IsUnique() = false, want true")
+	}
+	if !startAt.IsMultiKey {
+		t.Error("start_at IsMultiKey = false, want true")
+	}
+
+	endAt := tables[0].Columns[2]
+	if !endAt.IsUnique() {
+		t.Error("end_at IsUnique() = false, want true")
+	}
+	if !endAt.IsMultiKey {
+		t.Error("end_at IsMultiKey = false, want true")
+	}
+}
+
+func TestAssignColumns_SingleUniqueIndex(t *testing.T) {
+	tables := []*Table{
+		{Name: "users"},
+	}
+	columns := map[string][]*Column{
+		"users": {
+			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
+			{Name: "email", OrdinalPosition: 2, Key: "UNI"},
+		},
+	}
+	indexes := []Index{
+		{Table: "users", NonUnique: 0, IndexName: "idx_email", ColumnName: "email"},
+	}
+
+	assignColumns(tables, columns, indexes)
+
+	email := tables[0].Columns[1]
+	if !email.IsUnique() {
+		t.Error("email IsUnique() = false, want true")
+	}
+	if email.IsMultiKey {
+		t.Error("email IsMultiKey = true, want false")
+	}
+}
+
+func TestAssignColumns_PreferUniqueIndex(t *testing.T) {
+	tables := []*Table{
+		{Name: "events"},
+	}
+	columns := map[string][]*Column{
+		"events": {
+			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
+			{Name: "code", OrdinalPosition: 2, Key: "MUL"},
+			{Name: "name", OrdinalPosition: 3},
+		},
+	}
+	indexes := []Index{
+		{Table: "events", NonUnique: 1, IndexName: "idx_code", ColumnName: "code"},
+		{Table: "events", NonUnique: 0, IndexName: "idx_unique_code_name", ColumnName: "code"},
+		{Table: "events", NonUnique: 0, IndexName: "idx_unique_code_name", ColumnName: "name"},
+	}
+
+	assignColumns(tables, columns, indexes)
+
+	code := tables[0].Columns[1]
+	if !code.IsUnique() {
+		t.Error("code IsUnique() = false, want true")
+	}
+	if !code.IsMultiKey {
+		t.Error("code IsMultiKey = false, want true")
+	}
+
+	name := tables[0].Columns[2]
+	if !name.IsUnique() {
+		t.Error("name IsUnique() = false, want true")
+	}
+	if !name.IsMultiKey {
+		t.Error("name IsMultiKey = false, want true")
+	}
+}
+
 func TestAssignForeignKeys(t *testing.T) {
 	tables := []*Table{
 		{

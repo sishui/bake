@@ -57,6 +57,21 @@ ORDER BY
   ordinal_position;
 `
 
+const mysqlIndexQuery = `
+SELECT
+  table_name,
+  non_unique,
+  index_name,
+  column_name
+FROM
+  information_schema.STATISTICS
+WHERE
+  table_schema = ?
+ORDER BY
+  table_name,
+  index_name;
+`
+
 type mysqlScheme struct {
 	db       *sql.DB
 	cfg      *config.DB
@@ -81,107 +96,27 @@ func NewMySQL(cfg *config.DB) (Scheme, error) {
 
 func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 	slog.InfoContext(ctx, "load schema", "driver", s.cfg.Driver, "dsn", s.cfg.DSN, "database", s.database)
-	tables, err := s.loadTables(ctx)
+	tables, err := loadTables(ctx, s.db, s.database, mysqlTablesCommentQuery, s.cfg)
 	if err != nil {
 		return nil, err
 	}
-	columns, err := s.loadColumns(ctx, tables)
+	indexes, err := loadIndexes(ctx, s.db, s.database, mysqlIndexQuery)
 	if err != nil {
 		return nil, err
 	}
-	foreignKeys, err := s.loadForeignKeys(ctx)
+	columns, err := loadColumns(ctx, s.db, s.database, mysqlColumnMetadataQuery, tables)
 	if err != nil {
 		return nil, err
 	}
-	assignColumns(tables, columns)
+	foreignKeys, err := loadForeignKeys(ctx, s.db, s.database, mysqlForeignKeyQuery)
+	if err != nil {
+		return nil, err
+	}
+	assignColumns(tables, columns, indexes)
 	assignForeignKeys(tables, foreignKeys)
 	return tables, nil
 }
 
 func (s *mysqlScheme) Close() error {
 	return s.db.Close()
-}
-
-func (s *mysqlScheme) loadTables(ctx context.Context) ([]*Table, error) {
-	rows, err := s.db.QueryContext(ctx, mysqlTablesCommentQuery, s.database)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			slog.ErrorContext(ctx, "close rows", "error", err)
-		}
-	}()
-	result := make([]*Table, 0, 128)
-	for rows.Next() {
-		var t Table
-		err = rows.Scan(&t.Name, &t.Comment)
-		if err != nil {
-			return nil, err
-		}
-		if !shouldIncludeTable(ctx, t.Name, s.cfg) {
-			continue
-		}
-		result = append(result, &t)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func (s *mysqlScheme) loadColumns(ctx context.Context, tables []*Table) (map[string][]*Column, error) {
-	rows, err := s.db.QueryContext(ctx, mysqlColumnMetadataQuery, s.database)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			slog.ErrorContext(ctx, "close rows", "error", err)
-		}
-	}()
-	result := make(map[string][]*Column, len(tables))
-	for _, t := range tables {
-		result[t.Name] = make([]*Column, 0, 32)
-	}
-	for rows.Next() {
-		var c Column
-		var columnDefault sql.NullString
-		err = rows.Scan(&c.Table, &c.Name, &c.OrdinalPosition, &columnDefault, &c.Nullable, &c.DataType, &c.ColumnType, &c.Key, &c.Extra, &c.Comment)
-		if err != nil {
-			return nil, err
-		}
-		c.Default = columnDefault.String
-		result[c.Table] = append(result[c.Table], &c)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *mysqlScheme) loadForeignKeys(ctx context.Context) ([]ForeignKey, error) {
-	rows, err := s.db.QueryContext(ctx, mysqlForeignKeyQuery, s.database)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			slog.ErrorContext(ctx, "close rows", "error", err)
-		}
-	}()
-	var result []ForeignKey
-	for rows.Next() {
-		var fk ForeignKey
-		err = rows.Scan(&fk.ConstraintName, &fk.Table, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, fk)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return result, nil
 }

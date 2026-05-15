@@ -23,6 +23,9 @@ type Column struct {
 	Extra           string
 	Comment         string // ColumnComment
 	ForeignKey      *ForeignKey
+	IndexName       string
+	NonUnique       int
+	IsMultiKey      bool
 }
 
 type ForeignKey struct {
@@ -31,6 +34,13 @@ type ForeignKey struct {
 	ColumnName     string // Column in source table (e.g., "user_id")
 	RefTable       string // Referenced table (e.g., "users")
 	RefColumn      string // Referenced column (e.g., "id")
+}
+
+type Index struct {
+	Table      string
+	NonUnique  int
+	ColumnName string
+	IndexName  string
 }
 
 func (c *Column) IsNullable() bool {
@@ -56,4 +66,8 @@ func (c *Column) IsUnsigned() bool {
 
 func (c *Column) IsForeignKey() bool {
 	return c.ForeignKey != nil
+}
+
+func (c *Column) IsUnique() bool {
+	return c.IndexName != "" && c.NonUnique == 0
 }

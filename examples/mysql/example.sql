@@ -112,36 +112,65 @@ VALUES (2, 1, 10001, 10, UNIX_TIMESTAMP(), UNIX_TIMESTAMP()),
        (2, 1, 30001, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
 
 -- 外键示例: users + posts
-DROP TABLE IF EXISTS `posts`;
 DROP TABLE IF EXISTS `users`;
 
-CREATE TABLE `users` (
-  `id`         BIGINT       NOT NULL AUTO_INCREMENT,
-  `name`       VARCHAR(64)  NOT NULL COMMENT '用户名',
-  `email`      VARCHAR(128) NOT NULL COMMENT '邮箱',
-  `created_at` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_email` (`email`)
+CREATE TABLE `users`
+(
+    `id`         bigint       NOT NULL AUTO_INCREMENT,
+    `name`       varchar(64)  NOT NULL COMMENT '用户名',
+    `email`      varchar(128) NOT NULL COMMENT '邮箱',
+    `start_at`   timestamp(3) NOT NULL,
+    `end_at`     timestamp(3) NOT NULL,
+    `seq`        bigint       NOT NULL,
+    `created_at` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_email` (`email`),
+    UNIQUE KEY `idx_start_end` (`start_at`,`end_at`) USING BTREE,
+    KEY          `idx_seq` (`seq`) USING BTREE
 ) ENGINE=InnoDB COMMENT='用户表';
 
-CREATE TABLE `posts` (
-  `id`         BIGINT        NOT NULL AUTO_INCREMENT,
-  `user_id`    BIGINT        NOT NULL COMMENT '用户ID',
-  `title`      VARCHAR(256)  NOT NULL COMMENT '标题',
-  `content`    TEXT          COMMENT '内容',
-  `status`     TINYINT       NOT NULL DEFAULT 0 COMMENT '状态: 0=草稿, 1=发布',
-  `created_at` TIMESTAMP(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
-  `updated_at` TIMESTAMP(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_user_id` (`user_id`),
-  CONSTRAINT `fk_posts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE `posts`
+(
+    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `user_id`    BIGINT       NOT NULL COMMENT '用户ID',
+    `title`      VARCHAR(256) NOT NULL COMMENT '标题',
+    `content`    TEXT COMMENT '内容',
+    `status`     TINYINT      NOT NULL DEFAULT 0 COMMENT '状态: 0=草稿, 1=发布',
+    `created_at` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '创建时间',
+    `updated_at` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY          `idx_user_id` (`user_id`),
+    CONSTRAINT `fk_posts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='文章表';
 
-INSERT INTO `users` (`name`, `email`) VALUES
-  ('Alice', 'alice@example.com'),
-  ('Bob', 'bob@example.com');
+INSERT INTO `users` (`name`, `email`)
+VALUES ('Alice', 'alice@example.com'),
+       ('Bob', 'bob@example.com');
 
-INSERT INTO `posts` (`user_id`, `title`, `content`, `status`) VALUES
-  (1, 'First Post', 'Hello World!', 1),
-  (1, 'Second Post', 'Another post by Alice', 0),
-  (2, 'Bob Post', 'Post by Bob', 1);
+INSERT INTO `posts` (`user_id`, `title`, `content`, `status`)
+VALUES (1, 'First Post', 'Hello World!', 1),
+       (1, 'Second Post', 'Another post by Alice', 0),
+       (2, 'Bob Post', 'Post by Bob', 1);
+
+DROP TABLE IF EXISTS `test_index`;
+CREATE TABLE `test_index`
+(
+    `id`       int          NOT NULL AUTO_INCREMENT,
+    `start_at` timestamp(3) NOT NULL ON UPDATE CURRENT_TIMESTAMP(3),
+    `end_at`   timestamp(3) NOT NULL,
+    `seq`      bigint       NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_seq` (`seq`) USING BTREE
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS `test_multi_index`;
+CREATE TABLE `test_multi_index`
+(
+    `id`       int          NOT NULL AUTO_INCREMENT,
+    `start_at` timestamp(3) NOT NULL ON UPDATE CURRENT_TIMESTAMP(3),
+    `end_at`   timestamp(3) NOT NULL,
+    `seq`      bigint       NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_start_end` (`start_at`, `end_at`) USING BTREE
+) ENGINE=InnoDB;

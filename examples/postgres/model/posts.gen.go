@@ -539,7 +539,7 @@ const (
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
 
-	ID        int64     `bun:"id,pk,notnull" json:"id,omitempty" xml:"id"`                                                //
+	ID        int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty" xml:"id"`                                  //
 	UserID    int64     `bun:"user_id,notnull" json:"user_id,omitempty" xml:"user_id"`                                    //
 	Title     string    `bun:"title,notnull" json:"title,omitempty" xml:"title"`                                          //
 	Content   *string   `bun:"content,notnull" json:"content,omitempty" xml:"content"`                                    //

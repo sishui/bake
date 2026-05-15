@@ -1511,7 +1511,7 @@ const (
 type TestAllType struct {
 	bun.BaseModel `bun:"table:test_all_types,alias:test_all_types_alias"`
 
-	ID            int64            `bun:"id,pk,notnull" form:"id" json:"id,omitempty" xml:"Id"`                                                    //
+	ID            int64            `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty" xml:"Id"`                                      //
 	TinyIntVal    *int16           `bun:"tiny_int_val,notnull" form:"tiny_int_val" json:"tiny_int_val,omitempty" xml:"TinyIntVal"`                 //
 	SmallIntVal   int16            `bun:"small_int_val,notnull,default:'0'" form:"small_int_val" json:"small_int_val,omitempty" xml:"SmallIntVal"` //
 	MediumIntVal  *int32           `bun:"medium_int_val,notnull" form:"medium_int_val" json:"medium_int_val,omitempty" xml:"MediumIntVal"`         //

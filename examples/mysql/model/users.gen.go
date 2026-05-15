@@ -42,6 +42,9 @@ const (
 	UserID        = "id"
 	UserName      = "name"
 	UserEmail     = "email"
+	UserStartAt   = "start_at"
+	UserEndAt     = "end_at"
+	UserSeq       = "seq"
 	UserCreatedAt = "created_at"
 )
 
@@ -53,6 +56,9 @@ const (
 	UserAliasID        = "users_alias.id"
 	UserAliasName      = "users_alias.name"
 	UserAliasEmail     = "users_alias.email"
+	UserAliasStartAt   = "users_alias.start_at"
+	UserAliasEndAt     = "users_alias.end_at"
+	UserAliasSeq       = "users_alias.seq"
 	UserAliasCreatedAt = "users_alias.created_at"
 )
 
@@ -60,6 +66,9 @@ var (
 	UserIDIdent        = bun.Ident("id")
 	UserNameIdent      = bun.Ident("name")
 	UserEmailIdent     = bun.Ident("email")
+	UserStartAtIdent   = bun.Ident("start_at")
+	UserEndAtIdent     = bun.Ident("end_at")
+	UserSeqIdent       = bun.Ident("seq")
 	UserCreatedAtIdent = bun.Ident("created_at")
 )
 
@@ -67,6 +76,9 @@ var (
 	UserIDAliasIdent        = bun.Ident("id")
 	UserNameAliasIdent      = bun.Ident("name")
 	UserEmailAliasIdent     = bun.Ident("email")
+	UserStartAtAliasIdent   = bun.Ident("start_at")
+	UserEndAtAliasIdent     = bun.Ident("end_at")
+	UserSeqAliasIdent       = bun.Ident("seq")
 	UserCreatedAtAliasIdent = bun.Ident("created_at")
 )
 
@@ -74,6 +86,9 @@ const (
 	UserIDEq        = "id = ?"
 	UserNameEq      = "name = ?"
 	UserEmailEq     = "email = ?"
+	UserStartAtEq   = "start_at = ?"
+	UserEndAtEq     = "end_at = ?"
+	UserSeqEq       = "seq = ?"
 	UserCreatedAtEq = "created_at = ?"
 )
 
@@ -81,6 +96,9 @@ const (
 	UserAliasIDEq        = "users_alias.id = ?"
 	UserAliasNameEq      = "users_alias.name = ?"
 	UserAliasEmailEq     = "users_alias.email = ?"
+	UserAliasStartAtEq   = "users_alias.start_at = ?"
+	UserAliasEndAtEq     = "users_alias.end_at = ?"
+	UserAliasSeqEq       = "users_alias.seq = ?"
 	UserAliasCreatedAtEq = "users_alias.created_at = ?"
 )
 
@@ -88,6 +106,9 @@ const (
 	UserIDNeq        = "id <> ?"
 	UserNameNeq      = "name <> ?"
 	UserEmailNeq     = "email <> ?"
+	UserStartAtNeq   = "start_at <> ?"
+	UserEndAtNeq     = "end_at <> ?"
+	UserSeqNeq       = "seq <> ?"
 	UserCreatedAtNeq = "created_at <> ?"
 )
 
@@ -95,46 +116,73 @@ const (
 	UserAliasIDNeq        = "users_alias.id <> ?"
 	UserAliasNameNeq      = "users_alias.name <> ?"
 	UserAliasEmailNeq     = "users_alias.email <> ?"
+	UserAliasStartAtNeq   = "users_alias.start_at <> ?"
+	UserAliasEndAtNeq     = "users_alias.end_at <> ?"
+	UserAliasSeqNeq       = "users_alias.seq <> ?"
 	UserAliasCreatedAtNeq = "users_alias.created_at <> ?"
 )
 
 const (
 	UserIDGt        = "id > ?"
+	UserStartAtGt   = "start_at > ?"
+	UserEndAtGt     = "end_at > ?"
+	UserSeqGt       = "seq > ?"
 	UserCreatedAtGt = "created_at > ?"
 )
 
 const (
 	UserAliasIDGt        = "users_alias.id > ?"
+	UserAliasStartAtGt   = "users_alias.start_at > ?"
+	UserAliasEndAtGt     = "users_alias.end_at > ?"
+	UserAliasSeqGt       = "users_alias.seq > ?"
 	UserAliasCreatedAtGt = "users_alias.created_at > ?"
 )
 
 const (
 	UserIDGte        = "id >= ?"
+	UserStartAtGte   = "start_at >= ?"
+	UserEndAtGte     = "end_at >= ?"
+	UserSeqGte       = "seq >= ?"
 	UserCreatedAtGte = "created_at >= ?"
 )
 
 const (
 	UserAliasIDGte        = "users_alias.id >= ?"
+	UserAliasStartAtGte   = "users_alias.start_at >= ?"
+	UserAliasEndAtGte     = "users_alias.end_at >= ?"
+	UserAliasSeqGte       = "users_alias.seq >= ?"
 	UserAliasCreatedAtGte = "users_alias.created_at >= ?"
 )
 
 const (
 	UserIDLt        = "id < ?"
+	UserStartAtLt   = "start_at < ?"
+	UserEndAtLt     = "end_at < ?"
+	UserSeqLt       = "seq < ?"
 	UserCreatedAtLt = "created_at < ?"
 )
 
 const (
 	UserAliasIDLt        = "users_alias.id < ?"
+	UserAliasStartAtLt   = "users_alias.start_at < ?"
+	UserAliasEndAtLt     = "users_alias.end_at < ?"
+	UserAliasSeqLt       = "users_alias.seq < ?"
 	UserAliasCreatedAtLt = "users_alias.created_at < ?"
 )
 
 const (
 	UserIDLte        = "id <= ?"
+	UserStartAtLte   = "start_at <= ?"
+	UserEndAtLte     = "end_at <= ?"
+	UserSeqLte       = "seq <= ?"
 	UserCreatedAtLte = "created_at <= ?"
 )
 
 const (
 	UserAliasIDLte        = "users_alias.id <= ?"
+	UserAliasStartAtLte   = "users_alias.start_at <= ?"
+	UserAliasEndAtLte     = "users_alias.end_at <= ?"
+	UserAliasSeqLte       = "users_alias.seq <= ?"
 	UserAliasCreatedAtLte = "users_alias.created_at <= ?"
 )
 
@@ -179,29 +227,100 @@ const (
 )
 
 const (
+	UserSeqSUMExpr = "SUM(seq)"
+)
+
+const (
+	UserAliasSeqSUMExpr = "SUM(users_alias.seq)"
+)
+
+const (
+	UserSeqAVGExpr = "AVG(seq)"
+)
+
+const (
+	UserAliasSeqAVGExpr = "AVG(users_alias.seq)"
+)
+
+const (
 	UserIDMINExpr        = "MIN(id)"
+	UserStartAtMINExpr   = "MIN(start_at)"
+	UserEndAtMINExpr     = "MIN(end_at)"
+	UserSeqMINExpr       = "MIN(seq)"
 	UserCreatedAtMINExpr = "MIN(created_at)"
 )
 
 const (
 	UserAliasIDMINExpr        = "MIN(users_alias.id)"
+	UserAliasStartAtMINExpr   = "MIN(users_alias.start_at)"
+	UserAliasEndAtMINExpr     = "MIN(users_alias.end_at)"
+	UserAliasSeqMINExpr       = "MIN(users_alias.seq)"
 	UserAliasCreatedAtMINExpr = "MIN(users_alias.created_at)"
 )
 
 const (
 	UserIDMAXExpr        = "MAX(id)"
+	UserStartAtMAXExpr   = "MAX(start_at)"
+	UserEndAtMAXExpr     = "MAX(end_at)"
+	UserSeqMAXExpr       = "MAX(seq)"
 	UserCreatedAtMAXExpr = "MAX(created_at)"
 )
 
 const (
 	UserAliasIDMAXExpr        = "MAX(users_alias.id)"
+	UserAliasStartAtMAXExpr   = "MAX(users_alias.start_at)"
+	UserAliasEndAtMAXExpr     = "MAX(users_alias.end_at)"
+	UserAliasSeqMAXExpr       = "MAX(users_alias.seq)"
 	UserAliasCreatedAtMAXExpr = "MAX(users_alias.created_at)"
+)
+
+const (
+	UserSeqAddExpr = "seq = seq + ?"
+)
+
+const (
+	UserAliasSeqAddExpr = "users_alias.seq = users_alias.seq + ?"
+)
+
+const (
+	UserSeqSubExpr = "seq = seq - ?"
+)
+
+const (
+	UserAliasSeqSubExpr = "users_alias.seq = users_alias.seq - ?"
+)
+
+const (
+	UserSeqAddLeastExpr = "seq = LEAST(seq + ?, ?)"
+)
+
+const (
+	UserAliasSeqAddLeastExpr = "users_alias.seq = LEAST(users_alias.seq + ?, ?)"
+)
+
+const (
+	UserSeqSubGreatestExpr = "seq = GREATEST(seq - ?, ?)"
+)
+
+const (
+	UserAliasSeqSubGreatestExpr = "users_alias.seq = GREATEST(users_alias.seq - ?, ?)"
+)
+
+const (
+	UserSeqClampExpr = "seq = LEAST(GREATEST(seq + ?, ?), ?)"
+)
+
+const (
+	UserAliasSeqClampExpr = "users_alias.seq = LEAST(GREATEST(users_alias.seq + ?, ?), ?)"
 )
 
 const (
 	UserIDIn        = "id IN (?)"
 	UserNameIn      = "name IN (?)"
 	UserEmailIn     = "email IN (?)"
+	UserStartAtIn   = "start_at IN (?)"
+	UserEndAtIn     = "end_at IN (?)"
+	UserSeqIn       = "seq IN (?)"
 	UserCreatedAtIn = "created_at IN (?)"
 )
 
@@ -209,6 +328,9 @@ const (
 	UserAliasIDIn        = "users_alias.id IN (?)"
 	UserAliasNameIn      = "users_alias.name IN (?)"
 	UserAliasEmailIn     = "users_alias.email IN (?)"
+	UserAliasStartAtIn   = "users_alias.start_at IN (?)"
+	UserAliasEndAtIn     = "users_alias.end_at IN (?)"
+	UserAliasSeqIn       = "users_alias.seq IN (?)"
 	UserAliasCreatedAtIn = "users_alias.created_at IN (?)"
 )
 
@@ -216,6 +338,9 @@ const (
 	UserIDNotIn        = "id NOT IN (?)"
 	UserNameNotIn      = "name NOT IN (?)"
 	UserEmailNotIn     = "email NOT IN (?)"
+	UserStartAtNotIn   = "start_at NOT IN (?)"
+	UserEndAtNotIn     = "end_at NOT IN (?)"
+	UserSeqNotIn       = "seq NOT IN (?)"
 	UserCreatedAtNotIn = "created_at NOT IN (?)"
 )
 
@@ -223,82 +348,125 @@ const (
 	UserAliasIDNotIn        = "users_alias.id NOT IN (?)"
 	UserAliasNameNotIn      = "users_alias.name NOT IN (?)"
 	UserAliasEmailNotIn     = "users_alias.email NOT IN (?)"
+	UserAliasStartAtNotIn   = "users_alias.start_at NOT IN (?)"
+	UserAliasEndAtNotIn     = "users_alias.end_at NOT IN (?)"
+	UserAliasSeqNotIn       = "users_alias.seq NOT IN (?)"
 	UserAliasCreatedAtNotIn = "users_alias.created_at NOT IN (?)"
 )
 
 const (
 	UserIDBetween        = "id BETWEEN ? AND ?"
+	UserStartAtBetween   = "start_at BETWEEN ? AND ?"
+	UserEndAtBetween     = "end_at BETWEEN ? AND ?"
+	UserSeqBetween       = "seq BETWEEN ? AND ?"
 	UserCreatedAtBetween = "created_at BETWEEN ? AND ?"
 )
 
 const (
 	UserAliasIDBetween        = "users_alias.id BETWEEN ? AND ?"
+	UserAliasStartAtBetween   = "users_alias.start_at BETWEEN ? AND ?"
+	UserAliasEndAtBetween     = "users_alias.end_at BETWEEN ? AND ?"
+	UserAliasSeqBetween       = "users_alias.seq BETWEEN ? AND ?"
 	UserAliasCreatedAtBetween = "users_alias.created_at BETWEEN ? AND ?"
 )
 
 const (
 	UserIDNotBetween        = "id NOT BETWEEN ? AND ?"
+	UserStartAtNotBetween   = "start_at NOT BETWEEN ? AND ?"
+	UserEndAtNotBetween     = "end_at NOT BETWEEN ? AND ?"
+	UserSeqNotBetween       = "seq NOT BETWEEN ? AND ?"
 	UserCreatedAtNotBetween = "created_at NOT BETWEEN ? AND ?"
 )
 
 const (
 	UserAliasIDNotBetween        = "users_alias.id NOT BETWEEN ? AND ?"
+	UserAliasStartAtNotBetween   = "users_alias.start_at NOT BETWEEN ? AND ?"
+	UserAliasEndAtNotBetween     = "users_alias.end_at NOT BETWEEN ? AND ?"
+	UserAliasSeqNotBetween       = "users_alias.seq NOT BETWEEN ? AND ?"
 	UserAliasCreatedAtNotBetween = "users_alias.created_at NOT BETWEEN ? AND ?"
 )
 
 const (
+	UserStartAtDateExpr   = "DATE(start_at)"
+	UserEndAtDateExpr     = "DATE(end_at)"
 	UserCreatedAtDateExpr = "DATE(created_at)"
 )
 
 const (
+	UserAliasStartAtDateExpr   = "DATE(users_alias.start_at)"
+	UserAliasEndAtDateExpr     = "DATE(users_alias.end_at)"
 	UserAliasCreatedAtDateExpr = "DATE(users_alias.created_at)"
 )
 
 const (
+	UserStartAtYearExpr   = "EXTRACT(YEAR FROM start_at)"
+	UserEndAtYearExpr     = "EXTRACT(YEAR FROM end_at)"
 	UserCreatedAtYearExpr = "EXTRACT(YEAR FROM created_at)"
 )
 
 const (
+	UserAliasStartAtYearExpr   = "EXTRACT(YEAR FROM users_alias.start_at)"
+	UserAliasEndAtYearExpr     = "EXTRACT(YEAR FROM users_alias.end_at)"
 	UserAliasCreatedAtYearExpr = "EXTRACT(YEAR FROM users_alias.created_at)"
 )
 
 const (
+	UserStartAtMonthExpr   = "EXTRACT(MONTH FROM start_at)"
+	UserEndAtMonthExpr     = "EXTRACT(MONTH FROM end_at)"
 	UserCreatedAtMonthExpr = "EXTRACT(MONTH FROM created_at)"
 )
 
 const (
+	UserAliasStartAtMonthExpr   = "EXTRACT(MONTH FROM users_alias.start_at)"
+	UserAliasEndAtMonthExpr     = "EXTRACT(MONTH FROM users_alias.end_at)"
 	UserAliasCreatedAtMonthExpr = "EXTRACT(MONTH FROM users_alias.created_at)"
 )
 
 const (
+	UserStartAtDayExpr   = "EXTRACT(DAY FROM start_at)"
+	UserEndAtDayExpr     = "EXTRACT(DAY FROM end_at)"
 	UserCreatedAtDayExpr = "EXTRACT(DAY FROM created_at)"
 )
 
 const (
+	UserAliasStartAtDayExpr   = "EXTRACT(DAY FROM users_alias.start_at)"
+	UserAliasEndAtDayExpr     = "EXTRACT(DAY FROM users_alias.end_at)"
 	UserAliasCreatedAtDayExpr = "EXTRACT(DAY FROM users_alias.created_at)"
 )
 
 const (
+	UserStartAtHourExpr   = "EXTRACT(HOUR FROM start_at)"
+	UserEndAtHourExpr     = "EXTRACT(HOUR FROM end_at)"
 	UserCreatedAtHourExpr = "EXTRACT(HOUR FROM created_at)"
 )
 
 const (
+	UserAliasStartAtHourExpr   = "EXTRACT(HOUR FROM users_alias.start_at)"
+	UserAliasEndAtHourExpr     = "EXTRACT(HOUR FROM users_alias.end_at)"
 	UserAliasCreatedAtHourExpr = "EXTRACT(HOUR FROM users_alias.created_at)"
 )
 
 const (
+	UserStartAtMinuteExpr   = "EXTRACT(MINUTE FROM start_at)"
+	UserEndAtMinuteExpr     = "EXTRACT(MINUTE FROM end_at)"
 	UserCreatedAtMinuteExpr = "EXTRACT(MINUTE FROM created_at)"
 )
 
 const (
+	UserAliasStartAtMinuteExpr   = "EXTRACT(MINUTE FROM users_alias.start_at)"
+	UserAliasEndAtMinuteExpr     = "EXTRACT(MINUTE FROM users_alias.end_at)"
 	UserAliasCreatedAtMinuteExpr = "EXTRACT(MINUTE FROM users_alias.created_at)"
 )
 
 const (
+	UserStartAtSecondExpr   = "EXTRACT(SECOND FROM start_at)"
+	UserEndAtSecondExpr     = "EXTRACT(SECOND FROM end_at)"
 	UserCreatedAtSecondExpr = "EXTRACT(SECOND FROM created_at)"
 )
 
 const (
+	UserAliasStartAtSecondExpr   = "EXTRACT(SECOND FROM users_alias.start_at)"
+	UserAliasEndAtSecondExpr     = "EXTRACT(SECOND FROM users_alias.end_at)"
 	UserAliasCreatedAtSecondExpr = "EXTRACT(SECOND FROM users_alias.created_at)"
 )
 
@@ -306,6 +474,9 @@ const (
 	UserIDAsc        = "id ASC"
 	UserNameAsc      = "name ASC"
 	UserEmailAsc     = "email ASC"
+	UserStartAtAsc   = "start_at ASC"
+	UserEndAtAsc     = "end_at ASC"
+	UserSeqAsc       = "seq ASC"
 	UserCreatedAtAsc = "created_at ASC"
 )
 
@@ -313,6 +484,9 @@ const (
 	UserAliasIDAsc        = "users_alias.id ASC"
 	UserAliasNameAsc      = "users_alias.name ASC"
 	UserAliasEmailAsc     = "users_alias.email ASC"
+	UserAliasStartAtAsc   = "users_alias.start_at ASC"
+	UserAliasEndAtAsc     = "users_alias.end_at ASC"
+	UserAliasSeqAsc       = "users_alias.seq ASC"
 	UserAliasCreatedAtAsc = "users_alias.created_at ASC"
 )
 
@@ -320,6 +494,9 @@ const (
 	UserIDDesc        = "id DESC"
 	UserNameDesc      = "name DESC"
 	UserEmailDesc     = "email DESC"
+	UserStartAtDesc   = "start_at DESC"
+	UserEndAtDesc     = "end_at DESC"
+	UserSeqDesc       = "seq DESC"
 	UserCreatedAtDesc = "created_at DESC"
 )
 
@@ -327,6 +504,9 @@ const (
 	UserAliasIDDesc        = "users_alias.id DESC"
 	UserAliasNameDesc      = "users_alias.name DESC"
 	UserAliasEmailDesc     = "users_alias.email DESC"
+	UserAliasStartAtDesc   = "users_alias.start_at DESC"
+	UserAliasEndAtDesc     = "users_alias.end_at DESC"
+	UserAliasSeqDesc       = "users_alias.seq DESC"
 	UserAliasCreatedAtDesc = "users_alias.created_at DESC"
 )
 
@@ -337,7 +517,10 @@ type User struct {
 
 	ID        int64     `bun:"id,pk,autoincrement,notnull" form:"id" json:"id,omitempty"`                                     //
 	Name      string    `bun:"name,notnull" form:"name" json:"name,omitempty"`                                                // 用户名
-	Email     string    `bun:"email,notnull" form:"email" json:"email,omitempty"`                                             // 邮箱
+	Email     string    `bun:"email,unique,notnull" form:"email" json:"email,omitempty"`                                      // 邮箱
+	StartAt   time.Time `bun:"start_at,notnull" form:"start_at" json:"start_at,omitempty"`                                    //
+	EndAt     time.Time `bun:"end_at,notnull" form:"end_at" json:"end_at,omitempty"`                                          //
+	Seq       int64     `bun:"seq,notnull" form:"seq" json:"seq,omitempty"`                                                   //
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
 	Posts     []*Post   `bun:"posts,join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                        //
 }

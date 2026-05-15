@@ -488,7 +488,7 @@ const (
 type MailAttachment struct {
 	bun.BaseModel `bun:"table:mail_attachment,alias:mail_attachment_alias"`
 
-	ID          int64 `bun:"id,pk,notnull" json:"id,omitempty"`                          //
+	ID          int64 `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`            //
 	MailID      int64 `bun:"mail_id,notnull" json:"mail_id,omitempty"`                   //
 	Kind        int16 `bun:"kind,notnull,default:'0'" json:"kind,omitempty"`             //
 	RewardID    int64 `bun:"reward_id,notnull" json:"reward_id,omitempty"`               //
