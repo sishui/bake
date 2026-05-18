@@ -1,13 +1,13 @@
 module github.com/sishui/bake/examples/mysql
 
-go 1.24.4
+go 1.24.0
 
 require (
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/shopspring/decimal v1.4.0
-	github.com/uptrace/bun v1.2.16
-	github.com/uptrace/bun/dialect/mysqldialect v1.2.16
-	github.com/uptrace/bun/extra/bundebug v1.2.16
+	github.com/uptrace/bun v1.2.18
+	github.com/uptrace/bun/dialect/mysqldialect v1.2.18
+	github.com/uptrace/bun/extra/bundebug v1.2.18
 )
 
 require (

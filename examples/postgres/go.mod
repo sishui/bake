@@ -1,13 +1,13 @@
 module github.com/sishui/bake/examples/postgres
 
-go 1.24.4
+go 1.24.0
 
 require (
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/shopspring/decimal v1.4.0
-	github.com/uptrace/bun v1.2.16
-	github.com/uptrace/bun/dialect/pgdialect v1.2.16
-	github.com/uptrace/bun/extra/bundebug v1.2.16
+	github.com/uptrace/bun v1.2.18
+	github.com/uptrace/bun/dialect/pgdialect v1.2.18
+	github.com/uptrace/bun/extra/bundebug v1.2.18
 )
 
 require (
