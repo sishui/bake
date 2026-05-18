@@ -7,6 +7,7 @@ A database model code generator for Go. Generate ORM models from database schema
 - Supports MySQL and PostgreSQL databases
 - Automatic Go type mapping for database columns
 - Automatic foreign key detection and relation generation (belongs-to, has-many)
+- Composite unique index detection (`unique`, `unique:index_name` tags)
 - Customizable templates
 - Custom field names, types, comments, and tags
 - Naming conventions (snake_case, camelCase, consecutive acronyms)
@@ -139,37 +140,40 @@ You can use custom templates. The following data is passed to templates:
 
 ```go
 type Model struct {
-	Version                   string     // bake version
-	Driver                    string     // database driver (mysql, postgres)
-	Module                    string     // module path
-	Package                   string     // package name
-	Imports                   [][]string // imports
-	BunModel                  string     // bun.BaseModel
-	Table                     string     // table name
-	Model                     string     // model name
-	Alias                     string     // model alias
-	Comments                  []string   // model comments
-	Fields                    []*Field   // fields
-	Timezone                  string     // timezone
-	CreatedAtType             string     // created_at type
-	UpdatedAtType             string     // updated_at type
-	DeletedAtType             string     // deleted_at type
-	MaxFieldLength            int        // max field length
-	MaxNullableLength         int        // max nullable length
-	MaxStringLength           int        // max string length
-	MaxNumericLength          int        // max numeric length
-	MaxOrderedLength          int        // max ordered length
-	MaxOrderedNonStringLength int        // max ordered non-string length (numeric + time)
-	MaxEquatableLength        int        // max equatable length
-	MaxRelationLength         int        // max relation length
-	MaxArithmeticLength       int        // max arithmetic length (non-pk numeric)
-	MaxTimeLength             int        // max time length
+    Version                   string     // bake version
+    Module                    string     // module path
+    Package                   string     // package name
+    Imports                   [][]string // imports
+    BunModel                  string     // bun.BaseModel
+    Table                     string     // table name
+    Model                     string     // model name
+    Alias                     string     // model alias
+    Comments                  []string   // model comments
+    Fields                    []*Field   // fields
+    Timezone                  string     // timezone
+    CreatedAtType             string     // created_at type
+    UpdatedAtType             string     // updated_at type
+    DeletedAtType             string     // deleted_at type
+    MaxFieldLength            int        // max field length
+    MaxNullableLength         int        // max nullable length
+    MaxStringLength           int        // max string length
+    MaxNumericLength          int        // max numeric length
+    MaxOrderedLength          int        // max ordered length
+    MaxOrderedNonStringLength int        // max ordered non-string length (numeric + time)
+    MaxEquatableLength        int        // max equatable length
+    MaxRelationLength         int        // max relation length
+    MaxArithmeticLength       int        // max arithmetic length (non-pk numeric)
+    MaxTimeLength             int        // max time length
 }
 
 type Field struct {
+    Imports     []string // field imports
     Name        string   // field name
+    AlignedName string   // aligned field name
     Type        string   // Go type
+    AlignedType string   // aligned type
     Tag         string   // field tags
+    AlignedTag  string   // aligned tag
     Comments    []string // field comments
     ColumnName  string   // database column name
     Kind        string   // field kind: NUMERIC, STRING, TIME, etc.
@@ -219,6 +223,35 @@ type Field struct {
 | inet, cidr            | net.IP                                  |
 | interval              | time.Duration                           |
 | ARRAY                 | []string, []int32, []int64, []uuid.UUID |
+
+## Generated Bun Tags
+
+bake automatically generates bun struct tags for each column based on the database schema.
+
+### Index Tags
+
+| Scenario | Generated Tag | Description |
+|----------|--------------|-------------|
+| Primary key | `pk,autoincrement` | Primary key column |
+| Single-column unique index | `unique` | Column has a unique constraint |
+| Composite unique index | `unique:index_name` | Column is part of a multi-column unique index |
+
+Example for a composite unique index on `(start_at, end_at)`:
+
+```go
+StartAt time.Time `bun:"start_at,unique:idx_unique_range,notnull"`
+EndAt   time.Time `bun:"end_at,unique:idx_unique_range,notnull"`
+```
+
+### Column Tags
+
+| Property | Tag | Condition |
+|----------|-----|-----------|
+| `notnull` | Non-nullable column | `IS_NOT_NULL` or `NOT NULL` |
+| `nullzero` | Nullable column | `IS_NULL` or nullable |
+| `default:value` | Has default value | Column has a default |
+| `soft_delete` | Soft delete column | Column name is `deleted_at` |
+| `type:decimal(M,N)` | Decimal type | MySQL/PostgreSQL `decimal` columns |
 
 ## Foreign Key Relations
 
