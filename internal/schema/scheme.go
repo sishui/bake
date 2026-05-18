@@ -199,13 +199,15 @@ func bestIndexForColumn(colIndexes map[tableColumn][]Index, table, col string) (
 	if len(matches) == 0 {
 		return Index{}, false
 	}
-	best := matches[0]
-	for _, m := range matches[1:] {
-		if m.NonUnique < best.NonUnique {
-			best = m
+	for _, m := range matches {
+		if m.IndexName == "PRIMARY" {
+			continue
+		}
+		if m.NonUnique == 0 {
+			return m, true
 		}
 	}
-	return best, true
+	return Index{}, false
 }
 
 func assignColumns(tables []*Table, columns map[string][]*Column, indexes []Index) {
@@ -224,9 +226,6 @@ func assignColumns(tables []*Table, columns map[string][]*Column, indexes []Inde
 			return t.Columns[i].OrdinalPosition < t.Columns[j].OrdinalPosition
 		})
 		for _, column := range t.Columns {
-			if column.Key == "PRI" {
-				continue
-			}
 			best, ok := bestIndexForColumn(colIndexes, t.Name, column.Name)
 			if !ok {
 				continue

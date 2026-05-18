@@ -106,16 +106,14 @@ func (t *Tags) find(key string) int {
 
 func newBunTag(c *schema.Column) *Tag {
 	options := make([]string, 0, 8)
-	switch c.Key {
-	case "PRI":
+	if c.Key == "PRI" {
 		options = append(options, "pk")
-	default:
-		if c.IsUnique() {
-			if c.IsMultiKey {
-				options = append(options, "unique:"+c.IndexName)
-			} else {
-				options = append(options, "unique")
-			}
+	}
+	if c.IsUnique() {
+		if c.IsMultiKey {
+			options = append(options, "unique:"+c.IndexName)
+		} else {
+			options = append(options, "unique")
 		}
 	}
 
