@@ -15,7 +15,26 @@ import (
 	"github.com/sishui/bake/internal/config"
 )
 
-// var dsnRegex = regexp.MustCompile(`^([a-zA-Z][a-zA-Z0-9+.-]*)://(?:[^@]+@)?([^/]+)/([^?]+)`)
+// Driver is the interface for database driver registration.
+// Each driver must register itself via init() to be discoverable.
+type Driver interface {
+	// Open creates a new Scheme for the given configuration.
+	Open(cfg *config.DB) (Scheme, error)
+}
+
+var drivers = make(map[string]Driver)
+
+// Register registers a database driver by name.
+// Called from init() in driver implementations.
+func Register(name string, driver Driver) {
+	if driver == nil {
+		panic("schema: Register driver is nil")
+	}
+	if _, dup := drivers[name]; dup {
+		panic("schema: Register called twice for driver " + name)
+	}
+	drivers[name] = driver
+}
 
 type Scheme interface {
 	io.Closer
@@ -23,14 +42,11 @@ type Scheme interface {
 }
 
 func New(cfg *config.DB) (Scheme, error) {
-	switch cfg.Driver {
-	case "mysql":
-		return NewMySQL(cfg)
-	case "postgres":
-		return NewPostgres(cfg)
-	default:
+	driver, ok := drivers[cfg.Driver]
+	if !ok {
 		return nil, fmt.Errorf("unsupported driver: %s", cfg.Driver)
 	}
+	return driver.Open(cfg)
 }
 
 func openDB(driver string, dsn string) (*sql.DB, error) {

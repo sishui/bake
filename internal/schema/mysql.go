@@ -72,13 +72,13 @@ ORDER BY
   index_name;
 `
 
-type mysqlScheme struct {
-	db       *sql.DB
-	cfg      *config.DB
-	database string
+func init() {
+	Register("mysql", &mysqlDriver{})
 }
 
-func NewMySQL(cfg *config.DB) (Scheme, error) {
+type mysqlDriver struct{}
+
+func (d *mysqlDriver) Open(cfg *config.DB) (Scheme, error) {
 	c, err := mysql.ParseDSN(cfg.DSN)
 	if err != nil {
 		return nil, err
@@ -92,6 +92,12 @@ func NewMySQL(cfg *config.DB) (Scheme, error) {
 		cfg:      cfg,
 		database: c.DBName,
 	}, nil
+}
+
+type mysqlScheme struct {
+	db       *sql.DB
+	cfg      *config.DB
+	database string
 }
 
 func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {

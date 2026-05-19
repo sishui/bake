@@ -3,6 +3,7 @@ package schema
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log/slog"
 
 	"github.com/sishui/bake/internal/config"
@@ -138,23 +139,32 @@ ORDER BY
     index_name;
 `
 
-type postgres struct {
-	db  *sql.DB
-	cfg *config.DB
+func init() {
+	Register("postgres", &postgresDriver{})
 }
 
-func NewPostgres(cfg *config.DB) (Scheme, error) {
+type postgresDriver struct{}
+
+func (d *postgresDriver) Open(cfg *config.DB) (Scheme, error) {
+	if cfg.Schema == "" {
+		return nil, fmt.Errorf("db.schema is required for postgres")
+	}
 	db, err := openDB("pgx", cfg.DSN)
 	if err != nil {
 		return nil, err
 	}
-	return &postgres{
+	return &postgresScheme{
 		db:  db,
 		cfg: cfg,
 	}, nil
 }
 
-func (s *postgres) Load(ctx context.Context) ([]*Table, error) {
+type postgresScheme struct {
+	db  *sql.DB
+	cfg *config.DB
+}
+
+func (s *postgresScheme) Load(ctx context.Context) ([]*Table, error) {
 	slog.InfoContext(ctx, "load schema", "driver", s.cfg.Driver, "dsn", s.cfg.DSN, "schema", s.cfg.Schema)
 	tables, err := loadTables(ctx, s.db, s.cfg.Schema, pgTableCommentsQuery, s.cfg)
 	if err != nil {
@@ -177,6 +187,6 @@ func (s *postgres) Load(ctx context.Context) ([]*Table, error) {
 	return tables, nil
 }
 
-func (s *postgres) Close() error {
+func (s *postgresScheme) Close() error {
 	return s.db.Close()
 }

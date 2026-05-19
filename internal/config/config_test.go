@@ -167,15 +167,15 @@ func TestDBValidate(t *testing.T) {
 				DSN:    "postgres://user:pass@localhost:5432/db",
 				Schema: "",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
-			name: "unsupported driver",
+			name: "any driver name is valid at config level",
 			db: &DB{
 				Driver: "sqlite",
 				DSN:    "file.db",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 	}
 

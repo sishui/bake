@@ -164,15 +164,8 @@ func (d *DB) Validate() error {
 	if d.DSN == "" {
 		return errors.New("db.dsn is required")
 	}
-	switch d.Driver {
-	case "mysql":
-	case "postgres":
-		if d.Schema == "" {
-			return errors.New("db.schema is required")
-		}
-	default:
-		return errors.New("db.driver must be mysql or postgres")
-	}
+	// Driver-specific validation (e.g., schema requirement) is done
+	// at connection time by the registered schema driver.
 	for _, custom := range d.Custom {
 		if err := custom.Validate(); err != nil {
 			return err
