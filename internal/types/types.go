@@ -7,16 +7,25 @@ import (
 	"github.com/sishui/bake/internal/schema"
 )
 
-type DescFunc func(c *schema.Column) (Desc, error)
+// Mapper is the interface that wraps the Desc method for type mapping.
+type Mapper interface {
+	Desc(c *schema.Column) (Desc, error)
+}
 
-var descFuncs = map[string]DescFunc{}
+var mappers = map[string]Mapper{}
 
-func NewDesc(driver string, c *schema.Column) (Desc, error) {
-	fn, ok := descFuncs[driver]
+// Register registers a mapper for type mapping.
+func Register(name string, m Mapper) {
+	mappers[name] = m
+}
+
+// NewDesc returns a Desc for the given mapper name and column.
+func NewDesc(name string, c *schema.Column) (Desc, error) {
+	m, ok := mappers[name]
 	if !ok {
-		return Desc{}, fmt.Errorf("unsupported driver: %s", driver)
+		return Desc{}, fmt.Errorf("unsupported mapper: %s", name)
 	}
-	return fn(c)
+	return m.Desc(c)
 }
 
 type Desc struct {

@@ -9,11 +9,9 @@ import (
 	"github.com/sishui/bake/internal/schema"
 )
 
-func init() {
-	descFuncs["postgres"] = PostgresDescFunc
-}
+type postgresMapper struct{}
 
-func PostgresDescFunc(c *schema.Column) (Desc, error) {
+func (m *postgresMapper) Desc(c *schema.Column) (Desc, error) {
 	switch c.DataType {
 	case "int2", "smallint":
 		return newNumericDesc(c, "int16", "int16"), nil
@@ -106,4 +104,8 @@ func newArrayDesc(c *schema.Column) (Desc, error) {
 		Kind:    KindArray,
 		Imports: imports,
 	}, nil
+}
+
+func init() {
+	Register("postgres", &postgresMapper{})
 }

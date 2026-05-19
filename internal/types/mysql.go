@@ -11,11 +11,9 @@ import (
 
 var ErrUnsupportedType = errors.New("unsupported type")
 
-func init() {
-	descFuncs["mysql"] = MySQLDescFunc
-}
+type mysqlMapper struct{}
 
-func MySQLDescFunc(c *schema.Column) (Desc, error) {
+func (m *mysqlMapper) Desc(c *schema.Column) (Desc, error) {
 	switch c.DataType {
 	case "tinyint":
 		if strings.Contains(c.ColumnType, "(1)") {
@@ -49,4 +47,8 @@ func MySQLDescFunc(c *schema.Column) (Desc, error) {
 	default:
 		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedType, c.DataType)
 	}
+}
+
+func init() {
+	Register("mysql", &mysqlMapper{})
 }

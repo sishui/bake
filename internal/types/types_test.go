@@ -8,6 +8,8 @@ import (
 )
 
 func TestMySQLDescFunc(t *testing.T) {
+	mapper := &mysqlMapper{}
+
 	tests := []struct {
 		name    string
 		column  schema.Column
@@ -179,24 +181,25 @@ func TestMySQLDescFunc(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := MySQLDescFunc(&tt.column)
+			got, err := mapper.Desc(&tt.column)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("MySQLDescFunc() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("mysqlMapper.Desc() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
 				if got.Type != tt.want.Type || got.Kind != tt.want.Kind {
-					t.Errorf("MySQLDescFunc() = %v, want %v", got, tt.want)
+					t.Errorf("mysqlMapper.Desc() = %v, want %v", got, tt.want)
 				}
 			}
 			if tt.wantErr && !errors.Is(err, ErrUnsupportedType) {
-				t.Errorf("MySQLDescFunc() error = %v, want ErrUnsupportedType", err)
+				t.Errorf("mysqlMapper.Desc() error = %v, want ErrUnsupportedType", err)
 			}
 		})
 	}
 }
 
 func TestPostgresDescFunc(t *testing.T) {
+	mapper := &postgresMapper{}
 	tests := []struct {
 		name    string
 		column  schema.Column
@@ -391,18 +394,18 @@ func TestPostgresDescFunc(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := PostgresDescFunc(&tt.column)
+			got, err := mapper.Desc(&tt.column)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PostgresDescFunc() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("postgresMapper.Desc() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
 				if got.Type != tt.want.Type || got.Kind != tt.want.Kind {
-					t.Errorf("PostgresDescFunc() = %v, want %v", got, tt.want)
+					t.Errorf("postgresMapper.Desc() = %v, want %v", got, tt.want)
 				}
 			}
 			if tt.wantErr && !errors.Is(err, ErrUnsupportedType) && !errors.Is(err, ErrUnsupportedArrayType) {
-				t.Errorf("PostgresDescFunc() error = %v, want ErrUnsupportedType or ErrUnsupportedArrayType", err)
+				t.Errorf("postgresMapper.Desc() error = %v, want ErrUnsupportedType or ErrUnsupportedArrayType", err)
 			}
 		})
 	}
