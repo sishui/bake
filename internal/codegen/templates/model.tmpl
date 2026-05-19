@@ -98,7 +98,7 @@ var (
 var (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AliasIdent" $maxFieldLength }} = bun.Ident("{{$field.ColumnName}}")
+	{{- "\n\t" }}	{{$model}}{{ concat $field.Name "AliasIdent" $maxFieldLength }} = bun.Ident("{{$alias}}.{{$field.ColumnName}}")
 	{{- end}}
 {{- end}}
 )
