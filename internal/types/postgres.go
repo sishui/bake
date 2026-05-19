@@ -3,6 +3,7 @@ package types
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/sishui/bake/internal/schema"
@@ -48,7 +49,7 @@ func PostgresDescFunc(c *schema.Column) (Desc, error) {
 		if strings.HasPrefix(c.DataType, "enum_") {
 			return newEnumDesc(c), nil
 		}
-		return Desc{}, errors.Join(ErrUnsupportedType, errors.New(c.DataType))
+		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedType, c.DataType)
 	}
 }
 
@@ -98,7 +99,7 @@ func newArrayDesc(c *schema.Column) (Desc, error) {
 		typ = "[]uuid.UUID"
 		imports = []string{"github.com/google/uuid"}
 	default:
-		return Desc{}, errors.Join(ErrUnsupportedArrayType, errors.New(c.ColumnType))
+		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedArrayType, c.ColumnType)
 	}
 	return Desc{
 		Type:    typ,

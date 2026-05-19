@@ -3,6 +3,7 @@ package types
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/sishui/bake/internal/schema"
@@ -46,6 +47,6 @@ func MySQLDescFunc(c *schema.Column) (Desc, error) {
 	case "enum", "set":
 		return newEnumDesc(c), nil
 	default:
-		return Desc{}, errors.Join(ErrUnsupportedType, errors.New(c.DataType))
+		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedType, c.DataType)
 	}
 }
