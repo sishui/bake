@@ -104,11 +104,33 @@ func (t *Tags) find(key string) int {
 	return -1
 }
 
+// bunTagOpts is the ordered chain of option injectors for bun column tags.
+var bunTagOpts = []func(*schema.Column, []string) []string{
+	optPK,
+	optUnique,
+	optAutoIncr,
+	optDataType,
+	optNullable,
+	optDefault,
+	optSoftDelete,
+}
+
 func newBunTag(c *schema.Column) *Tag {
 	options := make([]string, 0, 8)
+	for _, f := range bunTagOpts {
+		options = f(c, options)
+	}
+	return NewTag("bun", c.Name, options...)
+}
+
+func optPK(c *schema.Column, options []string) []string {
 	if c.Key == "PRI" {
 		options = append(options, "pk")
 	}
+	return options
+}
+
+func optUnique(c *schema.Column, options []string) []string {
 	if c.IsUnique() {
 		if c.IsMultiKey {
 			options = append(options, "unique:"+c.IndexName)
@@ -116,20 +138,35 @@ func newBunTag(c *schema.Column) *Tag {
 			options = append(options, "unique")
 		}
 	}
+	return options
+}
 
+func optAutoIncr(c *schema.Column, options []string) []string {
 	if strings.Contains(c.Extra, "auto_increment") {
 		options = append(options, "autoincrement")
 	}
+	return options
+}
 
+func optDataType(c *schema.Column, options []string) []string {
 	if c.DataType == "decimal" {
 		options = append(options, "type:"+c.ColumnType)
 	}
+	return options
+}
 
-	if c.Nullable == "YES" {
-		options = append(options, "nullzero")
-	} else {
-		options = append(options, "notnull")
+func optNullable(c *schema.Column, options []string) []string {
+	if c.Name != "deleted_at" {
+		if c.Nullable == "YES" {
+			options = append(options, "nullzero")
+		} else {
+			options = append(options, "notnull")
+		}
 	}
+	return options
+}
+
+func optDefault(c *schema.Column, options []string) []string {
 	if c.Default != "" {
 		columnDefault := strings.ToLower(c.Default)
 		if strings.Contains(columnDefault, `current_timestamp`) {
@@ -138,10 +175,14 @@ func newBunTag(c *schema.Column) *Tag {
 			options = append(options, `default:'`+strings.ReplaceAll(c.Default, "'", "\\'")+`'`)
 		}
 	}
+	return options
+}
+
+func optSoftDelete(c *schema.Column, options []string) []string {
 	if c.Name == "deleted_at" {
-		options = append(options, "soft_delete")
+		options = append(options, "soft_delete", "nullzero")
 	}
-	return NewTag("bun", c.Name, options...)
+	return options
 }
 
 func newJSONTag(name string, options ...string) *Tag {
