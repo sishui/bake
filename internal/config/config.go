@@ -28,7 +28,7 @@ type Config struct {
 	Timezone     string          `koanf:"timezone"`
 	Template     *Template       `koanf:"template"`
 	Output       *Output         `koanf:"output"`
-	Objects      []*CustomObject `koanf:"objects"`
+	Custom       []*CustomStruct `koanf:"custom"`
 	DB           []*DB           `koanf:"db"`
 }
 
@@ -47,7 +47,7 @@ func (c *Config) Validate() error {
 		}
 	}
 
-	for _, o := range c.Objects {
+	for _, o := range c.Custom {
 		if err := o.Validate(); err != nil {
 			return err
 		}
@@ -62,15 +62,10 @@ type Log struct {
 }
 
 type Template struct {
-	Dir   string `koanf:"dir"`
-	Model string `koanf:"model"`
+	Dir string `koanf:"dir"`
 }
 
 func (t *Template) Validate() error {
-	if t.Model == "" {
-		return errors.New("template.model is required")
-	}
-
 	return nil
 }
 
@@ -104,14 +99,14 @@ type Replacement struct {
 	To   string `koanf:"to"`
 }
 
-type CustomObject struct {
+type CustomStruct struct {
 	Name    string         `koanf:"name"`
 	Comment string         `koanf:"comment"`
 	Fields  []*CustomField `koanf:"fields"`
 	Tags    []*Tag         `koanf:"tags"`
 }
 
-func (c *CustomObject) Validate() error {
+func (c *CustomStruct) Validate() error {
 	if c.Name == "" {
 		return errors.New("custom.name is required")
 	}
@@ -225,9 +220,7 @@ func Parse(args Args) (*Config, error) {
 		}
 	}
 	if config.Template == nil {
-		config.Template = &Template{
-			Model: "model",
-		}
+		config.Template = &Template{}
 	}
 	if config.Log == nil {
 		config.Log = &Log{

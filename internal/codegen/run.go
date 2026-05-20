@@ -22,6 +22,11 @@ import (
 	"github.com/sishui/bake/internal/schema"
 )
 
+const (
+	customStructTemplate = "custom"
+	modelTemplate        = "model"
+)
+
 func Run(c *config.Config) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -71,6 +76,14 @@ func run(ctx context.Context, c *config.Config, tmpl *templates) (int, error) {
 		}
 		totalTables += count
 	}
+
+	if len(c.Custom) > 0 {
+		slog.DebugContext(ctx, "generating custom struct", "count", len(c.Custom))
+		if err := generateCustomStruct(ctx, c, tmpl); err != nil {
+			return 0, err
+		}
+	}
+
 	return totalTables, nil
 }
 
@@ -87,6 +100,23 @@ func generate(ctx context.Context, db *config.DB, c *config.Config, tmpl *templa
 		return 0, errors.Join(errs...)
 	}
 	return len(tables), nil
+}
+
+func generateCustomStruct(ctx context.Context, c *config.Config, tmpl *templates) error {
+	for _, cs := range c.Custom {
+		data := NewCustomStruct(c, cs)
+		buffer, err := tmpl.render(customStructTemplate, data)
+		if err != nil {
+			return err
+		}
+		filename := naming.ToSnakeCase(cs.Name)
+		_, err = writeFile(ctx, c.Output.Dir, filename, buffer)
+		if err != nil {
+			return err
+		}
+		slog.DebugContext(ctx, "generated custom struct", "struct", cs.Name, "file", filename+".gen.go")
+	}
+	return nil
 }
 
 func loadSchema(ctx context.Context, db *config.DB) ([]*schema.Table, error) {
@@ -121,7 +151,7 @@ func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *co
 	if err != nil {
 		return result{err: err}
 	}
-	buffer, err := tmpl.render(c.Template.Model, m)
+	buffer, err := tmpl.render(modelTemplate, m)
 	if err != nil {
 		return result{err: err}
 	}

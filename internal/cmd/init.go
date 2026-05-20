@@ -32,12 +32,12 @@ initialisms: ["ID", "URL", "URI", "UUID", "IP"]
 timezone: ""
 
 template:
-  dir: ""
-  model: "%s"
+  dir: "%s" # template dir(if not set, use default template)
 output:
   dir: "%s"
   package: "%s"
   module: "%s"
+custom: [] # custom struct
 db:
   - driver: "%s"
     dsn: "%s"%s
@@ -53,7 +53,7 @@ func NewInitCommand() *cobra.Command {
 		RunE:  runInitCommand,
 	}
 	flags := cmd.Flags()
-	flags.StringP("template", "t", defaultModelTmpl, "model template filename(no extension)")
+	flags.StringP("template", "t", defaultModelTmpl, "model template dir")
 	flags.StringP("output", "o", defaultOutputDir, fmt.Sprintf("%s output dir", defaultConfigFile))
 	flags.StringP("package", "p", defaultPackage, "model gen package name")
 	flags.StringP("module", "m", defaultModule, "module name")

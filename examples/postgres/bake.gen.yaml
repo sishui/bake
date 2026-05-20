@@ -12,7 +12,6 @@ timezone: ""
 
 template:
   dir: ""
-  model: "model"
 output:
   dir: "model"
   package: "model"
@@ -70,3 +69,59 @@ db:
             tags:
               - key: "bun"
                 options: [ "rel:has-many", "join:id=mail_id" ]
+
+custom:
+  - name: "Config"
+    comment: "Application configuration stored as JSONB"
+    fields:
+      - name: "Theme"
+        type: "string"
+        comment: "UI theme (light/dark)"
+      - name: "Locale"
+        type: "string"
+        comment: "User locale"
+      - name: "Description"
+        type: "string"
+        comment: "A detailed description\nof the configuration\nwith multiple lines"
+      - name: "Notifications"
+        type: "bool"
+        comment: "Enable push notifications"
+      - name: "RefreshInterval"
+        type: "int"
+        comment: "Auto-refresh interval in seconds"
+
+  - name: "Metadata"
+    comment: "Resource metadata stored as JSON column"
+    fields:
+      - name: "Tags"
+        type: "[]string"
+        comment: "Resource tags"
+      - name: "Version"
+        type: "int64"
+        comment: "Resource version number"
+      - name: "Owner"
+        type: "string"
+        comment: "Resource owner UID"
+      - name: "Visibility"
+        type: "string"
+        tags:
+          - key: "json"
+            name: "visibility"
+            options: [ "omitempty" ]
+
+  - name: "Address"
+    comment: "Address value object stored as JSONB"
+    fields:
+      - name: "Country"
+        type: "string"
+        comment: "Country code (ISO 3166-1 alpha-2)"
+      - name: "City"
+        type: "string"
+      - name: "Coordinates"
+        type: "[]float64"
+        comment: "GPS coordinates\n(latitude, longitude)"
+      - name: "Street"
+        type: "string"
+      - name: "ZipCode"
+        type: "string"
+        comment: "Postal code"

@@ -24,6 +24,14 @@ type Field struct {
 	IsRelation  bool     // is relation
 }
 
+func (f *Field) FieldName() string        { return f.Name }
+func (f *Field) FieldType() string        { return f.Type }
+func (f *Field) GetTag() string           { return f.Tag }
+func (f *Field) GetComments() []string    { return f.Comments }
+func (f *Field) SetAlignedName(s string)  { f.AlignedName = s }
+func (f *Field) SetAlignedType(s string)  { f.AlignedType = s }
+func (f *Field) SetAlignedTag(s string)   { f.AlignedTag = s }
+
 func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming) (*Field, error) {
 	desc, err := types.NewDesc(driver, c)
 	if err != nil {

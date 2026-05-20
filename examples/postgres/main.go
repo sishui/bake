@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -90,6 +91,67 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(hours)
+
+	// --- Custom struct demo (JSONB values) ---
+	configJSON := []byte(`{
+		"theme": "dark",
+		"locale": "zh-CN",
+		"description": "Main application config\nfor production use\nwith feature flags",
+		"notifications": true,
+		"refresh_interval": 30
+	}`)
+
+	var cfg model.Config
+	if err := json.Unmarshal(configJSON, &cfg); err != nil {
+		panic(err)
+	}
+	fmt.Printf("Config: %+v\n", cfg)
+	fmt.Printf("  Description: %s\n", cfg.Description)
+
+	// Simulate database Scan/Value
+	var scanned model.Config
+	if err := scanned.Scan(configJSON); err != nil {
+		panic(err)
+	}
+	fmt.Printf("Scanned Config: %+v\n", scanned)
+
+	value, err := scanned.Value()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Config Value type: %T, bytes: %s\n", value, value)
+
+	metaJSON := []byte(`{
+		"tags": ["go", "bake", "orm"],
+		"version": 3,
+		"owner": "user_abc",
+		"visibility": "public"
+	}`)
+
+	var meta model.Metadata
+	if err := meta.Scan(metaJSON); err != nil {
+		panic(err)
+	}
+	fmt.Printf("Metadata: %+v\n", meta)
+	fmt.Printf("  Tags: %v\n", meta.Tags)
+
+	addrJSON := []byte(`{
+		"country": "CN",
+		"city": "Shanghai",
+		"coordinates": [31.2304, 121.4737],
+		"street": "Nanjing Road",
+		"zip_code": "200001"
+	}`)
+
+	var addr model.Address
+	if err := addr.Scan(addrJSON); err != nil {
+		panic(err)
+	}
+	fmt.Printf("Address: %+v\n", addr)
+	fmt.Printf("  Coordinates: %v\n", addr.Coordinates)
+
+	fmt.Println("--- Custom struct demo complete ---")
+
 	fmt.Println("done")
 }
 

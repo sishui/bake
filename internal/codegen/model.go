@@ -149,49 +149,6 @@ func (m *Model) applyCustom(customTable *config.CustomTable) {
 	}
 }
 
-func groupFields(fields []*Field) [][]*Field {
-	groups := make([][]*Field, 0, len(fields))
-	current := make([]*Field, 0, len(fields))
-
-	for _, field := range fields {
-		if len(field.Comments) > 1 && len(current) > 0 {
-			groups = append(groups, current)
-			current = make([]*Field, 0, len(fields))
-		}
-		current = append(current, field)
-	}
-
-	if len(current) > 0 {
-		groups = append(groups, current)
-	}
-
-	return groups
-}
-
-func alignFields(groups [][]*Field) {
-	for _, group := range groups {
-		maxName, maxType, maxTag := maxFieldAttr(group)
-		for j, field := range group {
-			group[j].AlignedName = naming.Align(field.Name, maxName)
-			group[j].AlignedType = naming.Align(field.Type, maxType)
-			group[j].AlignedTag = naming.Align(field.Tag, maxTag)
-		}
-	}
-}
-
-func maxFieldAttr(fields []*Field) (int, int, int) {
-	var maxName, maxType, maxTag int
-	for _, field := range fields {
-		maxName = max(len(field.Name), maxName)
-		maxType = max(len(field.Type), maxType)
-		if len(field.Comments) > 1 {
-			continue
-		}
-		maxTag = max(len(field.Tag), maxTag)
-	}
-	return maxName, maxType, maxTag
-}
-
 func newCustomFields(customTable *config.CustomTable, columns map[string]struct{}, n *naming.Naming) []*Field {
 	if customTable == nil {
 		return nil

@@ -89,34 +89,9 @@ func TestOutputValidate(t *testing.T) {
 }
 
 func TestTemplateValidate(t *testing.T) {
-	tests := []struct {
-		name     string
-		template *Template
-		wantErr  bool
-	}{
-		{
-			name: "valid template",
-			template: &Template{
-				Model: "model",
-			},
-			wantErr: false,
-		},
-		{
-			name: "empty model",
-			template: &Template{
-				Model: "",
-			},
-			wantErr: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.template.Validate()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Template.Validate() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
+	testTemplate := &Template{}
+	if err := testTemplate.Validate(); err != nil {
+		t.Errorf("Template.Validate() error = %v, want nil", err)
 	}
 }
 
