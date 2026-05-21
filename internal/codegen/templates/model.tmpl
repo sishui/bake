@@ -131,8 +131,8 @@ const (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Neq" $maxFieldLength }} = "{{$alias}}.{{$field.ColumnName}} <> ?"
-	{{- end}}
-{{- end}}
+	{{- end }}
+{{- end }}
 )
 
 {{- if gt $maxOrderedNonStringLength 0 -}}
@@ -421,6 +421,41 @@ const (
 {{- end}}
 )
 {{- end}}
+
+{{- if gt $maxFieldLength 0 -}}
+{{- "\n\n" -}}
+const (
+{{- range $field := .Fields}}
+	{{- if not $field.IsCustom }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "DistinctExpr" $maxFieldLength }} = "DISTINCT {{$field.ColumnName}}"
+	{{- end }}
+{{- end }}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if not $field.IsCustom }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DistinctExpr" $maxFieldLength }} = "DISTINCT {{$alias}}.{{$field.ColumnName}}"
+	{{- end }}
+{{- end }}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if not $field.IsCustom }}
+	{{- "\n\t" }}{{$model}}{{ concat $field.Name "CountDistinctExpr" $maxFieldLength }} = "COUNT(DISTINCT {{$field.ColumnName}})"
+	{{- end }}
+{{- end }}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if not $field.IsCustom }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "CountDistinctExpr" $maxFieldLength }} = "COUNT(DISTINCT {{$alias}}.{{$field.ColumnName}})"
+	{{- end }}
+{{- end }}
+)
+{{- end }}
 
 {{- if gt $maxEquatableLength 0 -}}
 {{- "\n\n" -}}

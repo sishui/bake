@@ -315,6 +315,47 @@ const (
 )
 
 const (
+	UserIDDistinctExpr        = "DISTINCT id"
+	UserNameDistinctExpr      = "DISTINCT name"
+	UserEmailDistinctExpr     = "DISTINCT email"
+	UserStartAtDistinctExpr   = "DISTINCT start_at"
+	UserEndAtDistinctExpr     = "DISTINCT end_at"
+	UserSeqDistinctExpr       = "DISTINCT seq"
+	UserCreatedAtDistinctExpr = "DISTINCT created_at"
+)
+
+const (
+	UserAliasIDDistinctExpr        = "DISTINCT users_alias.id"
+	UserAliasNameDistinctExpr      = "DISTINCT users_alias.name"
+	UserAliasEmailDistinctExpr     = "DISTINCT users_alias.email"
+	UserAliasStartAtDistinctExpr   = "DISTINCT users_alias.start_at"
+	UserAliasEndAtDistinctExpr     = "DISTINCT users_alias.end_at"
+	UserAliasSeqDistinctExpr       = "DISTINCT users_alias.seq"
+	UserAliasCreatedAtDistinctExpr = "DISTINCT users_alias.created_at"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	UserIDCountDistinctExpr        = "COUNT(DISTINCT id)"
+	UserNameCountDistinctExpr      = "COUNT(DISTINCT name)"
+	UserEmailCountDistinctExpr     = "COUNT(DISTINCT email)"
+	UserStartAtCountDistinctExpr   = "COUNT(DISTINCT start_at)"
+	UserEndAtCountDistinctExpr     = "COUNT(DISTINCT end_at)"
+	UserSeqCountDistinctExpr       = "COUNT(DISTINCT seq)"
+	UserCreatedAtCountDistinctExpr = "COUNT(DISTINCT created_at)"
+)
+
+const (
+	UserAliasIDCountDistinctExpr        = "COUNT(DISTINCT users_alias.id)"
+	UserAliasNameCountDistinctExpr      = "COUNT(DISTINCT users_alias.name)"
+	UserAliasEmailCountDistinctExpr     = "COUNT(DISTINCT users_alias.email)"
+	UserAliasStartAtCountDistinctExpr   = "COUNT(DISTINCT users_alias.start_at)"
+	UserAliasEndAtCountDistinctExpr     = "COUNT(DISTINCT users_alias.end_at)"
+	UserAliasSeqCountDistinctExpr       = "COUNT(DISTINCT users_alias.seq)"
+	UserAliasCreatedAtCountDistinctExpr = "COUNT(DISTINCT users_alias.created_at)"
+)
+
+const (
 	UserIDIn        = "id IN (?)"
 	UserNameIn      = "name IN (?)"
 	UserEmailIn     = "email IN (?)"

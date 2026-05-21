@@ -365,6 +365,47 @@ const (
 )
 
 const (
+	MailAttachmentIDDistinctExpr          = "DISTINCT id"
+	MailAttachmentMailIDDistinctExpr      = "DISTINCT mail_id"
+	MailAttachmentKindDistinctExpr        = "DISTINCT kind"
+	MailAttachmentRewardIDDistinctExpr    = "DISTINCT reward_id"
+	MailAttachmentRewardCountDistinctExpr = "DISTINCT reward_count"
+	MailAttachmentCreatedAtDistinctExpr   = "DISTINCT created_at"
+	MailAttachmentUpdatedAtDistinctExpr   = "DISTINCT updated_at"
+)
+
+const (
+	MailAttachmentAliasIDDistinctExpr          = "DISTINCT mail_attachment_alias.id"
+	MailAttachmentAliasMailIDDistinctExpr      = "DISTINCT mail_attachment_alias.mail_id"
+	MailAttachmentAliasKindDistinctExpr        = "DISTINCT mail_attachment_alias.kind"
+	MailAttachmentAliasRewardIDDistinctExpr    = "DISTINCT mail_attachment_alias.reward_id"
+	MailAttachmentAliasRewardCountDistinctExpr = "DISTINCT mail_attachment_alias.reward_count"
+	MailAttachmentAliasCreatedAtDistinctExpr   = "DISTINCT mail_attachment_alias.created_at"
+	MailAttachmentAliasUpdatedAtDistinctExpr   = "DISTINCT mail_attachment_alias.updated_at"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	MailAttachmentIDCountDistinctExpr          = "COUNT(DISTINCT id)"
+	MailAttachmentMailIDCountDistinctExpr      = "COUNT(DISTINCT mail_id)"
+	MailAttachmentKindCountDistinctExpr        = "COUNT(DISTINCT kind)"
+	MailAttachmentRewardIDCountDistinctExpr    = "COUNT(DISTINCT reward_id)"
+	MailAttachmentRewardCountCountDistinctExpr = "COUNT(DISTINCT reward_count)"
+	MailAttachmentCreatedAtCountDistinctExpr   = "COUNT(DISTINCT created_at)"
+	MailAttachmentUpdatedAtCountDistinctExpr   = "COUNT(DISTINCT updated_at)"
+)
+
+const (
+	MailAttachmentAliasIDCountDistinctExpr          = "COUNT(DISTINCT mail_attachment_alias.id)"
+	MailAttachmentAliasMailIDCountDistinctExpr      = "COUNT(DISTINCT mail_attachment_alias.mail_id)"
+	MailAttachmentAliasKindCountDistinctExpr        = "COUNT(DISTINCT mail_attachment_alias.kind)"
+	MailAttachmentAliasRewardIDCountDistinctExpr    = "COUNT(DISTINCT mail_attachment_alias.reward_id)"
+	MailAttachmentAliasRewardCountCountDistinctExpr = "COUNT(DISTINCT mail_attachment_alias.reward_count)"
+	MailAttachmentAliasCreatedAtCountDistinctExpr   = "COUNT(DISTINCT mail_attachment_alias.created_at)"
+	MailAttachmentAliasUpdatedAtCountDistinctExpr   = "COUNT(DISTINCT mail_attachment_alias.updated_at)"
+)
+
+const (
 	MailAttachmentIDIn          = "id IN (?)"
 	MailAttachmentMailIDIn      = "mail_id IN (?)"
 	MailAttachmentKindIn        = "kind IN (?)"

@@ -235,6 +235,35 @@ const (
 )
 
 const (
+	TestMultiIndexIDDistinctExpr      = "DISTINCT id"
+	TestMultiIndexStartAtDistinctExpr = "DISTINCT start_at"
+	TestMultiIndexEndAtDistinctExpr   = "DISTINCT end_at"
+	TestMultiIndexSeqDistinctExpr     = "DISTINCT seq"
+)
+
+const (
+	TestMultiIndexAliasIDDistinctExpr      = "DISTINCT test_multi_index_alias.id"
+	TestMultiIndexAliasStartAtDistinctExpr = "DISTINCT test_multi_index_alias.start_at"
+	TestMultiIndexAliasEndAtDistinctExpr   = "DISTINCT test_multi_index_alias.end_at"
+	TestMultiIndexAliasSeqDistinctExpr     = "DISTINCT test_multi_index_alias.seq"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	TestMultiIndexIDCountDistinctExpr      = "COUNT(DISTINCT id)"
+	TestMultiIndexStartAtCountDistinctExpr = "COUNT(DISTINCT start_at)"
+	TestMultiIndexEndAtCountDistinctExpr   = "COUNT(DISTINCT end_at)"
+	TestMultiIndexSeqCountDistinctExpr     = "COUNT(DISTINCT seq)"
+)
+
+const (
+	TestMultiIndexAliasIDCountDistinctExpr      = "COUNT(DISTINCT test_multi_index_alias.id)"
+	TestMultiIndexAliasStartAtCountDistinctExpr = "COUNT(DISTINCT test_multi_index_alias.start_at)"
+	TestMultiIndexAliasEndAtCountDistinctExpr   = "COUNT(DISTINCT test_multi_index_alias.end_at)"
+	TestMultiIndexAliasSeqCountDistinctExpr     = "COUNT(DISTINCT test_multi_index_alias.seq)"
+)
+
+const (
 	TestMultiIndexIDIn      = "id IN (?)"
 	TestMultiIndexStartAtIn = "start_at IN (?)"
 	TestMultiIndexEndAtIn   = "end_at IN (?)"

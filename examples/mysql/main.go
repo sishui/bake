@@ -92,6 +92,17 @@ func main() {
 	}
 	fmt.Println(hours)
 
+	// --- COUNT(DISTINCT ...) demo ---
+	var count int
+	err = db.NewSelect().
+		Table(model.UserTableName).
+		ColumnExpr(model.UserIDCountDistinctExpr).
+		Scan(ctx, &count)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("count distinct users:", count)
+
 	// --- Custom struct demo (JSONB values) ---
 	configJSON := []byte(`{
 		"theme": "dark",

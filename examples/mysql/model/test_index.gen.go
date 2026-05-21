@@ -235,6 +235,35 @@ const (
 )
 
 const (
+	TestIndexIDDistinctExpr      = "DISTINCT id"
+	TestIndexStartAtDistinctExpr = "DISTINCT start_at"
+	TestIndexEndAtDistinctExpr   = "DISTINCT end_at"
+	TestIndexSeqDistinctExpr     = "DISTINCT seq"
+)
+
+const (
+	TestIndexAliasIDDistinctExpr      = "DISTINCT test_index_alias.id"
+	TestIndexAliasStartAtDistinctExpr = "DISTINCT test_index_alias.start_at"
+	TestIndexAliasEndAtDistinctExpr   = "DISTINCT test_index_alias.end_at"
+	TestIndexAliasSeqDistinctExpr     = "DISTINCT test_index_alias.seq"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	TestIndexIDCountDistinctExpr      = "COUNT(DISTINCT id)"
+	TestIndexStartAtCountDistinctExpr = "COUNT(DISTINCT start_at)"
+	TestIndexEndAtCountDistinctExpr   = "COUNT(DISTINCT end_at)"
+	TestIndexSeqCountDistinctExpr     = "COUNT(DISTINCT seq)"
+)
+
+const (
+	TestIndexAliasIDCountDistinctExpr      = "COUNT(DISTINCT test_index_alias.id)"
+	TestIndexAliasStartAtCountDistinctExpr = "COUNT(DISTINCT test_index_alias.start_at)"
+	TestIndexAliasEndAtCountDistinctExpr   = "COUNT(DISTINCT test_index_alias.end_at)"
+	TestIndexAliasSeqCountDistinctExpr     = "COUNT(DISTINCT test_index_alias.seq)"
+)
+
+const (
 	TestIndexIDIn      = "id IN (?)"
 	TestIndexStartAtIn = "start_at IN (?)"
 	TestIndexEndAtIn   = "end_at IN (?)"

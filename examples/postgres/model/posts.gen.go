@@ -329,6 +329,47 @@ const (
 )
 
 const (
+	PostIDDistinctExpr        = "DISTINCT id"
+	PostUserIDDistinctExpr    = "DISTINCT user_id"
+	PostTitleDistinctExpr     = "DISTINCT title"
+	PostContentDistinctExpr   = "DISTINCT content"
+	PostStatusDistinctExpr    = "DISTINCT status"
+	PostCreatedAtDistinctExpr = "DISTINCT created_at"
+	PostUpdatedAtDistinctExpr = "DISTINCT updated_at"
+)
+
+const (
+	PostAliasIDDistinctExpr        = "DISTINCT posts_alias.id"
+	PostAliasUserIDDistinctExpr    = "DISTINCT posts_alias.user_id"
+	PostAliasTitleDistinctExpr     = "DISTINCT posts_alias.title"
+	PostAliasContentDistinctExpr   = "DISTINCT posts_alias.content"
+	PostAliasStatusDistinctExpr    = "DISTINCT posts_alias.status"
+	PostAliasCreatedAtDistinctExpr = "DISTINCT posts_alias.created_at"
+	PostAliasUpdatedAtDistinctExpr = "DISTINCT posts_alias.updated_at"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	PostIDCountDistinctExpr        = "COUNT(DISTINCT id)"
+	PostUserIDCountDistinctExpr    = "COUNT(DISTINCT user_id)"
+	PostTitleCountDistinctExpr     = "COUNT(DISTINCT title)"
+	PostContentCountDistinctExpr   = "COUNT(DISTINCT content)"
+	PostStatusCountDistinctExpr    = "COUNT(DISTINCT status)"
+	PostCreatedAtCountDistinctExpr = "COUNT(DISTINCT created_at)"
+	PostUpdatedAtCountDistinctExpr = "COUNT(DISTINCT updated_at)"
+)
+
+const (
+	PostAliasIDCountDistinctExpr        = "COUNT(DISTINCT posts_alias.id)"
+	PostAliasUserIDCountDistinctExpr    = "COUNT(DISTINCT posts_alias.user_id)"
+	PostAliasTitleCountDistinctExpr     = "COUNT(DISTINCT posts_alias.title)"
+	PostAliasContentCountDistinctExpr   = "COUNT(DISTINCT posts_alias.content)"
+	PostAliasStatusCountDistinctExpr    = "COUNT(DISTINCT posts_alias.status)"
+	PostAliasCreatedAtCountDistinctExpr = "COUNT(DISTINCT posts_alias.created_at)"
+	PostAliasUpdatedAtCountDistinctExpr = "COUNT(DISTINCT posts_alias.updated_at)"
+)
+
+const (
 	PostIDIn        = "id IN (?)"
 	PostUserIDIn    = "user_id IN (?)"
 	PostTitleIn     = "title IN (?)"

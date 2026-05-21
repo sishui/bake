@@ -363,6 +363,51 @@ const (
 )
 
 const (
+	MailIDDistinctExpr                  = "DISTINCT id"
+	MailUIDDistinctExpr                 = "DISTINCT uid"
+	MailSubjectDistinctExpr             = "DISTINCT subject"
+	MailContentDistinctExpr             = "DISTINCT content"
+	MailStatusDistinctExpr              = "DISTINCT status"
+	MailCustomHasAttachmentDistinctExpr = "DISTINCT has_attachment"
+	MailCreatedAtDistinctExpr           = "DISTINCT created_at"
+	MailUpdatedAtDistinctExpr           = "DISTINCT updated_at"
+)
+
+const (
+	MailAliasIDDistinctExpr                  = "DISTINCT mail_alias.id"
+	MailAliasUIDDistinctExpr                 = "DISTINCT mail_alias.uid"
+	MailAliasSubjectDistinctExpr             = "DISTINCT mail_alias.subject"
+	MailAliasContentDistinctExpr             = "DISTINCT mail_alias.content"
+	MailAliasStatusDistinctExpr              = "DISTINCT mail_alias.status"
+	MailAliasCustomHasAttachmentDistinctExpr = "DISTINCT mail_alias.has_attachment"
+	MailAliasCreatedAtDistinctExpr           = "DISTINCT mail_alias.created_at"
+	MailAliasUpdatedAtDistinctExpr           = "DISTINCT mail_alias.updated_at"
+)
+
+// COUNT(DISTINCT ...) expressions
+const (
+	MailIDCountDistinctExpr                  = "COUNT(DISTINCT id)"
+	MailUIDCountDistinctExpr                 = "COUNT(DISTINCT uid)"
+	MailSubjectCountDistinctExpr             = "COUNT(DISTINCT subject)"
+	MailContentCountDistinctExpr             = "COUNT(DISTINCT content)"
+	MailStatusCountDistinctExpr              = "COUNT(DISTINCT status)"
+	MailCustomHasAttachmentCountDistinctExpr = "COUNT(DISTINCT has_attachment)"
+	MailCreatedAtCountDistinctExpr           = "COUNT(DISTINCT created_at)"
+	MailUpdatedAtCountDistinctExpr           = "COUNT(DISTINCT updated_at)"
+)
+
+const (
+	MailAliasIDCountDistinctExpr                  = "COUNT(DISTINCT mail_alias.id)"
+	MailAliasUIDCountDistinctExpr                 = "COUNT(DISTINCT mail_alias.uid)"
+	MailAliasSubjectCountDistinctExpr             = "COUNT(DISTINCT mail_alias.subject)"
+	MailAliasContentCountDistinctExpr             = "COUNT(DISTINCT mail_alias.content)"
+	MailAliasStatusCountDistinctExpr              = "COUNT(DISTINCT mail_alias.status)"
+	MailAliasCustomHasAttachmentCountDistinctExpr = "COUNT(DISTINCT mail_alias.has_attachment)"
+	MailAliasCreatedAtCountDistinctExpr           = "COUNT(DISTINCT mail_alias.created_at)"
+	MailAliasUpdatedAtCountDistinctExpr           = "COUNT(DISTINCT mail_alias.updated_at)"
+)
+
+const (
 	MailIDIn                  = "id IN (?)"
 	MailUIDIn                 = "uid IN (?)"
 	MailSubjectIn             = "subject IN (?)"
