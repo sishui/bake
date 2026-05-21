@@ -924,7 +924,6 @@ const (
 	TestAllTypeAliasDeletedAtDistinctExpr      = "DISTINCT test_all_types_alias.deleted_at"
 )
 
-// COUNT(DISTINCT ...) expressions
 const (
 	TestAllTypeIDCountDistinctExpr             = "COUNT(DISTINCT id)"
 	TestAllTypeTinyIntValCountDistinctExpr     = "COUNT(DISTINCT tiny_int_val)"

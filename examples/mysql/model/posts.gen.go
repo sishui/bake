@@ -348,7 +348,6 @@ const (
 	PostAliasUpdatedAtDistinctExpr = "DISTINCT posts_alias.updated_at"
 )
 
-// COUNT(DISTINCT ...) expressions
 const (
 	PostIDCountDistinctExpr        = "COUNT(DISTINCT id)"
 	PostUserIDCountDistinctExpr    = "COUNT(DISTINCT user_id)"

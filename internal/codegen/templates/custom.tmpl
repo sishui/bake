@@ -3,7 +3,7 @@
 
 package {{.Package}}
 
-{{- if gt (len .Imports) 0}}
+{{- if gt (len .Imports) 0}}{{ "\n" }}
 import (
 {{- $lastIndex := sub (len .Imports) 1 }}
 {{- range $i, $group := .Imports }}
@@ -15,7 +15,12 @@ import (
 )
 {{- end}}
 
-{{- if .Comment }}
+var (
+	_ sql.Scanner   = (*{{.Name}})(nil)
+	_ driver.Valuer = (*{{.Name}})(nil)
+)
+
+{{- if .Comment }}{{ "\n" }}
 {{- range $comment := .Comment }}
 // {{$comment}}
 {{- end }}

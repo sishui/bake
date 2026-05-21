@@ -334,7 +334,6 @@ const (
 	UserAliasCreatedAtDistinctExpr = "DISTINCT users_alias.created_at"
 )
 
-// COUNT(DISTINCT ...) expressions
 const (
 	UserIDCountDistinctExpr        = "COUNT(DISTINCT id)"
 	UserNameCountDistinctExpr      = "COUNT(DISTINCT name)"

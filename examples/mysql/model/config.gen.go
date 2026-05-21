@@ -2,11 +2,19 @@
 // version: v0.2.1
 
 package model
+
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 )
+
+var (
+	_ sql.Scanner   = (*Config)(nil)
+	_ driver.Valuer = (*Config)(nil)
+)
+
 // Application configuration stored as JSONB
 type Config struct {
 	// A detailed description

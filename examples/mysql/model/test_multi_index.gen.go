@@ -248,7 +248,6 @@ const (
 	TestMultiIndexAliasSeqDistinctExpr     = "DISTINCT test_multi_index_alias.seq"
 )
 
-// COUNT(DISTINCT ...) expressions
 const (
 	TestMultiIndexIDCountDistinctExpr      = "COUNT(DISTINCT id)"
 	TestMultiIndexStartAtCountDistinctExpr = "COUNT(DISTINCT start_at)"

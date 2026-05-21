@@ -49,8 +49,8 @@ func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *CustomStruct 
 	groups := groupFields(fields)
 	alignFields(groups)
 
-	imports := make([]string, 0, 3+len(fields))
-	imports = append(imports, "database/sql/driver", "encoding/json", "errors")
+	imports := make([]string, 0, 4+len(fields))
+	imports = append(imports, "database/sql", "database/sql/driver", "encoding/json", "errors")
 	for _, f := range fields {
 		imports = append(imports, f.Imports...)
 	}

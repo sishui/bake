@@ -2,11 +2,19 @@
 // version: v0.2.1
 
 package model
+
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 )
+
+var (
+	_ sql.Scanner   = (*Address)(nil)
+	_ driver.Valuer = (*Address)(nil)
+)
+
 // Address value object stored as JSONB
 type Address struct {
 	City string `json:"city,omitempty"` //

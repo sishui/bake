@@ -2,11 +2,19 @@
 // version: v0.2.1
 
 package model
+
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 )
+
+var (
+	_ sql.Scanner   = (*Metadata)(nil)
+	_ driver.Valuer = (*Metadata)(nil)
+)
+
 // Resource metadata stored as JSON column
 type Metadata struct {
 	Owner      string   `json:"owner,omitempty"`      // Resource owner UID

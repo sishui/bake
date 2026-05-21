@@ -384,7 +384,6 @@ const (
 	MailAliasUpdatedAtDistinctExpr           = "DISTINCT mail_alias.updated_at"
 )
 
-// COUNT(DISTINCT ...) expressions
 const (
 	MailIDCountDistinctExpr                  = "COUNT(DISTINCT id)"
 	MailUIDCountDistinctExpr                 = "COUNT(DISTINCT uid)"
