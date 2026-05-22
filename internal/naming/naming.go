@@ -45,11 +45,9 @@ func (n *Naming) normalize(word string) string {
 	if word == "" {
 		return ""
 	}
-	var lower string
 	singular := Singular(word)
-	if singular == word {
-		lower = strings.ToLower(word)
-	} else {
+	lower := strings.ToLower(word)
+	if singular != word {
 		lower = strings.ToLower(singular)
 	}
 
