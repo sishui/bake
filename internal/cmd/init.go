@@ -104,11 +104,6 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	if _, err := os.Stat(defaultConfigFile); err == nil {
 		return fmt.Errorf("%s already exists", defaultConfigFile)
 	}
-	if driver == "postgres" {
-		schema = fmt.Sprintf("\n    schema: \"%s\"", schema)
-	} else {
-		schema = ""
-	}
 	content := defaultConfigContent[1:]
 	content = strings.ReplaceAll(content, "{{template}}", template)
 	content = strings.ReplaceAll(content, "{{output}}", output)
@@ -116,7 +111,11 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	content = strings.ReplaceAll(content, "{{module}}", module)
 	content = strings.ReplaceAll(content, "{{driver}}", driver)
 	content = strings.ReplaceAll(content, "{{dsn}}", dsn)
-	content = strings.ReplaceAll(content, "{{schema}}", schema)
+	if driver == "postgres" {
+		content = strings.ReplaceAll(content, "{{schema}}", fmt.Sprintf("\n    schema: \"%s\"", schema))
+	} else {
+		content = strings.ReplaceAll(content, "{{schema}}", "")
+	}
 	if err := os.WriteFile(defaultConfigFile, []byte(content), 0o644); err != nil {
 		return fmt.Errorf("write config file: %w", err)
 	}
