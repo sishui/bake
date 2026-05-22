@@ -73,8 +73,8 @@ SELECT
 FROM
   pg_class c
   JOIN pg_namespace n ON n.OID = c.relnamespace
-  JOIN pg_attribute a ON a.attrelid = c.
-  OID LEFT JOIN pg_attrdef ad ON ad.adrelid = c.OID
+  JOIN pg_attribute a ON a.attrelid = c.OID
+  LEFT JOIN pg_attrdef ad ON ad.adrelid = c.OID
   AND ad.adnum = a.attnum
   LEFT JOIN pg_type t ON t.OID = a.atttypid
   -- primary key constraint
