@@ -105,7 +105,7 @@ func loadIndexes(ctx context.Context, db *sql.DB, schema string, querySQL string
 			slog.ErrorContext(ctx, "close rows", "error", err)
 		}
 	}()
-	var result []Index
+	result := make([]Index, 0)
 	for rows.Next() {
 		var idx Index
 		err = rows.Scan(&idx.Table, &idx.NonUnique, &idx.IndexName, &idx.ColumnName)
@@ -130,7 +130,7 @@ func loadForeignKeys(ctx context.Context, db *sql.DB, scheme string, querySQL st
 			slog.ErrorContext(ctx, "close rows", "error", err)
 		}
 	}()
-	var result []ForeignKey
+	result := make([]ForeignKey, 0)
 	for rows.Next() {
 		var fk ForeignKey
 		err = rows.Scan(&fk.ConstraintName, &fk.Table, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
