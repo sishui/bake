@@ -206,7 +206,10 @@ func Parse(args Args) (*Config, error) {
 		if args.DSN == "" {
 			return nil, errors.New("db.dsn is required: set via config file or --dsn flag")
 		}
-		driver := detectDriver(args.DSN)
+		driver, err := detectDriver(args.DSN)
+		if err != nil {
+			return nil, err
+		}
 		config.DB = []*DB{
 			{
 				Driver: driver,
@@ -215,7 +218,11 @@ func Parse(args Args) (*Config, error) {
 		}
 	} else {
 		if args.DSN != "" {
-			config.DB[0].Driver = detectDriver(args.DSN)
+			driver, err := detectDriver(args.DSN)
+			if err != nil {
+				return nil, err
+			}
+			config.DB[0].Driver = driver
 			config.DB[0].DSN = args.DSN
 		}
 	}
@@ -307,9 +314,12 @@ func validateIdent(name string) error {
 	return nil
 }
 
-func detectDriver(dsn string) string {
+func detectDriver(dsn string) (string, error) {
 	if strings.HasPrefix(dsn, "postgres://") || strings.HasPrefix(dsn, "postgresql://") {
-		return "postgres"
+		return "postgres", nil
 	}
-	return "mysql"
+	if strings.Contains(dsn, "@tcp(") || strings.Contains(dsn, ":@tcp(") || strings.HasPrefix(dsn, "mysql://") {
+		return "mysql", nil
+	}
+	return "", fmt.Errorf("cannot detect driver from DSN %q: supported formats are postgres://, postgresql://, or mysql (user:pass@tcp(host:port)/db)", dsn)
 }
