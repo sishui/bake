@@ -45,6 +45,7 @@ func TestGroupFields_Fields(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := groupFields(tt.fields)
 			if len(got) != tt.want {
 				t.Errorf("groupFields() returned %d groups, want %d", len(got), tt.want)
@@ -108,6 +109,7 @@ func TestGroupFields_StructFields(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			groups := groupFields(tt.fields)
 			if len(groups) != tt.want {
 				t.Errorf("len(groups) = %d, want %d", len(groups), tt.want)
@@ -237,6 +239,7 @@ func TestAlignFields_StructFields(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			alignFields(tt.groups)
 			for g, group := range tt.groups {
 				wantGroup := tt.want[g]

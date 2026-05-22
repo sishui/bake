@@ -55,6 +55,7 @@ func TestShouldIncludeTable(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			cfg := &config.DB{
 				Exclude: tt.excluded,
 				Include: tt.included,
@@ -219,6 +220,7 @@ func TestColumnIsForeignKey(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			c := &Column{ForeignKey: tt.fk}
 			got := c.IsForeignKey()
 			if got != tt.want {

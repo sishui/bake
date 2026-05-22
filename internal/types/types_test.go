@@ -181,6 +181,7 @@ func TestMySQLDescFunc(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := mapper.Desc(&tt.column)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("mysqlMapper.Desc() error = %v, wantErr %v", err, tt.wantErr)
@@ -394,6 +395,7 @@ func TestPostgresDescFunc(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := mapper.Desc(&tt.column)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("postgresMapper.Desc() error = %v, wantErr %v", err, tt.wantErr)

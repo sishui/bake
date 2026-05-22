@@ -45,6 +45,7 @@ func TestFieldImports(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := fieldImports(tt.desc, tt.custom)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("fieldImports() = %v, want %v", got, tt.want)
@@ -83,6 +84,7 @@ func TestFieldName(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := fieldName(tt.col, tt.custom, n)
 			if got != tt.want {
 				t.Errorf("fieldName() = %v, want %v", got, tt.want)
@@ -120,6 +122,7 @@ func TestFieldType(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := fieldType(tt.desc, tt.custom)
 			if got != tt.want {
 				t.Errorf("fieldType() = %v, want %v", got, tt.want)

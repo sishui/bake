@@ -80,6 +80,7 @@ func TestOutputValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			err := tt.output.Validate()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Output.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -156,6 +157,7 @@ func TestDBValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			err := tt.db.Validate()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("DB.Validate() error = %v, wantErr %v", err, tt.wantErr)
@@ -246,6 +248,7 @@ func TestCustomFieldValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			err := tt.field.Validate()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CustomField.Validate() error = %v, wantErr %v", err, tt.wantErr)

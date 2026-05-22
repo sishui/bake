@@ -56,6 +56,7 @@ func TestGroupImports(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := groupImports(tt.module, tt.input...)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("groupImports() = %v, want %v", got, tt.want)
@@ -89,6 +90,7 @@ func TestSortedKeys(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := sortedKeys(tt.m)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("sortedKeys() = %v, want %v", got, tt.want)

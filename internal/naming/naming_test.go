@@ -47,6 +47,7 @@ func TestSingular(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			inflection.AddUncountable("sms", "mms", "rls")
 			if got := naming.Singular(tt.args.input); got != tt.want {
 				t.Errorf("Singular() = %v, want %v", got, tt.want)
@@ -92,6 +93,7 @@ func TestSanitize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.NormalizeIdentifier(tt.args.raw); got != tt.want {
 				t.Errorf("Sanitize() = %v, want %v", got, tt.want)
 			}
@@ -126,6 +128,7 @@ func TestCamelCase(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.ToCamelCase(tt.args.raw); got != tt.want {
 				t.Errorf("CamelCase() = %v, want %v", got, tt.want)
 			}
@@ -190,6 +193,7 @@ func TestSnakeCased(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.ToSnakeCase(tt.args.s); got != tt.want {
 				t.Errorf("SnakeCased() = %v, want %v", got, tt.want)
 			}
@@ -259,6 +263,7 @@ func TestTableNameToStructName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.TableToStruct(tt.args.raw); got != tt.want {
 				t.Errorf("TableNameToStructName() = %v, want %v", got, tt.want)
 			}
@@ -314,6 +319,7 @@ func TestColumnNameToFieldName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := n.ColumnToField(tt.args.raw); got != tt.want {
 				t.Errorf("ColumnNameToFieldName() = %v, want %v", got, tt.want)
 			}
@@ -353,6 +359,7 @@ func TestConvertCommentToLines(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.SplitCommentLines(tt.args.s); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ConvertCommentToLines() = %v, want %v", got, tt.want)
 			}
@@ -408,6 +415,7 @@ func TestPadRight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.Align(tt.args.s, tt.args.n); got != tt.want {
 				t.Errorf("PadRight() = %v, want %v", got, tt.want)
 			}
@@ -435,6 +443,7 @@ func TestTableToAlias(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.TableToAlias(tt.table); got != tt.want {
 				t.Errorf("TableToAlias() = %v, want %v", got, tt.want)
 			}
@@ -462,6 +471,7 @@ func TestStructToReceiver(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := naming.StructToReceiver(tt.structName); got != tt.want {
 				t.Errorf("StructToReceiver() = %v, want %v", got, tt.want)
 			}

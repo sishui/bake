@@ -73,6 +73,7 @@ func TestBunTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := newBunTag(&tt.args.c); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("BunTag() = %v, want %v", got, tt.want)
 			}
@@ -110,6 +111,7 @@ func TestOptPK(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			options := make([]string, 0, 8)
 			got := optPK(&tt.col, options)
 			if len(got) != tt.wantLen {
@@ -152,6 +154,7 @@ func TestOptUnique(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optUnique(&tt.col, nil)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("optUnique() = %v, want %v", got, tt.want)
@@ -185,6 +188,7 @@ func TestOptAutoIncr(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optAutoIncr(&tt.col, nil)
 			if len(got) != tt.wantLen {
 				t.Errorf("optAutoIncr() len = %d, want %d", len(got), tt.wantLen)
@@ -221,6 +225,7 @@ func TestOptDataType(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optDataType(&tt.col, nil)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("optDataType() = %v, want %v", got, tt.want)
@@ -259,6 +264,7 @@ func TestOptNullable(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optNullable(&tt.col, nil)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("optNullable() = %v, want %v", got, tt.want)
@@ -307,6 +313,7 @@ func TestOptDefault(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optDefault(&tt.col, nil)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("optDefault() = %v, want %v", got, tt.want)
@@ -340,6 +347,7 @@ func TestOptSoftDelete(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := optSoftDelete(&tt.col, nil)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("optSoftDelete() = %v, want %v", got, tt.want)
@@ -400,6 +408,7 @@ func TestNewBunTag_DeletedAt(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := newBunTag(&tt.col)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("newBunTag() = %v, want %v", got, tt.want)
@@ -441,6 +450,7 @@ func TestJsonTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := newJSONTag(tt.args.name, "omitempty"); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("JsonTag() = %v, want %v", got, tt.want)
 			}
@@ -493,6 +503,7 @@ func TestTagToString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := tt.args.tags.String(); got != tt.want {
 				t.Errorf("TagToString() = %v, want %v", got, tt.want)
 			}
