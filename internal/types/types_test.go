@@ -2,6 +2,7 @@ package types
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 
 	"github.com/sishui/bake/internal/schema"
@@ -190,6 +191,9 @@ func TestMySQLDescFunc(t *testing.T) {
 			if !tt.wantErr {
 				if got.Type != tt.want.Type || got.Kind != tt.want.Kind {
 					t.Errorf("mysqlMapper.Desc() = %v, want %v", got, tt.want)
+				}
+				if tt.want.Imports != nil && !reflect.DeepEqual(got.Imports, tt.want.Imports) {
+					t.Errorf("mysqlMapper.Desc() Imports = %v, want %v", got.Imports, tt.want.Imports)
 				}
 			}
 			if tt.wantErr && !errors.Is(err, ErrUnsupportedType) {
@@ -404,6 +408,9 @@ func TestPostgresDescFunc(t *testing.T) {
 			if !tt.wantErr {
 				if got.Type != tt.want.Type || got.Kind != tt.want.Kind {
 					t.Errorf("postgresMapper.Desc() = %v, want %v", got, tt.want)
+				}
+				if tt.want.Imports != nil && !reflect.DeepEqual(got.Imports, tt.want.Imports) {
+					t.Errorf("postgresMapper.Desc() Imports = %v, want %v", got.Imports, tt.want.Imports)
 				}
 			}
 			if tt.wantErr && !errors.Is(err, ErrUnsupportedType) && !errors.Is(err, ErrUnsupportedArrayType) {
