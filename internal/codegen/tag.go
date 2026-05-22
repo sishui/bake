@@ -157,7 +157,7 @@ func optDataType(c *schema.Column, options []string) []string {
 
 func optNullable(c *schema.Column, options []string) []string {
 	if c.Name != "deleted_at" {
-		if c.Nullable == "YES" {
+		if c.IsNullable() {
 			options = append(options, "nullzero")
 		} else {
 			options = append(options, "notnull")
