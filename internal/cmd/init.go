@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -32,15 +33,15 @@ initialisms: ["ID", "URL", "URI", "UUID", "IP"]
 timezone: ""
 
 template:
-  dir: "%s" # template dir(if not set, use default template)
+  dir: "{{template}}" # template dir(if not set, use default template)
 output:
-  dir: "%s"
-  package: "%s"
-  module: "%s"
+  dir: "{{output}}"
+  package: "{{package}}"
+  module: "{{module}}"
 custom: [] # custom struct
 db:
-  - driver: "%s"
-    dsn: "%s"%s
+  - driver: "{{driver}}"
+    dsn: "{{dsn}}"{{schema}}
     include: []
     exclude: []
     custom: {}
@@ -108,7 +109,14 @@ func runInitCommand(cmd *cobra.Command, args []string) error {
 	} else {
 		schema = ""
 	}
-	content := fmt.Sprintf(defaultConfigContent[1:], template, output, pkg, module, driver, dsn, schema)
+	content := defaultConfigContent[1:]
+	content = strings.ReplaceAll(content, "{{template}}", template)
+	content = strings.ReplaceAll(content, "{{output}}", output)
+	content = strings.ReplaceAll(content, "{{package}}", pkg)
+	content = strings.ReplaceAll(content, "{{module}}", module)
+	content = strings.ReplaceAll(content, "{{driver}}", driver)
+	content = strings.ReplaceAll(content, "{{dsn}}", dsn)
+	content = strings.ReplaceAll(content, "{{schema}}", schema)
 	if err := os.WriteFile(defaultConfigFile, []byte(content), 0o644); err != nil {
 		return fmt.Errorf("write config file: %w", err)
 	}
