@@ -1,4 +1,4 @@
-// Package generate provides for bun model
+// Package generate provides model generation from database schema.
 package generate
 
 import (
