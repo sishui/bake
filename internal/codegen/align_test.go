@@ -57,51 +57,51 @@ func TestGroupFields_Fields(t *testing.T) {
 func TestGroupFields_StructFields(t *testing.T) {
 	tests := []struct {
 		name   string
-		fields []*StructField
+		fields []*Field
 		want   int // number of expected groups
 	}{
 		{
 			name:   "empty fields",
-			fields: []*StructField{},
+			fields: []*Field{},
 			want:   0,
 		},
 		{
 			name: "single field without multi-line comment",
-			fields: []*StructField{
-				{Name: "A", GoType: "string"},
+			fields: []*Field{
+				{Name: "A", Type: "string"},
 			},
 			want: 1,
 		},
 		{
 			name: "single multi-line comment field",
-			fields: []*StructField{
-				{Name: "A", GoType: "string", Comment: []string{"Line 1", "Line 2"}},
+			fields: []*Field{
+				{Name: "A", Type: "string", Comments: []string{"Line 1", "Line 2"}},
 			},
 			want: 1,
 		},
 		{
 			name: "multi-line comment splits group",
-			fields: []*StructField{
-				{Name: "A", GoType: "int"},
-				{Name: "B", GoType: "string", Comment: []string{"Line 1", "Line 2"}},
-				{Name: "C", GoType: "bool"},
+			fields: []*Field{
+				{Name: "A", Type: "int"},
+				{Name: "B", Type: "string", Comments: []string{"Line 1", "Line 2"}},
+				{Name: "C", Type: "bool"},
 			},
 			want: 2,
 		},
 		{
 			name: "consecutive multi-line comments each start own group",
-			fields: []*StructField{
-				{Name: "A", GoType: "int"},
-				{Name: "B", GoType: "string", Comment: []string{"L1", "L2"}},
-				{Name: "C", GoType: "bool", Comment: []string{"L3", "L4"}},
+			fields: []*Field{
+				{Name: "A", Type: "int"},
+				{Name: "B", Type: "string", Comments: []string{"L1", "L2"}},
+				{Name: "C", Type: "bool", Comments: []string{"L3", "L4"}},
 			},
 			want: 3,
 		},
 		{
 			name: "multi-line comment at start doesn't create empty first group",
-			fields: []*StructField{
-				{Name: "A", GoType: "string", Comment: []string{"L1", "L2"}},
-				{Name: "B", GoType: "bool"},
+			fields: []*Field{
+				{Name: "A", Type: "string", Comments: []string{"L1", "L2"}},
+				{Name: "B", Type: "bool"},
 			},
 			want: 1,
 		},
@@ -141,10 +141,10 @@ func TestMaxFieldAttr_Fields(t *testing.T) {
 
 func TestMaxFieldAttr_StructFields_MultiLineCommentSkipsTag(t *testing.T) {
 	// Multi-line comment fields should not contribute to maxTag
-	fields := []*StructField{
-		{Name: "A", GoType: "int", Tag: "`json:\"a\"`"},
-		{Name: "LongDesc", GoType: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag", Comment: []string{"Line 1", "Line 2"}},
-		{Name: "B", GoType: "bool", Tag: "`json:\"b\"`"},
+	fields := []*Field{
+		{Name: "A", Type: "int", Tag: "`json:\"a\"`"},
+		{Name: "LongDesc", Type: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag", Comments: []string{"Line 1", "Line 2"}},
+		{Name: "B", Type: "bool", Tag: "`json:\"b\"`"},
 	}
 
 	maxName, maxType, maxTag := maxFieldAttr(fields)
@@ -165,72 +165,72 @@ func TestMaxFieldAttr_StructFields_MultiLineCommentSkipsTag(t *testing.T) {
 func TestAlignFields_StructFields(t *testing.T) {
 	tests := []struct {
 		name   string
-		groups [][]*StructField
-		want   [][]*StructField
+		groups [][]*Field
+		want   [][]*Field
 	}{
 		{
 			name:   "empty group",
-			groups: [][]*StructField{{}},
-			want:   [][]*StructField{{}},
+			groups: [][]*Field{{}},
+			want:   [][]*Field{{}},
 		},
 		{
 			name: "single field",
-			groups: [][]*StructField{{
-				{Name: "Value", GoType: "string", Tag: "`json:\"value,omitempty\"`"},
+			groups: [][]*Field{{
+				{Name: "Value", Type: "string", Tag: "`json:\"value,omitempty\"`"},
 			}},
-			want: [][]*StructField{{
-				{Name: "Value", AlignedName: "Value", GoType: "string", AlignedType: "string", Tag: "`json:\"value,omitempty\"`", AlignedTag: "`json:\"value,omitempty\"`"},
+			want: [][]*Field{{
+				{Name: "Value", AlignedName: "Value", Type: "string", AlignedType: "string", Tag: "`json:\"value,omitempty\"`", AlignedTag: "`json:\"value,omitempty\"`"},
 			}},
 		},
 		{
 			name: "fields with varying widths",
-			groups: [][]*StructField{{
-				{Name: "A", GoType: "int", Tag: "`json:\"a\"`"},
-				{Name: "LongName", GoType: "string", Tag: "`json:\"long_name,omitempty\"`"},
-				{Name: "B", GoType: "bool", Tag: "`json:\"b\"`"},
+			groups: [][]*Field{{
+				{Name: "A", Type: "int", Tag: "`json:\"a\"`"},
+				{Name: "LongName", Type: "string", Tag: "`json:\"long_name,omitempty\"`"},
+				{Name: "B", Type: "bool", Tag: "`json:\"b\"`"},
 			}},
-			want: [][]*StructField{{
-				{Name: "A", GoType: "int", Tag: "`json:\"a\"`",
+			want: [][]*Field{{
+				{Name: "A", Type: "int", Tag: "`json:\"a\"`",
 					AlignedName: "A       ", AlignedType: "int   ", AlignedTag: "`json:\"a\"`                  "},
-				{Name: "LongName", GoType: "string", Tag: "`json:\"long_name,omitempty\"`",
+				{Name: "LongName", Type: "string", Tag: "`json:\"long_name,omitempty\"`",
 					AlignedName: "LongName", AlignedType: "string", AlignedTag: "`json:\"long_name,omitempty\"`"},
-				{Name: "B", GoType: "bool", Tag: "`json:\"b\"`",
+				{Name: "B", Type: "bool", Tag: "`json:\"b\"`",
 					AlignedName: "B       ", AlignedType: "bool  ", AlignedTag: "`json:\"b\"`                  "},
 			}},
 		},
 		{
 			name: "multi-line comment field skips tag alignment",
-			groups: [][]*StructField{{
-				{Name: "A", GoType: "int", Tag: "`json:\"a\"`"},
-				{Name: "LongDesc", GoType: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag", Comment: []string{"Line 1", "Line 2"}},
-				{Name: "B", GoType: "bool", Tag: "`json:\"b\"`"},
+			groups: [][]*Field{{
+				{Name: "A", Type: "int", Tag: "`json:\"a\"`"},
+				{Name: "LongDesc", Type: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag", Comments: []string{"Line 1", "Line 2"}},
+				{Name: "B", Type: "bool", Tag: "`json:\"b\"`"},
 			}},
-			want: [][]*StructField{{
-				{Name: "A", GoType: "int", Tag: "`json:\"a\"`",
+			want: [][]*Field{{
+				{Name: "A", Type: "int", Tag: "`json:\"a\"`",
 					AlignedName: "A       ", AlignedType: "int   ", AlignedTag: "`json:\"a\"`"},
-				{Name: "LongDesc", GoType: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag",
+				{Name: "LongDesc", Type: "string", Tag: "`json:\"long_desc,omitempty\"`with_extra_tag",
 					AlignedName: "LongDesc", AlignedType: "string", AlignedTag: "`json:\"long_desc,omitempty\"`with_extra_tag"},
-				{Name: "B", GoType: "bool", Tag: "`json:\"b\"`",
+				{Name: "B", Type: "bool", Tag: "`json:\"b\"`",
 					AlignedName: "B       ", AlignedType: "bool  ", AlignedTag: "`json:\"b\"`"},
 			}},
 		},
 		{
 			name: "multiple groups respect independent alignment",
-			groups: [][]*StructField{
+			groups: [][]*Field{
 				{
-					{Name: "Short", GoType: "int", Tag: "`json:\"short\"`"},
+					{Name: "Short", Type: "int", Tag: "`json:\"short\"`"},
 				},
 				{
-					{Name: "VeryLongFieldName", GoType: "bool", Tag: "`json:\"very_long_field_name\"`"},
+					{Name: "VeryLongFieldName", Type: "bool", Tag: "`json:\"very_long_field_name\"`"},
 				},
 			},
-			want: [][]*StructField{
+			want: [][]*Field{
 				{
-					{Name: "Short", GoType: "int", Tag: "`json:\"short\"`",
+					{Name: "Short", Type: "int", Tag: "`json:\"short\"`",
 						AlignedName: "Short", AlignedType: "int", AlignedTag: "`json:\"short\"`"},
 				},
 				{
-					{Name: "VeryLongFieldName", GoType: "bool", Tag: "`json:\"very_long_field_name\"`",
+					{Name: "VeryLongFieldName", Type: "bool", Tag: "`json:\"very_long_field_name\"`",
 						AlignedName: "VeryLongFieldName", AlignedType: "bool", AlignedTag: "`json:\"very_long_field_name\"`"},
 				},
 			},

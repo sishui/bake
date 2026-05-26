@@ -1,6 +1,8 @@
 package generate
 
 import (
+	"sort"
+
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 	"github.com/sishui/bake/internal/schema"
@@ -23,14 +25,6 @@ type Field struct {
 	IsCustom    bool     // is custom type
 	IsRelation  bool     // is relation
 }
-
-func (f *Field) FieldName() string        { return f.Name }
-func (f *Field) FieldType() string        { return f.Type }
-func (f *Field) GetTag() string           { return f.Tag }
-func (f *Field) GetComments() []string    { return f.Comments }
-func (f *Field) SetAlignedName(s string)  { f.AlignedName = s }
-func (f *Field) SetAlignedType(s string)  { f.AlignedType = s }
-func (f *Field) SetAlignedTag(s string)   { f.AlignedTag = s }
 
 func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming) (*Field, error) {
 	desc, err := types.NewDesc(driver, c)
@@ -140,4 +134,10 @@ func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*
 		tags.Add(newCustomTags(name, v)...)
 	}
 	return tags
+}
+
+func sortFields(fields []*Field) {
+	sort.Slice(fields, func(i, j int) bool {
+		return fields[i].Name < fields[j].Name
+	})
 }

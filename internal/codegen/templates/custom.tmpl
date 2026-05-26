@@ -16,29 +16,29 @@ import (
 {{- end}}
 
 var (
-	_ sql.Scanner   = (*{{.Name}})(nil)
-	_ driver.Valuer = (*{{.Name}})(nil)
+	_ sql.Scanner   = (*{{.Model}})(nil)
+	_ driver.Valuer = (*{{.Model}})(nil)
 )
 
-{{- if .Comment }}{{ "\n" }}
-{{- range $comment := .Comment }}
+{{- if .Comments }}{{ "\n" }}
+{{- range $comment := .Comments }}
 // {{$comment}}
 {{- end }}
 {{- end }}
-type {{.Name}} struct {
+type {{.Model}} struct {
 {{- range $field := .Fields }}
-	{{- if gt (len $field.Comment) 1}}
-	{{- range $comment := $field.Comment}}
+	{{- if gt (len $field.Comments) 1}}
+	{{- range $comment := $field.Comments}}
 	// {{$comment}}
 	{{- end}}
 	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.Tag}}
 	{{- else}}
-	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.AlignedTag}} //{{ if gt (len $field.Comment) 0 -}} {{ " " }}{{ index $field.Comment 0 -}}{{ end }}
+	{{$field.AlignedName}} {{$field.AlignedType}} {{$field.AlignedTag}} //{{ if gt (len $field.Comments) 0 -}} {{ " " }}{{ index $field.Comments 0 -}}{{ end }}
 	{{- end}}
 {{- end}}
 }
 
-func (o *{{.Name}}) Scan(src any) error {
+func (o *{{.Model}}) Scan(src any) error {
 	if src == nil {
 		return nil
 	}
@@ -52,6 +52,6 @@ func (o *{{.Name}}) Scan(src any) error {
 	}
 }
 
-func (o {{.Name}}) Value() (driver.Value, error) {
+func (o {{.Model}}) Value() (driver.Value, error) {
 	return json.Marshal(o)
 }

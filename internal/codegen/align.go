@@ -4,29 +4,17 @@ import (
 	"github.com/sishui/bake/internal/naming"
 )
 
-// FieldAlignable is the interface for field types that support alignment.
-// Both *Field (model) and *StructField (custom struct) implement this.
-type FieldAlignable interface {
-	FieldName() string
-	FieldType() string
-	GetTag() string
-	GetComments() []string
-	SetAlignedName(string)
-	SetAlignedType(string)
-	SetAlignedTag(string)
-}
-
 // groupFields splits fields into groups, starting a new group before a
 // multi-line comment field. This ensures multi-line comment field tags don't
 // influence the tag alignment of preceding fields.
-func groupFields[T FieldAlignable](fields []T) [][]T {
-	groups := make([][]T, 0, len(fields))
-	current := make([]T, 0, len(fields))
+func groupFields(fields []*Field) [][]*Field {
+	groups := make([][]*Field, 0, len(fields))
+	current := make([]*Field, 0, len(fields))
 
 	for _, f := range fields {
-		if len(f.GetComments()) > 1 && len(current) > 0 {
+		if len(f.Comments) > 1 && len(current) > 0 {
 			groups = append(groups, current)
-			current = make([]T, 0, len(fields))
+			current = make([]*Field, 0, len(fields))
 		}
 		current = append(current, f)
 	}
@@ -40,33 +28,33 @@ func groupFields[T FieldAlignable](fields []T) [][]T {
 
 // alignFields aligns field name, type, and tag within each group using
 // naming.Align. Multi-line comment fields are skipped for tag alignment.
-func alignFields[T FieldAlignable](groups [][]T) {
+func alignFields(groups [][]*Field) {
 	for _, group := range groups {
 		maxName, maxType, maxTag := maxFieldAttr(group)
 		for _, f := range group {
-			f.SetAlignedName(naming.Align(f.FieldName(), maxName))
-			f.SetAlignedType(naming.Align(f.FieldType(), maxType))
-			f.SetAlignedTag(naming.Align(f.GetTag(), maxTag))
+			f.AlignedName = naming.Align(f.Name, maxName)
+			f.AlignedType = naming.Align(f.Type, maxType)
+			f.AlignedTag = naming.Align(f.Tag, maxTag)
 		}
 	}
 }
 
 // maxFieldAttr computes the maximum name, type, and tag lengths in a group.
 // Fields with multi-line comments do not contribute to maxTag.
-func maxFieldAttr[T FieldAlignable](fields []T) (int, int, int) {
+func maxFieldAttr(fields []*Field) (int, int, int) {
 	var maxName, maxType, maxTag int
 	for _, f := range fields {
-		if len(f.FieldName()) > maxName {
-			maxName = len(f.FieldName())
+		if len(f.Name) > maxName {
+			maxName = len(f.Name)
 		}
-		if len(f.FieldType()) > maxType {
-			maxType = len(f.FieldType())
+		if len(f.Type) > maxType {
+			maxType = len(f.Type)
 		}
-		if len(f.GetComments()) > 1 {
+		if len(f.Comments) > 1 {
 			continue
 		}
-		if len(f.GetTag()) > maxTag {
-			maxTag = len(f.GetTag())
+		if len(f.Tag) > maxTag {
+			maxTag = len(f.Tag)
 		}
 	}
 	return maxName, maxType, maxTag

@@ -52,7 +52,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 	}
 
 	customTable := db.Custom[t.Name]
-	m.applyCustom(customTable)
+	applyCustom(m, customTable)
 	fields := make([]*Field, 0, len(t.Columns)*2)
 	for _, c := range t.Columns {
 		f, err := NewField(c, customTable, db.Driver, n)
@@ -71,11 +71,11 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 	fields = append(fields, newCustomFields(customTable, columns, n)...)
 	alignFields(groupFields(fields))
 	m.Fields = fields
-	m.init()
+	initModel(m)
 	return m, nil
 }
 
-func (m *Model) init() {
+func initModel(m *Model) {
 	imports := make([]string, 0, len(m.Fields)*2+1)
 	imports = append(imports, "context", "github.com/uptrace/bun")
 
@@ -134,7 +134,7 @@ func (m *Model) init() {
 	m.Imports = groupImports(m.Module, imports...)
 }
 
-func (m *Model) applyCustom(customTable *config.CustomTable) {
+func applyCustom(m *Model, customTable *config.CustomTable) {
 	if customTable == nil {
 		return
 	}

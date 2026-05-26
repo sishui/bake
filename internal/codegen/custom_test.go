@@ -14,39 +14,39 @@ func TestNewStructField(t *testing.T) {
 	tests := []struct {
 		name string
 		cfg  *config.CustomField
-		want *StructField
+		want *Field
 	}{
 		{
 			name: "basic field",
 			cfg:  &config.CustomField{Name: "Theme", Type: "string"},
-			want: &StructField{
-				Name:    "Theme",
-				GoType:  "string",
-				Tag:     "`json:\"theme,omitempty\"`",
-				Comment: nil,
-				Imports: nil,
+			want: &Field{
+				Name:     "Theme",
+				Type:     "string",
+				Tag:      "`json:\"theme,omitempty\"`",
+				Comments: nil,
+				Imports:  nil,
 			},
 		},
 		{
 			name: "field with comment",
 			cfg:  &config.CustomField{Name: "Count", Type: "int", Comment: "Number of items"},
-			want: &StructField{
-				Name:    "Count",
-				GoType:  "int",
-				Tag:     "`json:\"count,omitempty\"`",
-				Comment: []string{"Number of items"},
-				Imports: nil,
+			want: &Field{
+				Name:     "Count",
+				Type:     "int",
+				Tag:      "`json:\"count,omitempty\"`",
+				Comments: []string{"Number of items"},
+				Imports:  nil,
 			},
 		},
 		{
 			name: "field with custom import",
 			cfg:  &config.CustomField{Name: "Data", Type: "json.RawMessage", Import: "encoding/json"},
-			want: &StructField{
-				Name:    "Data",
-				GoType:  "json.RawMessage",
-				Tag:     "`json:\"data,omitempty\"`",
-				Comment: nil,
-				Imports: []string{"encoding/json"},
+			want: &Field{
+				Name:     "Data",
+				Type:     "json.RawMessage",
+				Tag:      "`json:\"data,omitempty\"`",
+				Comments: nil,
+				Imports:  []string{"encoding/json"},
 			},
 		},
 		{
@@ -58,10 +58,10 @@ func TestNewStructField(t *testing.T) {
 					{Key: "json", Name: "refresh_interval", Options: []string{"omitempty"}},
 				},
 			},
-			want: &StructField{
-				Name:   "RefreshInterval",
-				GoType: "int",
-				Tag:    "`json:\"refresh_interval,omitempty\"`",
+			want: &Field{
+				Name: "RefreshInterval",
+				Type: "int",
+				Tag:  "`json:\"refresh_interval,omitempty\"`",
 			},
 		},
 		{
@@ -73,10 +73,10 @@ func TestNewStructField(t *testing.T) {
 					{Key: "json", Name: "required"},
 				},
 			},
-			want: &StructField{
-				Name:   "Required",
-				GoType: "string",
-				Tag:    "`json:\"required\"`",
+			want: &Field{
+				Name: "Required",
+				Type: "string",
+				Tag:  "`json:\"required\"`",
 			},
 		},
 		{
@@ -89,19 +89,19 @@ func TestNewStructField(t *testing.T) {
 					{Key: "form", Name: "Email"},
 				},
 			},
-			want: &StructField{
-				Name:   "Email",
-				GoType: "string",
-				Tag:    "`form:\"Email\" json:\"email,omitempty\" yaml:\"email\"`",
+			want: &Field{
+				Name: "Email",
+				Type: "string",
+				Tag:  "`form:\"Email\" json:\"email,omitempty\" yaml:\"email\"`",
 			},
 		},
 		{
 			name: "field with slice type",
 			cfg:  &config.CustomField{Name: "Tags", Type: "[]string"},
-			want: &StructField{
-				Name:   "Tags",
-				GoType: "[]string",
-				Tag:    "`json:\"tags,omitempty\"`",
+			want: &Field{
+				Name: "Tags",
+				Type: "[]string",
+				Tag:  "`json:\"tags,omitempty\"`",
 			},
 		},
 	}
@@ -113,14 +113,14 @@ func TestNewStructField(t *testing.T) {
 			if got.Name != tt.want.Name {
 				t.Errorf("Name = %q, want %q", got.Name, tt.want.Name)
 			}
-			if got.GoType != tt.want.GoType {
-				t.Errorf("GoType = %q, want %q", got.GoType, tt.want.GoType)
+			if got.Type != tt.want.Type {
+				t.Errorf("GoType = %q, want %q", got.Type, tt.want.Type)
 			}
 			if got.Tag != tt.want.Tag {
 				t.Errorf("Tag = %q, want %q", got.Tag, tt.want.Tag)
 			}
-			if !reflect.DeepEqual(got.Comment, tt.want.Comment) {
-				t.Errorf("Comment = %v, want %v", got.Comment, tt.want.Comment)
+			if !reflect.DeepEqual(got.Comments, tt.want.Comments) {
+				t.Errorf("Comment = %v, want %v", got.Comments, tt.want.Comments)
 			}
 			if !reflect.DeepEqual(got.Imports, tt.want.Imports) {
 				t.Errorf("Imports = %v, want %v", got.Imports, tt.want.Imports)
@@ -156,8 +156,8 @@ func TestNewCustomStruct(t *testing.T) {
 	if data.Module != "github.com/sishui/bake/examples/custom" {
 		t.Errorf("Module = %q, want %q", data.Module, "github.com/sishui/bake/examples/custom")
 	}
-	if data.Name != "Config" {
-		t.Errorf("Name = %q, want %q", data.Name, "Config")
+	if data.Model != "Config" {
+		t.Errorf("Model = %q, want %q", data.Model, "Config")
 	}
 	if len(data.Fields) != 1 {
 		t.Errorf("len(Fields) = %d, want 1", len(data.Fields))
@@ -256,10 +256,10 @@ func TestCustomStructTemplateRender_WithCustomImport(t *testing.T) {
 }
 
 func TestSortFields(t *testing.T) {
-	fields := []*StructField{
-		{Name: "Zulu", GoType: "string", Tag: "`json:\"zulu\"`"},
-		{Name: "Alpha", GoType: "int", Tag: "`json:\"alpha\"`"},
-		{Name: "Beta", GoType: "bool", Tag: "`json:\"beta\"`"},
+	fields := []*Field{
+		{Name: "Zulu", Type: "string", Tag: "`json:\"zulu\"`"},
+		{Name: "Alpha", Type: "int", Tag: "`json:\"alpha\"`"},
+		{Name: "Beta", Type: "bool", Tag: "`json:\"beta\"`"},
 	}
 
 	sortFields(fields)

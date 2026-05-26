@@ -1,46 +1,13 @@
 package generate
 
 import (
-	"sort"
-
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
 )
 
-// CustomStruct holds data for rendering a single custom struct template.
-type CustomStruct struct {
-	Version string
-	Package string
-	Module  string
-	Imports [][]string
-	Name    string
-	Comment []string
-	Fields  []*StructField
-}
-
-// StructField represents a field in a custom struct.
-type StructField struct {
-	Name        string   // Go field name (PascalCase)
-	AlignedName string   // Name padded to max field name width
-	GoType      string   // Go type
-	AlignedType string   // GoType padded to max type width
-	Tag         string   // Struct tag string (including backticks)
-	AlignedTag  string   // Tag padded to max tag width
-	Comment     []string // Field comment lines
-	Imports     []string // Additional imports needed by this field's type
-}
-
-func (f *StructField) FieldName() string       { return f.Name }
-func (f *StructField) FieldType() string       { return f.GoType }
-func (f *StructField) GetTag() string          { return f.Tag }
-func (f *StructField) GetComments() []string   { return f.Comment }
-func (f *StructField) SetAlignedName(s string) { f.AlignedName = s }
-func (f *StructField) SetAlignedType(s string) { f.AlignedType = s }
-func (f *StructField) SetAlignedTag(s string)  { f.AlignedTag = s }
-
-// NewCustomStruct creates CustomStruct from a single custom struct configuration.
-func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *CustomStruct {
-	fields := make([]*StructField, 0, len(st.Fields))
+// NewCustomStruct creates Model from a single custom struct configuration.
+func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *Model {
+	fields := make([]*Field, 0, len(st.Fields))
 	for _, f := range st.Fields {
 		fields = append(fields, newStructField(f))
 	}
@@ -55,18 +22,18 @@ func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *CustomStruct 
 		imports = append(imports, f.Imports...)
 	}
 
-	return &CustomStruct{
-		Version: cfg.Version,
-		Package: cfg.Output.Package,
-		Module:  cfg.Output.Module,
-		Imports: groupImports(cfg.Output.Module, imports...),
-		Name:    st.Name,
-		Comment: naming.SplitCommentLines(st.Comment),
-		Fields:  fields,
+	return &Model{
+		Version:  cfg.Version,
+		Package:  cfg.Output.Package,
+		Module:   cfg.Output.Module,
+		Imports:  groupImports(cfg.Output.Module, imports...),
+		Model:    st.Name,
+		Comments: naming.SplitCommentLines(st.Comment),
+		Fields:   fields,
 	}
 }
 
-func newStructField(cfg *config.CustomField) *StructField {
+func newStructField(cfg *config.CustomField) *Field {
 	name := cfg.Name
 	jsonName := naming.ToSnakeCase(name)
 
@@ -95,17 +62,11 @@ func newStructField(cfg *config.CustomField) *StructField {
 		imports = append(imports, cfg.Import)
 	}
 
-	return &StructField{
-		Name:    name,
-		GoType:  cfg.Type,
-		Tag:     tags.String(),
-		Comment: naming.SplitCommentLines(cfg.Comment),
-		Imports: imports,
+	return &Field{
+		Name:     name,
+		Type:     cfg.Type,
+		Tag:      tags.String(),
+		Comments: naming.SplitCommentLines(cfg.Comment),
+		Imports:  imports,
 	}
-}
-
-func sortFields(fields []*StructField) {
-	sort.Slice(fields, func(i, j int) bool {
-		return fields[i].Name < fields[j].Name
-	})
 }
