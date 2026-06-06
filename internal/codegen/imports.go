@@ -14,10 +14,10 @@ func groupImports(module string, packages ...string) [][]string {
 	local := make(map[string]struct{})
 	for _, pkg := range packages {
 		switch {
+		case module != "" && strings.HasPrefix(pkg, module):
+			local[pkg] = struct{}{}
 		case !strings.Contains(pkg, "."):
 			std[pkg] = struct{}{}
-		case strings.HasPrefix(pkg, module):
-			local[pkg] = struct{}{}
 		default:
 			third[pkg] = struct{}{}
 		}

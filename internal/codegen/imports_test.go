@@ -52,6 +52,12 @@ func TestGroupImports(t *testing.T) {
 			input:  []string{"fmt", "fmt", "context"},
 			want:   [][]string{{"context", "fmt"}},
 		},
+		{
+			name:   "short module name classified as local not std",
+			module: "myproject",
+			input:  []string{"myproject/internal/types", "fmt"},
+			want:   [][]string{{"fmt"}, {"myproject/internal/types"}},
+		},
 	}
 
 	for _, tt := range tests {
