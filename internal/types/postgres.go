@@ -30,7 +30,7 @@ func (m *postgresMapper) Desc(c *schema.Column) (Desc, error) {
 	case "text", "character varying", "character", "varchar", "char", "bpchar":
 		return newStringDesc(c), nil
 	case "bytea", "bit":
-		return newBytesDesc(), nil
+		return newBytesDesc(c), nil
 	case "date", "timestamp", "timestamp without time zone", "timestamp with time zone", "time", "time without time zone":
 		return newTimeDesc(c), nil
 	case "json", "jsonb":

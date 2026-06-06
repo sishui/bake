@@ -59,10 +59,11 @@ func newStringDesc(c *schema.Column) Desc {
 	}
 }
 
-func newBytesDesc() Desc {
-	typ := "[]byte"
+// newBytesDesc returns []byte type. Nullable is not applied because
+// []byte's zero value (nil) already represents SQL NULL.
+func newBytesDesc(_ *schema.Column) Desc {
 	return Desc{
-		Type: typ,
+		Type: "[]byte",
 		Kind: KindBytes,
 	}
 }

@@ -35,7 +35,7 @@ func (m *mysqlMapper) Desc(c *schema.Column) (Desc, error) {
 	case "char", "varchar", "text", "longtext", "mediumtext", "tinytext":
 		return newStringDesc(c), nil
 	case "binary", "varbinary", "blob", "longblob", "mediumblob", "tinyblob", "bit":
-		return newBytesDesc(), nil
+		return newBytesDesc(c), nil
 	case "date", "time", "datetime", "timestamp":
 		return newTimeDesc(c), nil
 	case "year":
