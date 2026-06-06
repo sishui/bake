@@ -67,34 +67,13 @@ func NewInitCommand() *cobra.Command {
 
 func runInitCommand(cmd *cobra.Command, args []string) error {
 	flags := cmd.Flags()
-	template, err := flags.GetString("template")
-	if err != nil {
-		return err
-	}
-	output, err := flags.GetString("output")
-	if err != nil {
-		return err
-	}
-	pkg, err := flags.GetString("package")
-	if err != nil {
-		return err
-	}
-	module, err := flags.GetString("module")
-	if err != nil {
-		return err
-	}
-	driver, err := flags.GetString("driver")
-	if err != nil {
-		return err
-	}
-	dsn, err := flags.GetString("dsn")
-	if err != nil {
-		return err
-	}
-	schema, err := flags.GetString("schema")
-	if err != nil {
-		return err
-	}
+	template := mustGetString(flags, "template")
+	output := mustGetString(flags, "output")
+	pkg := mustGetString(flags, "package")
+	module := mustGetString(flags, "module")
+	driver := mustGetString(flags, "driver")
+	dsn := mustGetString(flags, "dsn")
+	schema := mustGetString(flags, "schema")
 
 	if _, err := os.Stat(output); os.IsNotExist(err) {
 		if err := os.MkdirAll(output, 0o755); err != nil {

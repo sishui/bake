@@ -4,9 +4,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
-
+	"github.com/spf13/pflag"
 	generate "github.com/sishui/bake/internal/codegen"
 	"github.com/sishui/bake/internal/config"
 )
@@ -40,32 +39,12 @@ func Execute() {
 
 func runRootCommand(cmd *cobra.Command, args []string) error {
 	flags := cmd.Flags()
-	configFile, err := flags.GetString("config")
-	if err != nil {
-		return err
-	}
-	output, err := flags.GetString("output")
-	if err != nil {
-		return err
-	}
-	pkg, err := flags.GetString("package")
-	if err != nil {
-		return err
-	}
-	dsn, err := flags.GetString("dsn")
-	if err != nil {
-		return err
-	}
-	verbose, err := flags.GetBool("verbose")
-	if err != nil {
-		return err
-	}
 	cfg, err := config.Parse(config.Args{
-		Config:  configFile,
-		Output:  output,
-		Package: pkg,
-		DSN:     dsn,
-		Verbose: verbose,
+		Config:  mustGetString(flags, "config"),
+		Output:  mustGetString(flags, "output"),
+		Package: mustGetString(flags, "package"),
+		DSN:     mustGetString(flags, "dsn"),
+		Verbose: mustGetBool(flags, "verbose"),
 	})
 	if err != nil {
 		return err
@@ -75,4 +54,20 @@ func runRootCommand(cmd *cobra.Command, args []string) error {
 	}
 	cfg.Version = version
 	return generate.Run(cfg)
+}
+
+func mustGetString(flags *pflag.FlagSet, name string) string {
+	v, err := flags.GetString(name)
+	if err != nil {
+		panic(fmt.Sprintf("flag %s: %v", name, err))
+	}
+	return v
+}
+
+func mustGetBool(flags *pflag.FlagSet, name string) bool {
+	v, err := flags.GetBool(name)
+	if err != nil {
+		panic(fmt.Sprintf("flag %s: %v", name, err))
+	}
+	return v
 }
