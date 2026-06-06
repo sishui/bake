@@ -27,8 +27,8 @@ func TestBunTag(t *testing.T) {
 					Nullable:        "NO",
 					DataType:        "int",
 					ColumnType:      "int(11) unsigned",
-					Key:             "PRI",
-					Extra:           "auto_increment",
+					Key:             schema.ColumnKeyPrimary,
+					Extra:           schema.ColumnExtraAutoIncrement,
 					Comment:         "user id",
 				},
 			},
@@ -89,7 +89,7 @@ func TestOptPK(t *testing.T) {
 	}{
 		{
 			name:    "primary key",
-			col:     schema.Column{Key: "PRI"},
+			col:     schema.Column{Key: schema.ColumnKeyPrimary},
 			wantLen: 1,
 		},
 		{
@@ -171,7 +171,7 @@ func TestOptAutoIncr(t *testing.T) {
 	}{
 		{
 			name:    "has auto_increment",
-			col:     schema.Column{Extra: "auto_increment"},
+			col:     schema.Column{Extra: schema.ColumnExtraAutoIncrement},
 			wantLen: 1,
 		},
 		{

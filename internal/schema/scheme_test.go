@@ -145,9 +145,9 @@ func TestColumnIsPrimaryKey(t *testing.T) {
 		key  string
 		want bool
 	}{
-		{"PRI", true},
-		{"MUL", false},
-		{"UNI", false},
+		{ColumnKeyPrimary, true},
+		{ColumnKeyMulti, false},
+		{ColumnKeyUnique, false},
 		{"", false},
 	}
 
@@ -165,7 +165,7 @@ func TestColumnIsAutoIncrement(t *testing.T) {
 		extra string
 		want  bool
 	}{
-		{"auto_increment", true},
+		{ColumnExtraAutoIncrement, true},
 		{"", false},
 		{"DEFAULT_GENERATED", false},
 	}
@@ -236,8 +236,8 @@ func TestAssignColumns_CompositeUniqueIndex(t *testing.T) {
 	}
 	columns := map[string][]*Column{
 		"bookings": {
-			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
-			{Name: "start_at", OrdinalPosition: 2, Key: "MUL"},
+			{Name: "id", OrdinalPosition: 1, Key: ColumnKeyPrimary},
+			{Name: "start_at", OrdinalPosition: 2, Key: ColumnKeyMulti},
 			{Name: "end_at", OrdinalPosition: 3},
 		},
 	}
@@ -271,8 +271,8 @@ func TestAssignColumns_SingleUniqueIndex(t *testing.T) {
 	}
 	columns := map[string][]*Column{
 		"users": {
-			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
-			{Name: "email", OrdinalPosition: 2, Key: "UNI"},
+			{Name: "id", OrdinalPosition: 1, Key: ColumnKeyPrimary},
+			{Name: "email", OrdinalPosition: 2, Key: ColumnKeyUnique},
 		},
 	}
 	indexes := []Index{
@@ -296,8 +296,8 @@ func TestAssignColumns_PreferUniqueIndex(t *testing.T) {
 	}
 	columns := map[string][]*Column{
 		"events": {
-			{Name: "id", OrdinalPosition: 1, Key: "PRI"},
-			{Name: "code", OrdinalPosition: 2, Key: "MUL"},
+			{Name: "id", OrdinalPosition: 1, Key: ColumnKeyPrimary},
+			{Name: "code", OrdinalPosition: 2, Key: ColumnKeyMulti},
 			{Name: "name", OrdinalPosition: 3},
 		},
 	}

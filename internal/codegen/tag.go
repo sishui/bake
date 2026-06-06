@@ -124,7 +124,7 @@ func newBunTag(c *schema.Column) *Tag {
 }
 
 func optPK(c *schema.Column, options []string) []string {
-	if c.Key == "PRI" {
+	if c.IsPrimaryKey() {
 		options = append(options, "pk")
 	}
 	return options
@@ -142,7 +142,7 @@ func optUnique(c *schema.Column, options []string) []string {
 }
 
 func optAutoIncr(c *schema.Column, options []string) []string {
-	if strings.Contains(c.Extra, "auto_increment") {
+	if c.IsAutoIncrement() {
 		options = append(options, "autoincrement")
 	}
 	return options

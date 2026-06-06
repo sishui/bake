@@ -216,7 +216,7 @@ func bestIndexForColumn(colIndexes map[tableColumn][]Index, table, col string) (
 		return Index{}, false
 	}
 	for _, m := range matches {
-		if m.IndexName == "PRIMARY" {
+		if m.IndexName == IndexNamePrimary {
 			continue
 		}
 		if m.NonUnique == 0 {

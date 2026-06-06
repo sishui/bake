@@ -25,7 +25,7 @@ func TestNewField(t *testing.T) {
 	}{
 		{
 			name:     "int primary key",
-			column:   schema.Column{Name: "id", DataType: "int", ColumnType: "int(11)", Key: "PRI", Nullable: "NO", Extra: "auto_increment"},
+			column:   schema.Column{Name: "id", DataType: "int", ColumnType: "int(11)", Key: schema.ColumnKeyPrimary, Nullable: "NO", Extra: schema.ColumnExtraAutoIncrement},
 			driver:   "mysql",
 			wantName: "ID",
 			wantType: "int32",
@@ -279,7 +279,7 @@ func TestNewModel(t *testing.T) {
 	table := &schema.Table{
 		Name: "users",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", Extra: "auto_increment", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, Extra: schema.ColumnExtraAutoIncrement, OrdinalPosition: 1},
 			{Name: "name", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 2},
 			{Name: "email", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "YES", OrdinalPosition: 3},
 		},
@@ -360,7 +360,7 @@ func TestNewModel_WithForeignKey(t *testing.T) {
 	postsTable := &schema.Table{
 		Name: "posts",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "user_id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", OrdinalPosition: 2},
 			{Name: "title", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 3},
 		},
@@ -409,7 +409,7 @@ func TestNewModel_WithReverseForeignKey(t *testing.T) {
 	usersTable := &schema.Table{
 		Name: "users",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "name", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 2},
 		},
 		ReverseForeignKeys: []schema.ForeignKey{
@@ -466,7 +466,7 @@ func TestNewModel_WithCustomTable(t *testing.T) {
 	table := &schema.Table{
 		Name: "users",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "status", DataType: "varchar", ColumnType: "varchar(20)", Nullable: "NO", OrdinalPosition: 2},
 		},
 	}
@@ -507,7 +507,7 @@ func TestNewModel_MaxLengths(t *testing.T) {
 	table := &schema.Table{
 		Name: "orders",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "user_id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", OrdinalPosition: 2},
 			{Name: "total_price", DataType: "decimal", ColumnType: "decimal(10,2)", Nullable: "NO", OrdinalPosition: 3},
 			{Name: "notes", DataType: "text", ColumnType: "text", Nullable: "YES", OrdinalPosition: 4},
@@ -569,7 +569,7 @@ func TestNewModel_TimeHooks(t *testing.T) {
 	table := &schema.Table{
 		Name: "logs",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "created_at", DataType: "datetime", ColumnType: "datetime", Nullable: "NO", OrdinalPosition: 2},
 			{Name: "updated_at", DataType: "datetime", ColumnType: "datetime", Nullable: "NO", OrdinalPosition: 3},
 			{Name: "deleted_at", DataType: "datetime", ColumnType: "datetime", Nullable: "YES", OrdinalPosition: 4},
@@ -609,7 +609,7 @@ func TestNewModel_UnsupportedType(t *testing.T) {
 	table := &schema.Table{
 		Name: "bad_table",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
 			{Name: "geo", DataType: "geometry", ColumnType: "geometry", Nullable: "NO", OrdinalPosition: 2},
 		},
 	}
@@ -636,7 +636,7 @@ func BenchmarkNewModel(b *testing.B) {
 	table := &schema.Table{
 		Name: "users",
 		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: "PRI", Extra: "auto_increment", OrdinalPosition: 1},
+			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, Extra: schema.ColumnExtraAutoIncrement, OrdinalPosition: 1},
 			{Name: "name", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 2},
 			{Name: "email", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "YES", OrdinalPosition: 3},
 			{Name: "age", DataType: "int", ColumnType: "int(11)", Nullable: "NO", OrdinalPosition: 4},

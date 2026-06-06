@@ -3,6 +3,25 @@ package schema
 
 import "strings"
 
+// ColumnKey constants represent the normalized key type of a column.
+// Each database driver maps its native key type to these values.
+const (
+	ColumnKeyPrimary = "PRI" // Primary key
+	ColumnKeyUnique  = "UNI" // Unique constraint
+	ColumnKeyMulti   = "MUL" // Non-unique index or first column of multi-column index
+)
+
+// ColumnExtra constants represent the normalized extra information of a column.
+// Each database driver maps its native extra info to these values.
+const (
+	ColumnExtraAutoIncrement = "auto_increment"
+)
+
+// IndexName constants represent well-known index names.
+const (
+	IndexNamePrimary = "PRIMARY"
+)
+
 type Table struct {
 	Name               string
 	Comment            string
@@ -53,11 +72,11 @@ func (c *Column) IsNullable() bool {
 }
 
 func (c *Column) IsPrimaryKey() bool {
-	return c.Key == "PRI"
+	return c.Key == ColumnKeyPrimary
 }
 
 func (c *Column) IsAutoIncrement() bool {
-	return c.Extra == "auto_increment"
+	return strings.Contains(c.Extra, ColumnExtraAutoIncrement)
 }
 
 func (c *Column) IsUnsigned() bool {
