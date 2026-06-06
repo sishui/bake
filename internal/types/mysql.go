@@ -44,6 +44,8 @@ func (m *mysqlMapper) Desc(c *schema.Column) (Desc, error) {
 		return newJSONDesc(), nil
 	case "enum", "set":
 		return newEnumDesc(c), nil
+	case "geometry":
+		return newGeometryDesc(c), nil
 	default:
 		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedType, c.DataType)
 	}

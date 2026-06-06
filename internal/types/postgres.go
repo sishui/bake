@@ -41,6 +41,8 @@ func (m *postgresMapper) Desc(c *schema.Column) (Desc, error) {
 		return newIPDesc(c), nil
 	case "interval":
 		return newIntervalDesc(c), nil
+	case "geometry", "geography", "point", "linestring", "polygon", "multipoint", "multilinestring", "multipolygon":
+		return newGeometryDesc(c), nil
 	case "ARRAY":
 		return newArrayDesc(c)
 	default:

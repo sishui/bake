@@ -152,3 +152,12 @@ func newUUIDDesc(c *schema.Column) Desc {
 		},
 	}
 }
+
+// newGeometryDesc returns []byte for spatial types (WKB format).
+// Drivers return spatial data as WKB bytes; users can parse with their preferred library.
+func newGeometryDesc(_ *schema.Column) Desc {
+	return Desc{
+		Type: "[]byte",
+		Kind: KindBytes,
+	}
+}
