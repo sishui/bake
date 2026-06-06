@@ -196,11 +196,10 @@ func newHasManyFields(reverseForeignKeys []schema.ForeignKey, customTable *confi
 	}
 	results := make([]*Field, 0, len(reverseForeignKeys))
 	for _, fk := range reverseForeignKeys {
-		columnName := naming.ToCamelCase(fk.Table)
+		fieldName := naming.ToCamelCase(fk.Table)
 		fieldType := "[]*" + naming.TableToStruct(fk.Table)
 		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
-
-		field := newRelationField(customTable, columnName, fieldType, tags, fk.Table)
+		field := newRelationField(customTable, fieldName, fieldType, tags, fk.Table)
 		field.ColumnName = fk.Table
 
 		results = append(results, field)
