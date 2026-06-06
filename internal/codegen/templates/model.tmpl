@@ -749,92 +749,31 @@ type {{.Model}} struct {
 }
 
 func (m *{{.Model}}) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-{{- if or $createdAtType $updatedAtType }}
-{{- if eq $timezone "UTC" }}
-	now := time.Now().UTC()
-{{- else if eq $timezone "Local" }}
-	now := time.Now().Local()
-{{- else if $timezone }}
-	loc, err := time.LoadLocation("{{$timezone}}")
-	if err != nil {
-		return err
-	}
-	now := time.Now().In(loc)
-{{- else }}
-	now := time.Now()
-{{- end }}
-
-{{- if $createdAtType }}
-{{- if eq $createdAtType "time.Time" }}
-	if m.CreatedAt.IsZero() {
-		m.CreatedAt = now
-	}
-{{- else if eq $createdAtType "*time.Time" }}
-	if m.CreatedAt == nil {
-		m.CreatedAt = &now
-	}
-{{- else if eq $createdAtType "int64" }}
-	if m.CreatedAt == 0 {
-		m.CreatedAt = now.UnixMilli()
-	}
-{{- else if eq $createdAtType "*int64" }}
-	if m.CreatedAt == nil {
-		nowMs := now.UnixMilli()
-		m.CreatedAt = &nowMs
-	}
-{{- else if eq $createdAtType "int32" }}
-	if m.CreatedAt == 0 {
-		m.CreatedAt = int32(now.Unix())
-	}
-{{- else if eq $createdAtType "*int32" }}
-	if m.CreatedAt == nil {
-		nowSec := int32(now.Unix())
-		m.CreatedAt = &nowSec
-	}
-{{- end }}
-{{- end }}
-
-{{- if $updatedAtType }}
-{{- if eq $updatedAtType "time.Time" }}
-	if m.UpdatedAt.IsZero() {
-		m.UpdatedAt = now
-	}
-{{- else if eq $updatedAtType "*time.Time" }}
-	if m.UpdatedAt == nil {
-		m.UpdatedAt = &now
-	}
-{{- else if eq $updatedAtType "int64" }}
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = now.UnixMilli()
-	}
-{{- else if eq $updatedAtType "*int64" }}
-	if m.UpdatedAt == nil {
-		nowMs := now.UnixMilli()
-		m.UpdatedAt = &nowMs
-	}
-{{- else if eq $updatedAtType "int32" }}
-	if m.UpdatedAt == 0 {
-		m.UpdatedAt = int32(now.Unix())
-	}
-{{- else if eq $updatedAtType "*int32" }}
-	if m.UpdatedAt == nil {
-		nowSec := int32(now.Unix())
-		m.UpdatedAt = &nowSec
-	}
-{{- end }}
-{{- end }}
-{{- end }}
+	{{- if or $createdAtType $updatedAtType }}
+	{{- template "now" (dict "timezone" $timezone) }}
+	{{- if $createdAtType }}
+	{{- template "setTimeFieldIfZero" (dict "field" "CreatedAt" "type" $createdAtType) }}
+	{{- end }}
+	{{- if $updatedAtType }}
+	{{- template "setTimeFieldIfZero" (dict "field" "UpdatedAt" "type" $updatedAtType) }}
+	{{- end }}
+	{{- end }}
 	return nil
 }
-
 func (m *{{.Model}}) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
-{{- if $updatedAtType }}
-{{- if eq $timezone "UTC" }}
+	{{- if $updatedAtType }}
+	{{- template "now" (dict "timezone" $timezone) }}
+	{{- template "setTimeField" (dict "field" "UpdatedAt" "type" $updatedAtType) }}
+	{{- end }}
+	return nil
+}
+{{- define "now" }}
+{{- if eq .timezone "UTC" }}
 	now := time.Now().UTC()
-{{- else if eq $timezone "Local" }}
+{{- else if eq .timezone "Local" }}
 	now := time.Now().Local()
-{{- else if $timezone }}
-	loc, err := time.LoadLocation("{{$timezone}}")
+{{- else if .timezone }}
+	loc, err := time.LoadLocation("{{.timezone}}")
 	if err != nil {
 		return err
 	}
@@ -842,22 +781,50 @@ func (m *{{.Model}}) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) e
 {{- else }}
 	now := time.Now()
 {{- end }}
-
-{{- if eq $updatedAtType "time.Time" }}
-	m.UpdatedAt = now
-{{- else if eq $updatedAtType "*time.Time" }}
-	m.UpdatedAt = &now
-{{- else if eq $updatedAtType "int64" }}
-	m.UpdatedAt = now.UnixMilli()
-{{- else if eq $updatedAtType "*int64" }}
+{{- end }}
+{{- define "setTimeFieldIfZero" }}
+{{- if eq .type "time.Time" }}
+	if m.{{.field}}.IsZero() {
+		m.{{.field}} = now
+	}
+{{- else if eq .type "*time.Time" }}
+	if m.{{.field}} == nil {
+		m.{{.field}} = &now
+	}
+{{- else if eq .type "int64" }}
+	if m.{{.field}} == 0 {
+		m.{{.field}} = now.UnixMilli()
+	}
+{{- else if eq .type "*int64" }}
+	if m.{{.field}} == nil {
+		nowMs := now.UnixMilli()
+		m.{{.field}} = &nowMs
+	}
+{{- else if eq .type "int32" }}
+	if m.{{.field}} == 0 {
+		m.{{.field}} = int32(now.Unix())
+	}
+{{- else if eq .type "*int32" }}
+	if m.{{.field}} == nil {
+		nowSec := int32(now.Unix())
+		m.{{.field}} = &nowSec
+	}
+{{- end }}
+{{- end }}
+{{- define "setTimeField" }}
+{{- if eq .type "time.Time" }}
+	m.{{.field}} = now
+{{- else if eq .type "*time.Time" }}
+	m.{{.field}} = &now
+{{- else if eq .type "int64" }}
+	m.{{.field}} = now.UnixMilli()
+{{- else if eq .type "*int64" }}
 	nowMs := now.UnixMilli()
-	m.UpdatedAt = &nowMs
-{{- else if eq $updatedAtType "int32" }}
-	m.UpdatedAt = int32(now.Unix())
-{{- else if eq $updatedAtType "*int32" }}
+	m.{{.field}} = &nowMs
+{{- else if eq .type "int32" }}
+	m.{{.field}} = int32(now.Unix())
+{{- else if eq .type "*int32" }}
 	nowSec := int32(now.Unix())
-	m.UpdatedAt = &nowSec
+	m.{{.field}} = &nowSec
 {{- end }}
 {{- end }}
-	return nil
-}

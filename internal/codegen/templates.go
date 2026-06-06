@@ -24,6 +24,7 @@ var templateFuncs = template.FuncMap{
 	"longest": longest,
 	"concat":  naming.Concat,
 	"align":   naming.Align,
+	"dict":    dict,
 }
 
 type templates struct {
@@ -128,4 +129,20 @@ func longest(fields []*Field, kinds ...string) int {
 		}
 	}
 	return length
+}
+
+// dict creates a map from alternating key-value pairs for use in templates.
+func dict(pairs ...any) (map[string]any, error) {
+	if len(pairs)%2 != 0 {
+		return nil, fmt.Errorf("dict: odd number of arguments")
+	}
+	m := make(map[string]any, len(pairs)/2)
+	for i := 0; i < len(pairs); i += 2 {
+		key, ok := pairs[i].(string)
+		if !ok {
+			return nil, fmt.Errorf("dict: key %d is not a string", i)
+		}
+		m[key] = pairs[i+1]
+	}
+	return m, nil
 }
