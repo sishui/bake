@@ -15,6 +15,7 @@ type Model struct {
 	Module                    string     // module path
 	Package                   string     // package name
 	Imports                   [][]string // imports
+	Driver                    string     // driver name
 	BunModel                  string     // bun.BaseModel
 	Table                     string     // table name
 	Model                     string     // model name
@@ -43,6 +44,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		Module:   cfg.Output.Module,
 		Package:  cfg.Output.Package,
 		Imports:  nil,
+		Driver:   db.Driver,
 		BunModel: "bun.BaseModel",
 		Table:    t.Name,
 		Model:    naming.TableToStruct(t.Name),

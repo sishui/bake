@@ -36,11 +36,14 @@ var (
 	{{.Model}}TableAliasIdent = bun.Ident("{{.Alias}}")
 )
 
+{{ $driver := .Driver -}}
 const (
 	InnerJoin{{.Model}}AsAlias = "INNER JOIN {{.Table}} AS {{.Alias}}" // same as JOIN
 	LeftJoin{{.Model}}AsAlias  = "LEFT JOIN {{.Table}} AS {{.Alias}}"  // same as LEFT OUTER JOIN
 	RightJoin{{.Model}}AsAlias = "RIGHT JOIN {{.Table}} AS {{.Alias}}" // same as RIGHT OUTER JOIN
+{{- if ne $driver "mysql" }}
 	FullJoin{{.Model}}AsAlias  = "FULL JOIN {{.Table}} AS {{.Alias}}"  // same as FULL OUTER JOIN
+{{- end }}
 )
 
 {{ $model := .Model -}}
