@@ -8,7 +8,6 @@ import (
 	"log/slog"
 	"slices"
 	"sort"
-	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 
@@ -58,10 +57,8 @@ func openDB(driver string, dsn string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.SetMaxIdleConns(10)
-	db.SetMaxOpenConns(100)
-	db.SetConnMaxIdleTime(time.Minute)
-	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(2)
+	db.SetMaxIdleConns(2)
 	return db, nil
 }
 
