@@ -243,27 +243,22 @@ func cleanDir(dir string) error {
 	})
 }
 
-func writeFile(ctx context.Context, dir string, filename string, data *bytes.Buffer) (fullPath string, err error) {
-	fullPath = filepath.Join(dir, filename+".gen.go")
+func writeFile(ctx context.Context, dir string, filename string, data *bytes.Buffer) (string, error) {
+	fullPath := filepath.Join(dir, filename+".gen.go")
 	file, err := os.OpenFile(fullPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return "", err
 	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil {
-			slog.ErrorContext(ctx, "close file", "file", fullPath, "error", closeErr)
+	_, err = data.WriteTo(file)
+	closeErr := file.Close()
+	if err != nil {
+		if removeErr := os.Remove(fullPath); removeErr != nil {
+			slog.ErrorContext(ctx, "remove file", "file", fullPath, "error", removeErr)
 		}
-		if err != nil {
-			if removeErr := os.Remove(fullPath); removeErr != nil {
-				slog.ErrorContext(ctx, "remove file", "file", fullPath, "error", removeErr)
-			}
-		}
-	}()
-	if _, err = data.WriteTo(file); err != nil {
 		return "", err
 	}
-	if err = file.Sync(); err != nil {
-		return "", err
+	if closeErr != nil {
+		slog.ErrorContext(ctx, "close file", "file", fullPath, "error", closeErr)
 	}
 	return fullPath, nil
 }
