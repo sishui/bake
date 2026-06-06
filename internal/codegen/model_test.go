@@ -68,7 +68,7 @@ func TestNewField(t *testing.T) {
 		},
 		{
 			name:    "unsupported type returns error",
-			column:  schema.Column{Name: "col", DataType: "geometry", ColumnType: "geometry"},
+			column:  schema.Column{Name: "col", DataType: "unknown_type", ColumnType: "unknown_type"},
 			driver:  "mysql",
 			wantErr: true,
 		},
@@ -610,7 +610,7 @@ func TestNewModel_UnsupportedType(t *testing.T) {
 		Name: "bad_table",
 		Columns: []*schema.Column{
 			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
-			{Name: "geo", DataType: "geometry", ColumnType: "geometry", Nullable: "NO", OrdinalPosition: 2},
+			{Name: "geo", DataType: "unknown_type", ColumnType: "unknown_type", Nullable: "NO", OrdinalPosition: 2},
 		},
 	}
 
