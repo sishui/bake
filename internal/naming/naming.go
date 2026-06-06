@@ -46,18 +46,17 @@ func (n *Naming) normalize(word string) string {
 		return ""
 	}
 	singular := Singular(word)
-	lower := strings.ToLower(word)
-	if singular != word {
-		lower = strings.ToLower(singular)
-	}
-
+	lower := strings.ToLower(singular)
 	if v, ok := n.initialisms[lower]; ok {
 		if singular == word {
 			return v
 		}
-		return v + strings.ToLower(word[len(singular):])
+		suffix := word[len(singular):]
+		if len(suffix) > 0 && suffix[0] == 's' {
+			// Common plural: append lowercase 's' (or 'es') to the initialism.
+			return v + strings.ToLower(suffix)
+		}
 	}
-
 	return strings.ToUpper(word[:1]) + strings.ToLower(word[1:])
 }
 
