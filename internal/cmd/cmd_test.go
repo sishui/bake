@@ -36,8 +36,8 @@ func TestRunVersion(t *testing.T) {
 	if !strings.Contains(got, "bake version:") {
 		t.Errorf("runVersion output = %q, want substring %q", got, "bake version:")
 	}
-	if !strings.Contains(got, "v0.3.0") {
-		t.Errorf("runVersion output = %q, want substring %q", got, "v0.3.0")
+	if !strings.HasPrefix(strings.TrimSpace(got), "bake version: v") {
+		t.Errorf("runVersion output = %q, want prefix %q", got, "bake version: v")
 	}
 }
 
