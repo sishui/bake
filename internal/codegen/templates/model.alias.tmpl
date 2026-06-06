@@ -150,6 +150,38 @@ const (
 	{{- end}}
 {{- end}}
 )
+
+const (
+{{- range $field := .Fields}}
+	{{- if eq $field.Kind "STRING" }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "NotLike" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} NOT LIKE ?"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if eq $field.Kind "STRING" }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LengthExpr" $maxStringLength }} = "LENGTH({{$alias}}.{{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if eq $field.Kind "STRING" }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LowerExpr" $maxStringLength }} = "LOWER({{$alias}}.{{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if eq $field.Kind "STRING" }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "UpperExpr" $maxStringLength }} = "UPPER({{$alias}}.{{$field.ColumnName}})"
+	{{- end}}
+{{- end}}
+)
 {{- end}}
 
 {{- if gt $maxArithmeticLength 0 -}}
@@ -204,6 +236,22 @@ const (
 {{- range $field := .Fields}}
 	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SubExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} - ?"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MulExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} * ?"
+	{{- end}}
+{{- end}}
+)
+
+const (
+{{- range $field := .Fields}}
+	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DivExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} / ?"
 	{{- end}}
 {{- end}}
 )
