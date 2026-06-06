@@ -19,16 +19,25 @@ A database model code generator for Go. Generate ORM models from database schema
 
 ### Generated Expressions
 
-| Category   | Expressions                                                | Description           |
-| ---------- | ---------------------------------------------------------- | --------------------- |
-| Comparison | `Eq`, `Neq`, `Gt`, `Gte`, `Lt`, `Lte`                      | Basic comparisons     |
-| String     | `Like`, `LikePrefix`, `LikeSuffix`, `LikeContain`          | Pattern matching      |
-| Numeric    | `In`, `NotIn`, `Between`, `NotBetween`                     | Range operations      |
-| Aggregate  | `SUM`, `AVG`, `MIN`, `MAX`                                 | Aggregate functions   |
-| Arithmetic | `Add`, `Sub`, `AddLeast`, `SubGreatest`, `Clamp`           | Arithmetic operations |
-| Time       | `Date`, `Year`, `Month`, `Day`, `Hour`, `Minute`, `Second` | Time extraction       |
-| Nullable   | `IsNull`, `IsNotNull`, `Coalesce`                          | NULL handling         |
-| Ordering   | `Asc`, `Desc`                                              | Sort order            |
+For each table, bake generates two files:
+- `<table>.gen.go` — base constants, struct, time hooks
+- `<table>.alias.gen.go` — alias-prefixed constants for joined queries
+
+| Category   | Expressions                                                                            | Description           |
+| ---------- | -------------------------------------------------------------------------------------- | --------------------- |
+| Column     | `Eq`, `Neq`                                                                            | Equality comparisons  |
+| Ordered    | `Gt`, `Gte`, `Lt`, `Lte`                                                               | Ordering comparisons  |
+| String     | `Like`, `LikePrefix`, `LikeSuffix`, `LikeContain`, `NotLike`, `ConcatExpr`             | Pattern matching      |
+| String     | `LengthExpr`, `LowerExpr`, `UpperExpr`                                                 | String functions      |
+| Numeric    | `In`, `NotIn`, `Between`, `NotBetween`                                                 | Range operations      |
+| Aggregate  | `SUMExpr`, `AVGExpr`, `MINExpr`, `MAXExpr`                                             | Aggregate functions   |
+| Arithmetic | `AddExpr`, `SubExpr`, `MulExpr`, `DivExpr`                                             | Arithmetic assignment |
+| Arithmetic | `AddLeastExpr`, `SubGreatestExpr`, `ClampExpr`                                         | Bounded arithmetic    |
+| Distinct   | `DistinctExpr`, `CountDistinctExpr`                                                    | Deduplication         |
+| Nullable   | `IsNull`, `IsNotNull`, `CoalesceExpr`                                                  | NULL handling         |
+| Time       | `DateExpr`, `YearExpr`, `MonthExpr`, `DayExpr`, `HourExpr`, `MinuteExpr`, `SecondExpr` | Time extraction       |
+| Ordering   | `Asc`, `Desc`                                                                          | Sort order            |
+| Join       | `InnerJoin`, `LeftJoin`, `RightJoin`, `FullJoin` (alias file, `FullJoin` skipped on MySQL) | JOIN helpers          |
 
 ## Installation
 
@@ -135,48 +144,6 @@ db:
 | `$CamelCase`  | Convert to camelCase  |
 | `#field_name` | Use literal value     |
 
-### Custom Structs
-
-Define arbitrary Go structs that are not backed by a database table. Useful for:
-
-- JSON/JSONB column types (value objects, embedded documents)
-- Configuration objects
-- API request/response types
-- Any Go struct with Scan/Value methods for database scanning
-
-```yaml
-custom:
-  # Struct-level comment (rendered above the type declaration)
-  - name: "Config"
-    comment: "Application configuration stored as JSONB"
-    fields:
-      - name: "Theme"
-        type: "string"
-        comment: "UI theme (light/dark)"  # Field-level comment
-      - name: "Locale"
-        type: "string"
-        comment: "User locale"
-      - name: "Description"
-        type: "string"
-        comment: "Multi-line description\nrendered above the field\nline by line"
-      - name: "RefreshInterval"
-        type: "int"
-        comment: "Auto-refresh interval in seconds"
-
-  - name: "Metadata"
-    fields:
-      - name: "Tags"
-        type: "[]string"
-      - name: "Owner"
-        type: "string"
-        tags:
-          - key: "json"
-            name: "owner"
-            options: ["omitempty"]  # Custom tag with options
-```
-
-Field tags support the same tag name transformations as table fields (`$SnakeCase`, `$CamelCase`, `#literal`).
-
 ## Template Data Structure
 
 You can use custom templates. The following data is passed to templates:
@@ -188,6 +155,7 @@ type Model struct {
     Package                   string     // package name
     Imports                   [][]string // imports
     BunModel                  string     // bun.BaseModel
+    Driver                    string     // database driver: mysql, postgres
     Table                     string     // table name
     Model                     string     // model name
     Alias                     string     // model alias
@@ -278,6 +246,7 @@ Generated features:
 | datetime, timestamp | time.Time       |
 | json                | json.RawMessage |
 | enum, set           | string          |
+| geometry, point, linestring, polygon, etc. | []byte (WKB)    |
 
 ### PostgreSQL
 
@@ -298,6 +267,7 @@ Generated features:
 | inet, cidr            | net.IP                                  |
 | interval              | time.Duration                           |
 | ARRAY                 | []string, []int32, []int64, []uuid.UUID |
+| geometry, geography, point, etc. (PostGIS) | []byte (WKB)   |
 
 ## Generated Bun Tags
 
@@ -411,14 +381,14 @@ Running `bake` generates one file per custom struct (e.g., `model/config.gen.go`
 
 ```go
 // Code generated by bake. DO NOT EDIT.
-// version: v0.2.1
+// version: v0.4.0
 
 package model
 
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
+	"fmt"
 )
 
 // Application configuration stored as JSONB
@@ -440,7 +410,7 @@ func (o *Config) Scan(src any) error {
 	case string:
 		return json.Unmarshal([]byte(v), o)
 	default:
-		return errors.New("unsupported type")
+		return fmt.Errorf("unsupported scan type %T for Config", src)
 	}
 }
 
