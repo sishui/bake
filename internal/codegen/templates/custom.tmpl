@@ -48,7 +48,7 @@ func (o *{{.Model}}) Scan(src any) error {
 	case string:
 		return json.Unmarshal([]byte(v), o)
 	default:
-		return errors.New("unsupported type")
+		return fmt.Errorf("unsupported scan type %T for {{.Model}}", src)
 	}
 }
 

@@ -325,8 +325,8 @@ func TestCustomStructTemplateRender(t *testing.T) {
 	if !strings.Contains(output, "\"encoding/json\"") {
 		t.Error("output missing json import")
 	}
-	if !strings.Contains(output, "\"errors\"") {
-		t.Error("output missing errors import")
+	if !strings.Contains(output, "\"fmt\"") {
+		t.Error("output missing fmt import")
 	}
 
 	// Check Config struct
