@@ -120,15 +120,14 @@ func initModel(m *Model) {
 		switch f.ColumnName {
 		case "created_at":
 			m.CreatedAtType = f.Type
-			imports = append(imports, "time")
 		case "updated_at":
 			m.UpdatedAtType = f.Type
-			imports = append(imports, "time")
 		case "deleted_at":
 			m.DeletedAtType = f.Type
-			imports = append(imports, "time")
 		default:
+			continue
 		}
+		imports = append(imports, "time")
 	}
 
 	m.Imports = groupImports(m.Module, imports...)
