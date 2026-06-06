@@ -24,27 +24,9 @@ var (
 	_ bun.BeforeUpdateHook = (*{{.Model}})(nil)
 )
 
-const (
-	{{.Model}}TableName  = "{{.Table}}"
-	{{.Model}}TableAlias = "{{.Alias}}"
-)
+const {{.Model}}TableName = "{{.Table}}"
 
-const {{.Model}}TableNameAsAlias = "{{.Table}} AS {{.Alias}}"
-
-var (
-	{{.Model}}TableNameIdent  = bun.Ident("{{.Table}}")
-	{{.Model}}TableAliasIdent = bun.Ident("{{.Alias}}")
-)
-
-{{ $driver := .Driver -}}
-const (
-	InnerJoin{{.Model}}AsAlias = "INNER JOIN {{.Table}} AS {{.Alias}}" // same as JOIN
-	LeftJoin{{.Model}}AsAlias  = "LEFT JOIN {{.Table}} AS {{.Alias}}"  // same as LEFT OUTER JOIN
-	RightJoin{{.Model}}AsAlias = "RIGHT JOIN {{.Table}} AS {{.Alias}}" // same as RIGHT OUTER JOIN
-{{- if ne $driver "mysql" }}
-	FullJoin{{.Model}}AsAlias  = "FULL JOIN {{.Table}} AS {{.Alias}}"  // same as FULL OUTER JOIN
-{{- end }}
-)
+var {{.Model}}TableNameIdent  = bun.Ident("{{.Table}}")
 
 {{ $model := .Model -}}
 {{ $maxFieldLength := .MaxFieldLength -}}
@@ -57,7 +39,6 @@ const (
 {{ $maxEquatableLength := .MaxEquatableLength -}}
 {{ $maxArithmeticLength := .MaxArithmeticLength -}}
 {{ $maxTimeLength := .MaxTimeLength -}}
-{{ $alias := .Alias -}}
 {{ $createdAtType := .CreatedAtType -}}
 {{ $updatedAtType := .UpdatedAtType -}}
 {{ $deletedAtType := .DeletedAtType -}}
@@ -82,26 +63,10 @@ const (
 )
 {{- end}}
 
-const (
-{{- range $field := .Fields}}
-	{{- if not $field.IsRelation }}
-	{{- "\n\t" }}{{$model}}Alias{{ align $field.Name $maxFieldLength }} = "{{$alias}}.{{$field.ColumnName}}"
-	{{- end }}
-{{- end}}
-)
-
 var (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Ident" $maxFieldLength }} = bun.Ident("{{$field.ColumnName}}")
-	{{- end}}
-{{- end}}
-)
-
-var (
-{{- range $field := .Fields}}
-	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AliasIdent" $maxFieldLength }} = bun.Ident("{{$alias}}.{{$field.ColumnName}}")
 	{{- end}}
 {{- end}}
 )
@@ -117,25 +82,9 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Eq" $maxFieldLength }} = "{{$alias}}.{{$field.ColumnName}} = ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if not $field.IsCustom }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Neq" $maxFieldLength }} = "{{$field.ColumnName}} <> ?"
 	{{- end}}
 {{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Neq" $maxFieldLength }} = "{{$alias}}.{{$field.ColumnName}} <> ?"
-	{{- end }}
-{{- end }}
 )
 
 {{- if gt $maxOrderedNonStringLength 0 -}}
@@ -151,23 +100,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gt" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} > ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Gte" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} >= ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Gte" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} >= ?"
 	{{- end}}
 {{- end}}
 )
@@ -183,23 +116,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lt" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} < ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Lte" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} <= ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Lte" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} <= ?"
 	{{- end}}
 {{- end}}
 )
@@ -218,23 +135,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Like" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "LikePrefix" $maxStringLength }} = "{{$field.ColumnName}} LIKE ?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikePrefix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE ?%"
 	{{- end}}
 {{- end}}
 )
@@ -250,23 +151,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeSuffix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE %?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "LikeContain" $maxStringLength }} = "{{$field.ColumnName}} LIKE %?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeContain" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE %?%"
 	{{- end}}
 {{- end}}
 )
@@ -285,23 +170,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SUMExpr" $maxArithmeticLength }} = "SUM({{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "AVGExpr" $maxArithmeticLength }} = "AVG({{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AVGExpr" $maxArithmeticLength }} = "AVG({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -320,23 +189,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MINExpr" $maxOrderedLength }} = "MIN({{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MAXExpr" $maxOrderedLength }} = "MAX({{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MAXExpr" $maxOrderedLength }} = "MAX({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -355,23 +208,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AddExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} + ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SubExpr" $maxArithmeticLength }} = "{{$field.ColumnName}} = {{$field.ColumnName}} - ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SubExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} - ?"
 	{{- end}}
 {{- end}}
 )
@@ -387,14 +224,6 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "AddLeastExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = LEAST({{$alias}}.{{$field.ColumnName}} + ?, ?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SubGreatestExpr" $maxArithmeticLength }} = "{{$field.ColumnName}} = GREATEST({{$field.ColumnName}} - ?, ?)"
 	{{- end}}
 {{- end}}
@@ -403,23 +232,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SubGreatestExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = GREATEST({{$alias}}.{{$field.ColumnName}} - ?, ?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "ClampExpr" $maxArithmeticLength }} = "{{$field.ColumnName}} = LEAST(GREATEST({{$field.ColumnName}} + ?, ?), ?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "ClampExpr" $maxArithmeticLength }} = "{{$alias}}.{{$field.ColumnName}} = LEAST(GREATEST({{$alias}}.{{$field.ColumnName}} + ?, ?), ?)"
 	{{- end}}
 {{- end}}
 )
@@ -438,23 +251,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DistinctExpr" $maxFieldLength }} = "DISTINCT {{$alias}}.{{$field.ColumnName}}"
-	{{- end }}
-{{- end }}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if not $field.IsCustom }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "CountDistinctExpr" $maxFieldLength }} = "COUNT(DISTINCT {{$field.ColumnName}})"
-	{{- end }}
-{{- end }}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if not $field.IsCustom }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "CountDistinctExpr" $maxFieldLength }} = "COUNT(DISTINCT {{$alias}}.{{$field.ColumnName}})"
 	{{- end }}
 {{- end }}
 )
@@ -473,23 +270,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "In" $maxEquatableLength }} = "{{$alias}}.{{$field.ColumnName}} IN (?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "NotIn" $maxEquatableLength }} = "{{$field.ColumnName}} NOT IN (?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "NotIn" $maxEquatableLength }} = "{{$alias}}.{{$field.ColumnName}} NOT IN (?)"
 	{{- end}}
 {{- end}}
 )
@@ -508,23 +289,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if $field.IsNullable }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "IsNull" $maxNullableLength }} = "{{$alias}}.{{$field.ColumnName}} IS NULL"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if $field.IsNullable }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "IsNotNull" $maxNullableLength }} = "{{$field.ColumnName}} IS NOT NULL"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if $field.IsNullable }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "IsNotNull" $maxNullableLength }} = "{{$alias}}.{{$field.ColumnName}} IS NOT NULL"
 	{{- end}}
 {{- end}}
 )
@@ -534,14 +299,6 @@ const (
 {{- range $field := .Fields}}
 	{{- if $field.IsNullable }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "CoalesceExpr" $maxNullableLength }} = "COALESCE({{$field.ColumnName}}, ?)"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if $field.IsNullable }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "CoalesceExpr" $maxNullableLength }} = "COALESCE({{$alias}}.{{$field.ColumnName}}, ?)"
 	{{- end}}
 {{- end}}
 )
@@ -560,23 +317,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Between" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} BETWEEN ? AND ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "NotBetween" $maxOrderedNonStringLength }} = "{{$field.ColumnName}} NOT BETWEEN ? AND ?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "TIME") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "NotBetween" $maxOrderedNonStringLength }} = "{{$alias}}.{{$field.ColumnName}} NOT BETWEEN ? AND ?"
 	{{- end}}
 {{- end}}
 )
@@ -595,23 +336,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DateExpr" $maxTimeLength }} = "DATE({{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "YearExpr" $maxTimeLength }} = "EXTRACT(YEAR FROM {{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "YearExpr" $maxTimeLength }} = "EXTRACT(YEAR FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -627,23 +352,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MonthExpr" $maxTimeLength }} = "EXTRACT(MONTH FROM {{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "DayExpr" $maxTimeLength }} = "EXTRACT(DAY FROM {{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "DayExpr" $maxTimeLength }} = "EXTRACT(DAY FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -659,14 +368,6 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "HourExpr" $maxTimeLength }} = "EXTRACT(HOUR FROM {{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "EXTRACT(MINUTE FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -675,23 +376,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "MinuteExpr" $maxTimeLength }} = "EXTRACT(MINUTE FROM {{$alias}}.{{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "EXTRACT(SECOND FROM {{$field.ColumnName}})"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "SecondExpr" $maxTimeLength }} = "EXTRACT(SECOND FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
@@ -710,23 +395,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Asc" $maxEquatableLength }} = "{{$alias}}.{{$field.ColumnName}} ASC"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "Desc" $maxEquatableLength }} = "{{$field.ColumnName}} DESC"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if or (eq $field.Kind "NUMERIC") (eq $field.Kind "STRING") (eq $field.Kind "BOOL") (eq $field.Kind "TIME") (eq $field.Kind "ENUM") }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "Desc" $maxEquatableLength }} = "{{$alias}}.{{$field.ColumnName}} DESC"
 	{{- end}}
 {{- end}}
 )

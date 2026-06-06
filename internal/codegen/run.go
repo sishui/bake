@@ -24,8 +24,12 @@ import (
 
 const (
 	customStructTemplate = "custom"
-	modelTemplate        = "model"
 )
+
+var modelTemplates = map[string]string{
+	"model":       "",
+	"model.alias": "alias",
+}
 
 func Run(c *config.Config) error {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -141,9 +145,9 @@ func loadSchema(ctx context.Context, db *config.DB) ([]*schema.Table, error) {
 }
 
 type result struct {
-	model    *Model
-	filename string
-	err      error
+	model     *Model
+	filenames []string
+	err       error
 }
 
 func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *config.Config, tmpl *templates, nm *naming.Naming) result {
@@ -151,16 +155,24 @@ func processTable(ctx context.Context, table *schema.Table, db *config.DB, c *co
 	if err != nil {
 		return result{err: err}
 	}
-	buffer, err := tmpl.render(modelTemplate, m)
-	if err != nil {
-		return result{err: err}
+	filenames := make([]string, 0, len(modelTemplates))
+	for template, suffix := range modelTemplates {
+		buf, err := tmpl.render(template, m)
+		if err != nil {
+			return result{err: err}
+		}
+		filename := m.Table
+		if len(suffix) > 0 {
+			filename = m.Table + "." + suffix
+		}
+		filename, err = writeFile(ctx, c.Output.Dir, filename, buf)
+		if err != nil {
+			return result{err: err}
+		}
+		filenames = append(filenames, filename)
 	}
-	filename, err := writeFile(ctx, c.Output.Dir, m.Table, buffer)
-	if err != nil {
-		return result{err: err}
-	}
-	slog.DebugContext(ctx, "generated model", "table", m.Table, "model", m.Model, "file", filename)
-	return result{model: m, filename: filename}
+	slog.DebugContext(ctx, "generated model", "table", m.Table, "model", m.Model, "files", filenames)
+	return result{model: m, filenames: filenames}
 }
 
 func sendResult(ctx context.Context, ch chan<- result, r result) bool {
