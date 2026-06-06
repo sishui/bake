@@ -318,7 +318,7 @@ func detectDriver(dsn string) (string, error) {
 	if strings.HasPrefix(dsn, "postgres://") || strings.HasPrefix(dsn, "postgresql://") {
 		return "postgres", nil
 	}
-	if strings.Contains(dsn, "@tcp(") || strings.Contains(dsn, ":@tcp(") || strings.HasPrefix(dsn, "mysql://") {
+	if strings.Contains(dsn, "@tcp(") || strings.HasPrefix(dsn, "mysql://") {
 		return "mysql", nil
 	}
 	return "", fmt.Errorf("cannot detect driver from DSN %q: supported formats are postgres://, postgresql://, or mysql (user:pass@tcp(host:port)/db)", dsn)
