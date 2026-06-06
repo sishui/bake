@@ -1,5 +1,5 @@
 // Package generate provides model generation from database schema.
-package generate
+package codegen
 
 import (
 	"sort"

@@ -4,10 +4,11 @@ package cmd
 import (
 	"fmt"
 	"os"
+
+	"github.com/sishui/bake/internal/codegen"
+	"github.com/sishui/bake/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	generate "github.com/sishui/bake/internal/codegen"
-	"github.com/sishui/bake/internal/config"
 )
 
 func newRootCommand() *cobra.Command {
@@ -53,7 +54,7 @@ func runRootCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	cfg.Version = version
-	return generate.Run(cfg)
+	return codegen.Run(cfg)
 }
 
 func mustGetString(flags *pflag.FlagSet, name string) string {

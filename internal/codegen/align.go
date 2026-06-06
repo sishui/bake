@@ -1,4 +1,4 @@
-package generate
+package codegen
 
 import (
 	"github.com/sishui/bake/internal/naming"
