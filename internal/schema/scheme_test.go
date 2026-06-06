@@ -386,3 +386,197 @@ func TestAssignForeignKeys(t *testing.T) {
 		t.Errorf("reverse foreign key column = %q, want %q", usersTable.ReverseForeignKeys[0].ColumnName, "user_id")
 	}
 }
+
+
+func TestColumnIndexes(t *testing.T) {
+	t.Run("EmptyInput_ReturnsEmptyMap", func(t *testing.T) {
+		result := columnIndexes(nil)
+		if len(result) != 0 {
+			t.Errorf("got %d entries, want 0", len(result))
+		}
+	})
+
+	t.Run("MultipleIndexesForSameColumn_Grouped", func(t *testing.T) {
+		indexes := []Index{
+			{Table: "users", ColumnName: "email", IndexName: "idx_email", NonUnique: 0},
+			{Table: "users", ColumnName: "email", IndexName: "idx_email_2", NonUnique: 1},
+		}
+		result := columnIndexes(indexes)
+		key := tableColumn{table: "users", col: "email"}
+		if len(result[key]) != 2 {
+			t.Errorf("got %d indexes for users.email, want 2", len(result[key]))
+		}
+	})
+
+	t.Run("DifferentTablesAndColumns_SeparateKeys", func(t *testing.T) {
+		indexes := []Index{
+			{Table: "users", ColumnName: "email", IndexName: "idx_email", NonUnique: 0},
+			{Table: "posts", ColumnName: "title", IndexName: "idx_title", NonUnique: 1},
+		}
+		result := columnIndexes(indexes)
+		if len(result) != 2 {
+			t.Errorf("got %d entries, want 2", len(result))
+		}
+		usersKey := tableColumn{table: "users", col: "email"}
+		postsKey := tableColumn{table: "posts", col: "title"}
+		if len(result[usersKey]) != 1 {
+			t.Errorf("users.email: got %d indexes, want 1", len(result[usersKey]))
+		}
+		if len(result[postsKey]) != 1 {
+			t.Errorf("posts.title: got %d indexes, want 1", len(result[postsKey]))
+		}
+	})
+}
+
+func TestBestIndexForColumn(t *testing.T) {
+	t.Run("NoMatches_ReturnsFalse", func(t *testing.T) {
+		colIndexes := map[tableColumn][]Index{}
+		_, ok := bestIndexForColumn(colIndexes, "users", "email")
+		if ok {
+			t.Errorf("got ok=true, want false")
+		}
+	})
+
+	t.Run("PrimaryOnly_ReturnsFalse", func(t *testing.T) {
+		colIndexes := map[tableColumn][]Index{
+			{table: "users", col: "id"}: {
+				{Table: "users", ColumnName: "id", IndexName: IndexNamePrimary, NonUnique: 0},
+			},
+		}
+		_, ok := bestIndexForColumn(colIndexes, "users", "id")
+		if ok {
+			t.Errorf("got ok=true for PRIMARY-only, want false")
+		}
+	})
+
+	t.Run("UniqueIndex_Returned", func(t *testing.T) {
+		want := Index{Table: "users", ColumnName: "email", IndexName: "idx_email", NonUnique: 0}
+		colIndexes := map[tableColumn][]Index{
+			{table: "users", col: "email"}: {want},
+		}
+		got, ok := bestIndexForColumn(colIndexes, "users", "email")
+		if !ok {
+			t.Fatalf("got ok=false, want true")
+		}
+		if got.IndexName != want.IndexName {
+			t.Errorf("IndexName = %q, want %q", got.IndexName, want.IndexName)
+		}
+	})
+
+	t.Run("MultipleIndexes_FirstUniqueNonPrimaryReturned", func(t *testing.T) {
+		colIndexes := map[tableColumn][]Index{
+			{table: "users", col: "id"}: {
+				{Table: "users", ColumnName: "id", IndexName: IndexNamePrimary, NonUnique: 0},
+				{Table: "users", ColumnName: "id", IndexName: "idx_id_unique", NonUnique: 0},
+				{Table: "users", ColumnName: "id", IndexName: "idx_id_dup", NonUnique: 1},
+			},
+		}
+		got, ok := bestIndexForColumn(colIndexes, "users", "id")
+		if !ok {
+			t.Fatalf("got ok=false, want true")
+		}
+		if got.IndexName != "idx_id_unique" {
+			t.Errorf("IndexName = %q, want %q", got.IndexName, "idx_id_unique")
+		}
+	})
+
+	t.Run("OnlyNonUnique_ReturnsFalse", func(t *testing.T) {
+		colIndexes := map[tableColumn][]Index{
+			{table: "posts", col: "title"}: {
+				{Table: "posts", ColumnName: "title", IndexName: "idx_title", NonUnique: 1},
+			},
+		}
+		_, ok := bestIndexForColumn(colIndexes, "posts", "title")
+		if ok {
+			t.Errorf("got ok=true for non-unique only, want false")
+		}
+	})
+}
+
+func TestAssignForeignKeys_ReverseFK(t *testing.T) {
+	usersTable := &Table{Name: "users", Columns: []*Column{
+		{Name: "id"},
+	}}
+	postsTable := &Table{Name: "posts", Columns: []*Column{
+		{Name: "id"},
+		{Name: "user_id"},
+	}}
+	tables := []*Table{usersTable, postsTable}
+
+	fk := ForeignKey{
+		ConstraintName: "fk_posts_user",
+		Table:          "posts",
+		ColumnName:     "user_id",
+		RefTable:       "users",
+		RefColumn:      "id",
+	}
+
+	assignForeignKeys(tables, []ForeignKey{fk})
+
+	// posts.ForeignKeys should contain the FK
+	if len(postsTable.ForeignKeys) != 1 {
+		t.Fatalf("posts.ForeignKeys: got %d, want 1", len(postsTable.ForeignKeys))
+	}
+	if postsTable.ForeignKeys[0].ConstraintName != "fk_posts_user" {
+		t.Errorf("posts.ForeignKeys[0].ConstraintName = %q, want %q", postsTable.ForeignKeys[0].ConstraintName, "fk_posts_user")
+	}
+
+	// users.ReverseForeignKeys should contain the FK
+	if len(usersTable.ReverseForeignKeys) != 1 {
+		t.Fatalf("users.ReverseForeignKeys: got %d, want 1", len(usersTable.ReverseForeignKeys))
+	}
+	if usersTable.ReverseForeignKeys[0].ConstraintName != "fk_posts_user" {
+		t.Errorf("users.ReverseForeignKeys[0].ConstraintName = %q, want %q", usersTable.ReverseForeignKeys[0].ConstraintName, "fk_posts_user")
+	}
+
+	// The user_id column in posts should have ForeignKey set
+	var userCol *Column
+	for _, c := range postsTable.Columns {
+		if c.Name == "user_id" {
+			userCol = c
+			break
+		}
+	}
+	if userCol == nil {
+		t.Fatalf("user_id column not found in posts")
+	}
+	if userCol.ForeignKey == nil {
+		t.Fatalf("user_id.ForeignKey is nil, want non-nil")
+	}
+	if userCol.ForeignKey.ConstraintName != "fk_posts_user" {
+		t.Errorf("user_id.ForeignKey.ConstraintName = %q, want %q", userCol.ForeignKey.ConstraintName, "fk_posts_user")
+	}
+}
+
+func TestColumnIsUnique(t *testing.T) {
+	tests := []struct {
+		name     string
+		column   Column
+		expected bool
+	}{
+		{
+			name:     "EmptyIndexName_ReturnsFalse",
+			column:   Column{IndexName: "", NonUnique: 0},
+			expected: false,
+		},
+		{
+			name:     "NonUniqueZeroWithIndexName_ReturnsTrue",
+			column:   Column{IndexName: "idx_email", NonUnique: 0},
+			expected: true,
+		},
+		{
+			name:     "NonUniqueOne_ReturnsFalse",
+			column:   Column{IndexName: "idx_title", NonUnique: 1},
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.column.IsUnique()
+			if got != tt.expected {
+				t.Errorf("IsUnique() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
