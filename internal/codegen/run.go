@@ -175,7 +175,7 @@ func sendResult(ctx context.Context, ch chan<- result, r result) bool {
 func processTablesConcurrently(ctx context.Context, tables []*schema.Table, db *config.DB, c *config.Config, tmpl *templates, nm *naming.Naming) <-chan result {
 	results := make(chan result, len(tables))
 	var wg sync.WaitGroup
-	limiter := semaphore.NewWeighted(int64(runtime.NumCPU() * 4))
+	limiter := semaphore.NewWeighted(int64(runtime.NumCPU()))
 
 	for _, table := range tables {
 		if err := limiter.Acquire(ctx, 1); err != nil {
