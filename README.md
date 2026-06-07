@@ -75,8 +75,7 @@ bake
 
 ```yaml
 log:
-    level: "info" # debug, info, warn, error
-    file: "" # log file path (optional)
+    file: "" # log file path (optional; level defaults to "info")
 
 uncountables: ["sms", "mms", "rls"] # words that should not be pluralized
 
@@ -86,19 +85,21 @@ timezone: "Asia/Shanghai" # timezone for time hooks
 
 template:
     dir: "" # custom template directory
-    model: "model" # template filename
 
 output:
     dir: "model" # output directory
     package: "model" # package name
     module: "github.com/username/project" # module path for imports
 
+custom: [] # custom struct definitions (not tied to db tables)
+
 db:
     - driver: "postgres"
       dsn: "postgres://user:pass@localhost:5432/db?sslmode=disable"
-      schema: "public" # required for postgres, optional for mysql
-      included: [] # tables to include (default: all)
-      excluded: [] # tables to exclude (default: none)
+      schema: "public" # required for postgres, omitted for mysql
+      include: [] # tables to include (default: all)
+      exclude: [] # tables to exclude (default: none)
+      custom: {} # per-table custom field/tag overrides
 ```
 
 ### Environment-based Configuration
@@ -111,7 +112,7 @@ When `.env` contains `env=dev`, bake looks for `bake.gen.dev.yaml` first, then f
 db:
     - driver: "postgres"
       # ...
-      customs:
+      custom:
           users:
               comment: "User table" # custom table comment
               tags:
@@ -344,7 +345,7 @@ type User struct {
 
 ### Manual Override
 
-You can still manually configure relations using the `customs` configuration. Manual configuration takes precedence over automatic detection.
+You can still manually configure relations using the `custom` configuration. Manual configuration takes precedence over automatic detection.
 
 ## Custom Structs
 
