@@ -135,30 +135,6 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "LikePrefix" $maxStringLength }} = "{{$field.ColumnName}} LIKE ?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "LikeSuffix" $maxStringLength }} = "{{$field.ColumnName}} LIKE %?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}{{ concat $field.Name "LikeContain" $maxStringLength }} = "{{$field.ColumnName}} LIKE %?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
 	{{- "\n\t" }}{{$model}}{{ concat $field.Name "ConcatExpr" $maxStringLength }} = "{{$field.ColumnName}} = CONCAT({{$field.ColumnName}}, ?)"
 	{{- end}}
 {{- end}}

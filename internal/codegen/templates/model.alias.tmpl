@@ -122,30 +122,6 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikePrefix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE ?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeSuffix" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE %?"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
-	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "LikeContain" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} LIKE %?%"
-	{{- end}}
-{{- end}}
-)
-
-const (
-{{- range $field := .Fields}}
-	{{- if eq $field.Kind "STRING" }}
 	{{- "\n\t" }}{{$model}}Alias{{ concat $field.Name "ConcatExpr" $maxStringLength }} = "{{$alias}}.{{$field.ColumnName}} = CONCAT({{$alias}}.{{$field.ColumnName}}, ?)"
 	{{- end}}
 {{- end}}
