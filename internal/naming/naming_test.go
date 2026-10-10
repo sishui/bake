@@ -1,6 +1,7 @@
 package naming_test
 
 import (
+	"os"
 	"reflect"
 	"testing"
 
@@ -9,6 +10,14 @@ import (
 )
 
 var initialisms = []string{"ID", "URL", "URI", "UUID", "IP"}
+
+// TestMain registers uncountables once before any test runs. inflection keeps
+// global state, so mutating it inside parallel subtests races with concurrent
+// reads and makes the suite flaky.
+func TestMain(m *testing.M) {
+	inflection.AddUncountable("sms", "mms", "rls")
+	os.Exit(m.Run())
+}
 
 func TestSingular(t *testing.T) {
 	type args struct {
@@ -48,7 +57,6 @@ func TestSingular(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			inflection.AddUncountable("sms", "mms", "rls")
 			if got := naming.Singular(tt.args.input); got != tt.want {
 				t.Errorf("Singular() = %v, want %v", got, tt.want)
 			}

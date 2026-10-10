@@ -19,10 +19,7 @@ import (
 
 var Nil{{.Model}} = (*{{.Model}})(nil)
 
-var (
-	_ bun.BeforeInsertHook = (*{{.Model}})(nil)
-	_ bun.BeforeUpdateHook = (*{{.Model}})(nil)
-)
+var _ bun.BeforeAppendModelHook = (*{{.Model}})(nil)
 
 const {{.Model}}TableName = "{{.Table}}"
 
@@ -452,83 +449,77 @@ type {{.Model}} struct {
 	{{- end}}
 }
 
-func (m *{{.Model}}) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
-	{{- if or $createdAtType $updatedAtType }}
-	{{- template "now" (dict "timezone" $timezone) }}
-	{{- if $createdAtType }}
-	{{- template "setTimeFieldIfZero" (dict "field" "CreatedAt" "type" $createdAtType) }}
-	{{- end }}
-	{{- if $updatedAtType }}
-	{{- template "setTimeFieldIfZero" (dict "field" "UpdatedAt" "type" $updatedAtType) }}
-	{{- end }}
-	{{- end }}
+func (m *{{.Model}}) BeforeAppendModel(ctx context.Context, query bun.Query) error {
+{{- if or $createdAtType $updatedAtType }}
+{{ template "now" (dict "timezone" $timezone) }}
+	switch query.(type) {
+	case *bun.InsertQuery:{{ if $createdAtType }}{{ template "setTimeFieldIfZero" (dict "field" "CreatedAt" "type" $createdAtType) }}{{ end }}{{ if $updatedAtType }}{{ template "setTimeFieldIfZero" (dict "field" "UpdatedAt" "type" $updatedAtType) }}{{ end }}
+	case *bun.UpdateQuery:{{ if $updatedAtType }}{{ template "setTimeField" (dict "field" "UpdatedAt" "type" $updatedAtType) }}{{ end }}
+	}
+{{- end }}
 	return nil
 }
-func (m *{{.Model}}) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
-	{{- if $updatedAtType }}
-	{{- template "now" (dict "timezone" $timezone) }}
-	{{- template "setTimeField" (dict "field" "UpdatedAt" "type" $updatedAtType) }}
-	{{- end }}
-	return nil
-}
-{{- define "now" }}
-{{- if eq .timezone "UTC" }}
+
+{{- define "now" -}}
+{{- if eq .timezone "UTC" -}}
 	now := time.Now().UTC()
-{{- else if eq .timezone "Local" }}
+{{- else if eq .timezone "Local" -}}
 	now := time.Now().Local()
-{{- else if .timezone }}
+{{- else if .timezone -}}
 	loc, err := time.LoadLocation("{{.timezone}}")
 	if err != nil {
 		return err
 	}
 	now := time.Now().In(loc)
-{{- else }}
+{{- else -}}
 	now := time.Now()
-{{- end }}
-{{- end }}
-{{- define "setTimeFieldIfZero" }}
+{{- end -}}
+{{- end -}}
+
+{{- define "setTimeFieldIfZero" -}}
 {{- if eq .type "time.Time" }}
-	if m.{{.field}}.IsZero() {
-		m.{{.field}} = now
-	}
+		if m.{{.field}}.IsZero() {
+			m.{{.field}} = now
+		}
 {{- else if eq .type "*time.Time" }}
-	if m.{{.field}} == nil {
-		m.{{.field}} = &now
-	}
+		if m.{{.field}} == nil {
+			m.{{.field}} = &now
+		}
 {{- else if eq .type "int64" }}
-	if m.{{.field}} == 0 {
-		m.{{.field}} = now.UnixMilli()
-	}
+		if m.{{.field}} == 0 {
+			m.{{.field}} = now.UnixMilli()
+		}
 {{- else if eq .type "*int64" }}
-	if m.{{.field}} == nil {
+		if m.{{.field}} == nil {
+			nowMs := now.UnixMilli()
+			m.{{.field}} = &nowMs
+		}
+{{- else if eq .type "int32" }}
+		if m.{{.field}} == 0 {
+			m.{{.field}} = int32(now.Unix())
+		}
+{{- else if eq .type "*int32" }}
+		if m.{{.field}} == nil {
+			nowSec := int32(now.Unix())
+			m.{{.field}} = &nowSec
+		}
+{{- end -}}
+{{- end -}}
+
+{{- define "setTimeField" -}}
+{{- if eq .type "time.Time" }}
+		m.{{.field}} = now
+{{- else if eq .type "*time.Time" }}
+		m.{{.field}} = &now
+{{- else if eq .type "int64" }}
+		m.{{.field}} = now.UnixMilli()
+{{- else if eq .type "*int64" }}
 		nowMs := now.UnixMilli()
 		m.{{.field}} = &nowMs
-	}
 {{- else if eq .type "int32" }}
-	if m.{{.field}} == 0 {
 		m.{{.field}} = int32(now.Unix())
-	}
 {{- else if eq .type "*int32" }}
-	if m.{{.field}} == nil {
 		nowSec := int32(now.Unix())
 		m.{{.field}} = &nowSec
-	}
-{{- end }}
-{{- end }}
-{{- define "setTimeField" }}
-{{- if eq .type "time.Time" }}
-	m.{{.field}} = now
-{{- else if eq .type "*time.Time" }}
-	m.{{.field}} = &now
-{{- else if eq .type "int64" }}
-	m.{{.field}} = now.UnixMilli()
-{{- else if eq .type "*int64" }}
-	nowMs := now.UnixMilli()
-	m.{{.field}} = &nowMs
-{{- else if eq .type "int32" }}
-	m.{{.field}} = int32(now.Unix())
-{{- else if eq .type "*int32" }}
-	nowSec := int32(now.Unix())
-	m.{{.field}} = &nowSec
-{{- end }}
-{{- end }}
+{{- end -}}
+{{- end -}}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
+	"go/format"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -90,11 +91,14 @@ func (t *templates) render(tmplName string, data any) (*bytes.Buffer, error) {
 		return nil, fmt.Errorf("template %s not found", tmplName)
 	}
 	var buffer bytes.Buffer
-	err := tmpl.Execute(&buffer, data)
-	if err != nil {
+	if err := tmpl.Execute(&buffer, data); err != nil {
 		return nil, err
 	}
-	return &buffer, nil
+	src, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return nil, fmt.Errorf("format %s output: %w", tmplName, err)
+	}
+	return bytes.NewBuffer(src), nil
 }
 
 func parseTemplate(filename string, readBufferFunc func(filename string) ([]byte, error)) (*template.Template, error) {
