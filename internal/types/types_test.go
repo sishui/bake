@@ -282,6 +282,26 @@ func TestPostgresDescFunc(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "bit",
+			column: schema.Column{
+				DataType:   "bit",
+				ColumnType: "bit(8)",
+				Nullable:   "NO",
+			},
+			want:    Desc{Type: "[]byte", Kind: KindBytes},
+			wantErr: false,
+		},
+		{
+			name: "varbit",
+			column: schema.Column{
+				DataType:   "varbit",
+				ColumnType: "bit varying(64)",
+				Nullable:   "YES",
+			},
+			want:    Desc{Type: "[]byte", Kind: KindBytes},
+			wantErr: false,
+		},
+		{
 			name: "timestamp",
 			column: schema.Column{
 				DataType:   "timestamp",
