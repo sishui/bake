@@ -296,6 +296,48 @@ func TestPostgresDescFunc(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "timestamptz",
+			column: schema.Column{
+				DataType:   "timestamptz",
+				ColumnType: "timestamp with time zone",
+				Nullable:   "NO",
+			},
+			want: Desc{
+				Type:    "time.Time",
+				Kind:    KindTime,
+				Imports: []string{"time"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "timestamptz nullable",
+			column: schema.Column{
+				DataType:   "timestamptz",
+				ColumnType: "timestamp with time zone",
+				Nullable:   "YES",
+			},
+			want: Desc{
+				Type:    "*time.Time",
+				Kind:    KindTime,
+				Imports: []string{"time"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "timetz",
+			column: schema.Column{
+				DataType:   "timetz",
+				ColumnType: "time with time zone",
+				Nullable:   "NO",
+			},
+			want: Desc{
+				Type:    "time.Time",
+				Kind:    KindTime,
+				Imports: []string{"time"},
+			},
+			wantErr: false,
+		},
+		{
 			name: "json",
 			column: schema.Column{
 				DataType:   "json",
@@ -360,8 +402,18 @@ func TestPostgresDescFunc(t *testing.T) {
 		{
 			name: "array text",
 			column: schema.Column{
-				DataType:   "ARRAY",
-				ColumnType: "_text",
+				DataType:   "_text",
+				ColumnType: "text[]",
+				Nullable:   "NO",
+			},
+			want:    Desc{Type: "[]string", Kind: KindArray},
+			wantErr: false,
+		},
+		{
+			name: "array varchar",
+			column: schema.Column{
+				DataType:   "_varchar",
+				ColumnType: "character varying[]",
 				Nullable:   "NO",
 			},
 			want:    Desc{Type: "[]string", Kind: KindArray},
@@ -370,11 +422,35 @@ func TestPostgresDescFunc(t *testing.T) {
 		{
 			name: "array int4",
 			column: schema.Column{
-				DataType:   "ARRAY",
-				ColumnType: "_int4",
+				DataType:   "_int4",
+				ColumnType: "integer[]",
 				Nullable:   "NO",
 			},
 			want:    Desc{Type: "[]int32", Kind: KindArray},
+			wantErr: false,
+		},
+		{
+			name: "array int8",
+			column: schema.Column{
+				DataType:   "_int8",
+				ColumnType: "bigint[]",
+				Nullable:   "NO",
+			},
+			want:    Desc{Type: "[]int64", Kind: KindArray},
+			wantErr: false,
+		},
+		{
+			name: "array uuid",
+			column: schema.Column{
+				DataType:   "_uuid",
+				ColumnType: "uuid[]",
+				Nullable:   "NO",
+			},
+			want: Desc{
+				Type:    "[]uuid.UUID",
+				Kind:    KindArray,
+				Imports: []string{"github.com/google/uuid"},
+			},
 			wantErr: false,
 		},
 		{
@@ -387,10 +463,10 @@ func TestPostgresDescFunc(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "unsupported array type",
+			name: "unsupported array element type",
 			column: schema.Column{
-				DataType:   "ARRAY",
-				ColumnType: "_unsupported",
+				DataType:   "_bool",
+				ColumnType: "boolean[]",
 				Nullable:   "NO",
 			},
 			wantErr: true,

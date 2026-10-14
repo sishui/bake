@@ -13,25 +13,25 @@ type postgresMapper struct{}
 
 func (m *postgresMapper) Desc(c *schema.Column) (Desc, error) {
 	switch c.DataType {
-	case "int2", "smallint":
+	case "int2":
 		return newNumericDesc(c, "int16", "int16"), nil
-	case "int4", "integer":
+	case "int4":
 		return newNumericDesc(c, "int32", "int32"), nil
-	case "bigint", "int8":
+	case "int8":
 		return newNumericDesc(c, "int64", "int64"), nil
-	case "float4", "real":
+	case "float4":
 		return newNumericDesc(c, "float32", "float32"), nil
-	case "float8", "double precision":
+	case "float8":
 		return newNumericDesc(c, "float64", "float64"), nil
-	case "numeric", "decimal":
+	case "numeric":
 		return newDecimalDesc(c), nil
 	case "bool":
 		return newBoolDesc(c), nil
-	case "text", "character varying", "character", "varchar", "char", "bpchar":
+	case "text", "varchar", "char", "bpchar":
 		return newStringDesc(c), nil
 	case "bytea", "bit":
 		return newBytesDesc(c), nil
-	case "date", "timestamp", "timestamp without time zone", "timestamp with time zone", "time", "time without time zone":
+	case "date", "timestamp", "timestamptz", "time", "timetz":
 		return newTimeDesc(c), nil
 	case "json", "jsonb":
 		return newJSONDesc(), nil
@@ -41,9 +41,9 @@ func (m *postgresMapper) Desc(c *schema.Column) (Desc, error) {
 		return newIPDesc(c), nil
 	case "interval":
 		return newIntervalDesc(c), nil
-	case "geometry", "geography", "point", "linestring", "polygon", "multipoint", "multilinestring", "multipolygon":
+	case "geometry", "geography", "point", "polygon":
 		return newGeometryDesc(c), nil
-	case "ARRAY":
+	case "_text", "_varchar", "_int4", "_int8", "_uuid":
 		return newArrayDesc(c)
 	default:
 		if strings.HasPrefix(c.DataType, "enum_") {
@@ -88,7 +88,7 @@ var ErrUnsupportedArrayType = errors.New("unsupported array type")
 func newArrayDesc(c *schema.Column) (Desc, error) {
 	typ := ""
 	var imports []string
-	switch c.ColumnType {
+	switch c.DataType {
 	case "_text", "_varchar":
 		typ = "[]string"
 	case "_int4":
@@ -99,7 +99,7 @@ func newArrayDesc(c *schema.Column) (Desc, error) {
 		typ = "[]uuid.UUID"
 		imports = []string{"github.com/google/uuid"}
 	default:
-		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedArrayType, c.ColumnType)
+		return Desc{}, fmt.Errorf("%w: %s", ErrUnsupportedArrayType, c.DataType)
 	}
 	return Desc{
 		Type:    typ,
