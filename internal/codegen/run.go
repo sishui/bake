@@ -1,4 +1,4 @@
-// Package generate provides model generation from database schema.
+// Package codegen provides model generation from database schema.
 package codegen
 
 import (
