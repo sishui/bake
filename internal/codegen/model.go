@@ -11,31 +11,30 @@ import (
 )
 
 type Model struct {
-	Version                   string     // bake version
-	Module                    string     // module path
-	Package                   string     // package name
-	Imports                   [][]string // imports
-	Driver                    string     // driver name
-	BunModel                  string     // bun.BaseModel
-	Table                     string     // table name
-	Model                     string     // model name
-	Alias                     string     // model alias
-	Comments                  []string   // model comments
-	Fields                    []*Field   // fields
-	Timezone                  string     // timezone
-	CreatedAtType             string     // created_at type
-	UpdatedAtType             string     // updated_at type
-	DeletedAtType             string     // deleted_at type
-	MaxFieldLength            int        // max field length
-	MaxNullableLength         int        // max nullable length
-	MaxStringLength           int        // max string length
-	MaxNumericLength          int        // max numeric length
-	MaxOrderedLength          int        // max ordered length
-	MaxOrderedNonStringLength int        // max ordered non-string length (numeric + time)
-	MaxEquatableLength        int        // max equatable length
-	MaxRelationLength         int        // max relation length
-	MaxArithmeticLength       int        // max arithmetic length (non-pk numeric)
-	MaxTimeLength             int        // max time length
+	Version             string     // bake version
+	Module              string     // module path
+	Package             string     // package name
+	Imports             [][]string // imports
+	Driver              string     // driver name
+	BunModel            string     // bun.BaseModel
+	Table               string     // table name
+	Model               string     // model name
+	Alias               string     // model alias
+	Comments            []string   // model comments
+	Fields              []*Field   // fields
+	Timezone            string     // timezone
+	CreatedAtType       string     // created_at type
+	UpdatedAtType       string     // updated_at type
+	DeletedAtType       string     // deleted_at type
+	HasField            bool       // has at least one field
+	HasNullable         bool       // has a nullable field
+	HasString           bool       // has a STRING field
+	HasOrdered          bool       // has an ordered field (string/numeric/time)
+	HasOrderedNonString bool       // has a numeric or time field
+	HasEquatable        bool       // has an equatable field (numeric/string/bool/time/enum)
+	HasRelation         bool       // has a relation field
+	HasArithmetic       bool       // has a non-primary numeric field
+	HasTime             bool       // has a TIME field
 }
 
 func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Naming) (*Model, error) {
@@ -71,7 +70,6 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		columns[f.ColumnName] = struct{}{}
 	}
 	fields = append(fields, newCustomFields(customTable, columns, n)...)
-	alignFields(groupFields(fields))
 	m.Fields = fields
 	initModel(m)
 	return m, nil
@@ -83,42 +81,41 @@ func initModel(m *Model) {
 
 	for _, f := range m.Fields {
 		imports = append(imports, f.Imports...)
-		nameLen := len(f.Name)
 
-		m.MaxFieldLength = max(m.MaxFieldLength, nameLen)
+		m.HasField = true
 
 		if f.IsNullable {
-			m.MaxNullableLength = max(m.MaxNullableLength, nameLen)
+			m.HasNullable = true
 		}
 
 		if f.IsRelation {
-			m.MaxRelationLength = max(m.MaxRelationLength, nameLen)
+			m.HasRelation = true
 		}
 
 		switch f.Kind {
 		case types.KindString:
-			m.MaxStringLength = max(m.MaxStringLength, nameLen)
-			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
-			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
+			m.HasString = true
+			m.HasOrdered = true
+			m.HasEquatable = true
 
 		case types.KindNumeric:
-			m.MaxNumericLength = max(m.MaxNumericLength, nameLen)
-			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
-			m.MaxOrderedNonStringLength = max(m.MaxOrderedNonStringLength, nameLen)
-			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
+			m.HasOrdered = true
+			m.HasOrderedNonString = true
+			m.HasEquatable = true
 			if !f.IsPrimary {
-				m.MaxArithmeticLength = max(m.MaxArithmeticLength, nameLen)
+				m.HasArithmetic = true
 			}
 
 		case types.KindTime:
-			m.MaxOrderedLength = max(m.MaxOrderedLength, nameLen)
-			m.MaxOrderedNonStringLength = max(m.MaxOrderedNonStringLength, nameLen)
-			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
-			m.MaxTimeLength = max(m.MaxTimeLength, nameLen)
+			m.HasOrdered = true
+			m.HasOrderedNonString = true
+			m.HasEquatable = true
+			m.HasTime = true
 
 		case types.KindBoolean, types.KindEnum:
-			m.MaxEquatableLength = max(m.MaxEquatableLength, nameLen)
+			m.HasEquatable = true
 		}
+
 		switch f.ColumnName {
 		case "created_at":
 			m.CreatedAtType = f.Type

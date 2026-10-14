@@ -8,10 +8,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"slices"
 	"text/template"
-
-	"github.com/sishui/bake/internal/naming"
 )
 
 const templatesDir = "templates"
@@ -20,12 +17,8 @@ const templatesDir = "templates"
 var templatesFS embed.FS
 
 var templateFuncs = template.FuncMap{
-	"add":     add,
-	"sub":     sub,
-	"longest": longest,
-	"concat":  naming.Concat,
-	"align":   naming.Align,
-	"dict":    dict,
+	"sub":  sub,
+	"dict": dict,
 }
 
 type templates struct {
@@ -115,24 +108,8 @@ func parseTemplate(filename string, readBufferFunc func(filename string) ([]byte
 	return tmpl, nil
 }
 
-func add(a int, b int) int {
-	return a + b
-}
-
 func sub(a int, b int) int {
 	return a - b
-}
-
-func longest(fields []*Field, kinds ...string) int {
-	var length int
-	for _, field := range fields {
-		if slices.Contains(kinds, field.Kind) {
-			if len(field.Name) > length {
-				length = len(field.Name)
-			}
-		}
-	}
-	return length
 }
 
 // dict creates a map from alternating key-value pairs for use in templates.

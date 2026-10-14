@@ -10,20 +10,17 @@ import (
 )
 
 type Field struct {
-	Imports     []string // field imports libs
-	Name        string   // field name, e.g: ID
-	AlignedName string   // aligned field name e.g: ID
-	Type        string   // type, e.g: string | int32 | int8
-	AlignedType string   // aligned type e.g: string | int32 | int8
-	Tag         string   // tag, e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
-	AlignedTag  string   // aligned tag e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
-	Comments    []string // comments e.g: user id
-	ColumnName  string   // db column name e.g: id
-	Kind        string   // logic type: NUMERIC |STRING | ...
-	IsPrimary   bool     // is primary key
-	IsNullable  bool     // is nullable
-	IsCustom    bool     // is custom type
-	IsRelation  bool     // is relation
+	Imports    []string // field imports libs
+	Name       string   // field name, e.g: ID
+	Type       string   // type, e.g: string | int32 | int8
+	Tag        string   // tag, e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
+	Comments   []string // comments e.g: user id
+	ColumnName string   // db column name e.g: id
+	Kind       string   // logic type: NUMERIC |STRING | ...
+	IsPrimary  bool     // is primary key
+	IsNullable bool     // is nullable
+	IsCustom   bool     // is custom type
+	IsRelation bool     // is relation
 }
 
 func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming) (*Field, error) {

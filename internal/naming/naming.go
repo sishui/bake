@@ -3,7 +3,6 @@ package naming
 
 import (
 	"strings"
-	"unicode/utf8"
 
 	"github.com/fatih/camelcase"
 	"github.com/jinzhu/inflection"
@@ -179,26 +178,4 @@ func SplitCommentLines(s string) []string {
 		lines[i] = strings.TrimSpace(lines[i])
 	}
 	return lines
-}
-
-func Align(s string, maxN int) string {
-	if maxN <= 0 {
-		return s
-	}
-	if utf8.RuneCountInString(s) >= maxN {
-		return s
-	}
-	return s + strings.Repeat(" ", maxN-utf8.RuneCountInString(s))
-}
-
-func Concat(a, b string, maxN int) string {
-	s := a + b
-	if maxN <= 0 {
-		return s
-	}
-	n := utf8.RuneCountInString(a)
-	if maxN-n <= 0 {
-		return s
-	}
-	return s + strings.Repeat(" ", maxN-n)
 }

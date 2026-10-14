@@ -375,62 +375,6 @@ func TestConvertCommentToLines(t *testing.T) {
 	}
 }
 
-func TestPadRight(t *testing.T) {
-	type args struct {
-		s string
-		n int
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "Should pad right with spaces",
-			args: args{"test", 10},
-			want: "test      ",
-		},
-		{
-			name: "Should pad right with spaces when len < n",
-			args: args{"test", 6},
-			want: "test  ",
-		},
-		{
-			name: "Not pad if already longer than n",
-			args: args{"test", 4},
-			want: "test",
-		},
-		{
-			name: "Not pad if n is negative",
-			args: args{"test", -1},
-			want: "test",
-		},
-		{
-			name: "Should align by rune width for multibyte chars",
-			args: args{"用户", 6},
-			want: "用户    ",
-		},
-		{
-			name: "Should align mixed ascii and multibyte chars",
-			args: args{"ab名", 6},
-			want: "ab名   ",
-		},
-		{
-			name: "Should not pad if rune count equals maxN",
-			args: args{"用户名", 3},
-			want: "用户名",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			if got := naming.Align(tt.args.s, tt.args.n); got != tt.want {
-				t.Errorf("PadRight() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestTableToAlias(t *testing.T) {
 	tests := []struct {
 		name  string

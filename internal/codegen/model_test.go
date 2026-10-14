@@ -12,16 +12,16 @@ import (
 func TestNewField(t *testing.T) {
 	n := naming.New("ID", "URL")
 	tests := []struct {
-		name       string
-		column     schema.Column
-		custom     *config.CustomTable
-		driver     string
-		wantName   string
-		wantType   string
-		wantKind   string
-		wantPri    bool
-		wantNull   bool
-		wantErr    bool
+		name     string
+		column   schema.Column
+		custom   *config.CustomTable
+		driver   string
+		wantName string
+		wantType string
+		wantKind string
+		wantPri  bool
+		wantNull bool
+		wantErr  bool
 	}{
 		{
 			name:     "int primary key",
@@ -491,7 +491,7 @@ func TestNewModel_WithCustomTable(t *testing.T) {
 	}
 }
 
-func TestNewModel_MaxLengths(t *testing.T) {
+func TestNewModel_KindFlags(t *testing.T) {
 	n := naming.New()
 	cfg := &config.Config{
 		Version: "v0.2.1",
@@ -521,34 +521,35 @@ func TestNewModel_MaxLengths(t *testing.T) {
 		t.Fatalf("NewModel() error = %v", err)
 	}
 
-	// MaxFieldLength should be the longest field name
-	if m.MaxFieldLength < 10 { // "TotalPrice" = 10
-		t.Errorf("MaxFieldLength = %d, want >= 10", m.MaxFieldLength)
+	// Flag assertions for the "orders" table:
+	// id (pk int), user_id (int), total_price (decimal), notes (nullable text),
+	// created_at (datetime), deleted_at (nullable datetime).
+	if !m.HasField {
+		t.Error("HasField = false, want true")
 	}
-
-	// MaxNullableLength should track nullable fields (notes=5, deleted_at=10)
-	if m.MaxNullableLength < 5 { // "Notes" = 5
-		t.Errorf("MaxNullableLength = %d, want >= 5", m.MaxNullableLength)
+	if !m.HasNullable {
+		t.Error("HasNullable = false, want true (notes, deleted_at)")
 	}
-
-	// MaxStringLength should track string fields (notes=5)
-	if m.MaxStringLength < 5 {
-		t.Errorf("MaxStringLength = %d, want >= 5", m.MaxStringLength)
+	if !m.HasString {
+		t.Error("HasString = false, want true (notes)")
 	}
-
-	// MaxNumericLength should track numeric fields (id=2, user_id=6, total_price=10)
-	if m.MaxNumericLength < 10 {
-		t.Errorf("MaxNumericLength = %d, want >= 10", m.MaxNumericLength)
+	if !m.HasOrdered {
+		t.Error("HasOrdered = false, want true")
 	}
-
-	// MaxTimeLength should track time fields
-	if m.MaxTimeLength < 9 {
-		t.Errorf("MaxTimeLength = %d, want >= 9", m.MaxTimeLength)
+	if !m.HasOrderedNonString {
+		t.Error("HasOrderedNonString = false, want true")
 	}
-
-	// MaxArithmeticLength should track non-pk numeric (user_id=6, total_price=10)
-	if m.MaxArithmeticLength < 10 {
-		t.Errorf("MaxArithmeticLength = %d, want >= 10", m.MaxArithmeticLength)
+	if !m.HasEquatable {
+		t.Error("HasEquatable = false, want true")
+	}
+	if !m.HasArithmetic {
+		t.Error("HasArithmetic = false, want true (user_id, total_price)")
+	}
+	if !m.HasTime {
+		t.Error("HasTime = false, want true (created_at, deleted_at)")
+	}
+	if m.HasRelation {
+		t.Error("HasRelation = true, want false")
 	}
 }
 
