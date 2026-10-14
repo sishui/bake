@@ -187,57 +187,67 @@ func (c *CustomTable) Validate() error {
 }
 
 func Parse(args Args) (*Config, error) {
-	config, err := parse(args.Config)
+	cfg, err := parse(args.Config)
 	if err != nil {
 		return nil, err
 	}
-	if config.Output == nil {
-		config.Output = &Output{}
+
+	applyOutputArgs(cfg, args)
+	if err := applyDBArgs(cfg, args); err != nil {
+		return nil, err
+	}
+	applyLogArgs(cfg, args)
+
+	if cfg.Template == nil {
+		cfg.Template = &Template{}
+	}
+	return cfg, nil
+}
+
+func applyOutputArgs(cfg *Config, args Args) {
+	if cfg.Output == nil {
+		cfg.Output = &Output{}
 	}
 	if args.Output != "" {
-		config.Output.Dir = args.Output
+		cfg.Output.Dir = args.Output
 	}
-	if args.Package != "" {
-		config.Output.Package = args.Package
-	} else if config.Output.Package == "" {
-		config.Output.Package = filepath.Base(config.Output.Dir)
+	switch {
+	case args.Package != "":
+		cfg.Output.Package = args.Package
+	case cfg.Output.Package == "":
+		cfg.Output.Package = filepath.Base(cfg.Output.Dir)
 	}
-	if config.DB == nil {
-		if args.DSN == "" {
-			return nil, errors.New("db.dsn is required: set via config file or --dsn flag")
+}
+
+func applyDBArgs(cfg *Config, args Args) error {
+	if args.DSN == "" {
+		if cfg.DB == nil {
+			return errors.New("db.dsn is required: set via config file or --dsn flag")
 		}
-		driver, err := detectDriver(args.DSN)
-		if err != nil {
-			return nil, err
-		}
-		config.DB = []*DB{
-			{
-				Driver: driver,
-				DSN:    args.DSN,
-			},
-		}
-	} else {
-		if args.DSN != "" {
-			driver, err := detectDriver(args.DSN)
-			if err != nil {
-				return nil, err
-			}
-			config.DB[0].Driver = driver
-			config.DB[0].DSN = args.DSN
-		}
+		return nil
 	}
-	if config.Template == nil {
-		config.Template = &Template{}
+
+	driver, err := detectDriver(args.DSN)
+	if err != nil {
+		return err
 	}
-	if config.Log == nil {
-		config.Log = &Log{
-			Level: "info",
-		}
+
+	if cfg.DB == nil {
+		cfg.DB = []*DB{{Driver: driver, DSN: args.DSN}}
+		return nil
+	}
+	cfg.DB[0].Driver = driver
+	cfg.DB[0].DSN = args.DSN
+	return nil
+}
+
+func applyLogArgs(cfg *Config, args Args) {
+	if cfg.Log == nil {
+		cfg.Log = &Log{Level: "info"}
 	}
 	if args.Verbose {
-		config.Log.Level = "debug"
+		cfg.Log.Level = "debug"
 	}
-	return config, nil
 }
 
 func parse(filename string) (*Config, error) {
