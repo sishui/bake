@@ -152,21 +152,21 @@ You can use custom templates. The following data is passed to templates:
 
 ```go
 type Model struct {
-    Version                   string     // bake version
-    Module                    string     // module path
-    Package                   string     // package name
-    Imports                   [][]string // imports
-    BunModel                  string     // bun.BaseModel
-    Driver                    string     // database driver: mysql, postgres
-    Table                     string     // table name
-    Model                     string     // model name
-    Alias                     string     // model alias
-    Comments                  []string   // model comments
-    Fields                    []*Field   // fields
-    Timezone                  string     // timezone
-    CreatedAtType             string     // created_at type
-    UpdatedAtType             string     // updated_at type
-    DeletedAtType             string     // deleted_at type
+    Version             string     // bake version
+    Module              string     // module path
+    Package             string     // package name
+    Imports             [][]string // imports
+    BunModel            string     // bun.BaseModel
+    Driver              string     // database driver: mysql, postgres
+    Table               string     // table name
+    Model               string     // model name
+    Alias               string     // model alias
+    Comments            []string   // model comments
+    Fields              []*Field   // fields
+    Timezone            string     // timezone
+    CreatedAtType       string     // created_at type
+    UpdatedAtType       string     // updated_at type
+    DeletedAtType       string     // deleted_at type
     HasField            bool       // has at least one field
     HasNullable         bool       // has a nullable field
     HasString           bool       // has a STRING field
@@ -247,7 +247,7 @@ than `double precision`. Array columns use the element type prefixed with `_`
 | numeric                                       | decimal.Decimal                         |
 | bool                                          | bool                                    |
 | text, varchar, char, bpchar                   | string                                  |
-| bytea, bit                                    | []byte                                  |
+| bytea, bit, varbit                            | []byte                                  |
 | date, timestamp, timestamptz, time, timetz    | time.Time                               |
 | json, jsonb                                   | json.RawMessage                         |
 | uuid                                          | uuid.UUID                               |
@@ -255,6 +255,24 @@ than `double precision`. Array columns use the element type prefixed with `_`
 | interval                                      | time.Duration                           |
 | text[], varchar[], int4[], int8[], uuid[]     | []string, []int32, []int64, []uuid.UUID |
 | geometry, geography (PostGIS), point, polygon | []byte (WKB)                            |
+
+### Unsupported PostgreSQL Types
+
+These built-in types have no mapping, so a column using one fails generation
+with `unsupported type` (or `unsupported array type` for arrays):
+
+- **Arrays** — any element type other than `text`, `varchar`, `int4`, `int8` or `uuid`,
+  e.g. `bool[]`, `int2[]`, `float4[]`, `float8[]`, `numeric[]`, `date[]`, `timestamptz[]`
+- **Ranges** — `int4range`, `int8range`, `numrange`, `daterange`, `tsrange`, `tstzrange`
+  and their `*multirange` forms
+- **Other** — `money`, `xml`, `jsonpath`, `macaddr`, `macaddr8`, `tsvector`, `tsquery`
+- **Native geometry** — `line`, `lseg`, `box`, `path`, `circle`
+- **System / internal** — `aclitem`, `cid`, `tid`, `xid`, `xid8`, `oid`, `name`,
+  `int2vector`, `oidvector`, `refcursor`, `gtsvector`, `pg_lsn`, `pg_snapshot`, `reg*`
+  and the remaining `pg_*` catalog types
+
+`geometry` and `geography` come from PostGIS and are mapped when the extension
+is installed.
 
 ## Generated Tags
 
