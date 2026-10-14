@@ -233,24 +233,28 @@ already represents SQL NULL (`[]byte`, `json.RawMessage`).
 
 ### PostgreSQL
 
-| PostgreSQL Type                                                                            | Go Type                                 |
-|--------------------------------------------------------------------------------------------|-----------------------------------------|
-| int2                                                                                       | int16                                   |
-| int4                                                                                       | int32                                   |
-| int8                                                                                       | int64                                   |
-| float4                                                                                     | float32                                 |
-| float8                                                                                     | float64                                 |
-| numeric, decimal                                                                           | decimal.Decimal                         |
-| bool                                                                                       | bool                                    |
-| text, varchar                                                                              | string                                  |
-| bytea                                                                                      | []byte                                  |
-| timestamp, date, time                                                                      | time.Time                               |
-| json, jsonb                                                                                | json.RawMessage                         |
-| uuid                                                                                       | uuid.UUID                               |
-| inet, cidr                                                                                 | net.IP                                  |
-| interval                                                                                   | time.Duration                           |
-| ARRAY                                                                                      | []string, []int32, []int64, []uuid.UUID |
-| geometry, geography, point, linestring, polygon, multipoint, multilinestring, multipolygon | []byte (WKB)                            |
+Values are `pg_type.typname`, i.e. `int4` rather than `integer`, `float8` rather
+than `double precision`. Array columns use the element type prefixed with `_`
+(`_text` for `text[]`), so they are listed here by their element type.
+
+| PostgreSQL Type                               | Go Type                                 |
+|-----------------------------------------------|-----------------------------------------|
+| int2                                          | int16                                   |
+| int4                                          | int32                                   |
+| int8                                          | int64                                   |
+| float4                                        | float32                                 |
+| float8                                        | float64                                 |
+| numeric                                       | decimal.Decimal                         |
+| bool                                          | bool                                    |
+| text, varchar, char, bpchar                   | string                                  |
+| bytea, bit                                    | []byte                                  |
+| date, timestamp, timestamptz, time, timetz    | time.Time                               |
+| json, jsonb                                   | json.RawMessage                         |
+| uuid                                          | uuid.UUID                               |
+| inet, cidr                                    | net.IP                                  |
+| interval                                      | time.Duration                           |
+| text[], varchar[], int4[], int8[], uuid[]     | []string, []int32, []int64, []uuid.UUID |
+| geometry, geography (PostGIS), point, polygon | []byte (WKB)                            |
 
 ## Generated Tags
 
