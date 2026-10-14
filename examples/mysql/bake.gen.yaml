@@ -4,7 +4,7 @@
 log:
   file: ""
 
-singular: [ "sms", "mms", "rls" ]
+uncountables: [ "sms", "mms", "rls" ]
 
 initialisms: [ "ID", "UID", "URL", "URI", "UUID", "IP" ]
 
