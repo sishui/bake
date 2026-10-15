@@ -2,14 +2,11 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/sishui/bake/internal/schema"
 )
-
-var ErrUnsupportedType = errors.New("unsupported type")
 
 type mysqlMapper struct{}
 

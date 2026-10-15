@@ -2,10 +2,13 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/sishui/bake/internal/schema"
 )
+
+var ErrUnsupportedType = errors.New("unsupported type")
 
 // Mapper is the interface that wraps the Desc method for type mapping.
 type Mapper interface {
