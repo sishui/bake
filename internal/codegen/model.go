@@ -155,7 +155,7 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 		if _, ok := columns[k]; ok {
 			continue
 		}
-		if field.Name == "" && field.Type == "" && !field.Relation {
+		if field.Name == "" && field.Type == "" && !hasRelationship(field.Tags...) {
 			continue
 		}
 		f := NewCustomField(k, customTable, n)
@@ -167,86 +167,4 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 		return results[i].Name < results[j].Name
 	})
 	return results
-}
-
-func newBelongsToFields(foreignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
-	if len(foreignKeys) == 0 {
-		return nil
-	}
-	results := make([]*Field, 0, len(foreignKeys))
-	for _, fk := range foreignKeys {
-		fieldName := naming.TableToStruct(fk.RefTable)
-		singular := naming.Singular(fk.RefTable)
-		name := naming.ToSnakeCase(singular)
-		tags := NewTags(NewTag("bun", name, "rel:belongs-to", "join:"+fk.ColumnName+"="+fk.RefColumn), NewTag("json", name, "omitempty"))
-
-		field := newRelationField(customTable, fieldName, "*"+fieldName, tags, singular)
-		field.ColumnName = name
-
-		results = append(results, field)
-	}
-	return results
-}
-
-func newHasManyFields(reverseForeignKeys []schema.ForeignKey, customTable *config.CustomTable) []*Field {
-	if len(reverseForeignKeys) == 0 {
-		return nil
-	}
-	results := make([]*Field, 0, len(reverseForeignKeys))
-	for _, fk := range reverseForeignKeys {
-		fieldName := naming.ToCamelCase(fk.Table)
-		fieldType := "[]*" + naming.TableToStruct(fk.Table)
-		tags := NewTags(NewTag("bun", fk.Table, "rel:has-many", "join:"+fk.RefColumn+"="+fk.ColumnName), NewTag("json", fk.Table, "omitempty"))
-		field := newRelationField(customTable, fieldName, fieldType, tags, fk.Table)
-		field.ColumnName = fk.Table
-
-		results = append(results, field)
-	}
-	return results
-}
-
-func newRelationField(customTable *config.CustomTable, fieldName, fieldType string, tags *Tags, name string) *Field {
-	if customTable == nil {
-		return &Field{
-			Name:       fieldName,
-			Type:       fieldType,
-			Tag:        tags.String(),
-			Kind:       types.KindStruct,
-			IsCustom:   true,
-			IsRelation: true,
-		}
-	}
-	// Apply table-level tags
-	if len(customTable.Tags) > 0 {
-		tags.Add(newCustomTags(name, customTable.Tags...)...)
-	}
-	// Apply field-level config
-	customField := customTable.Fields[name]
-	if customField == nil {
-		return &Field{
-			Name:       fieldName,
-			Type:       fieldType,
-			Tag:        tags.String(),
-			Kind:       types.KindStruct,
-			IsCustom:   true,
-			IsRelation: true,
-		}
-	}
-	if customField.Name != "" {
-		fieldName = customField.Name
-	}
-	if customField.Type != "" {
-		fieldType = customField.Type
-	}
-	if len(customField.Tags) > 0 {
-		tags.Add(newCustomTags(name, customField.Tags...)...)
-	}
-	return &Field{
-		Name:       fieldName,
-		Type:       fieldType,
-		Tag:        tags.String(),
-		Kind:       types.KindStruct,
-		IsCustom:   true,
-		IsRelation: true,
-	}
 }

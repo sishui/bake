@@ -74,7 +74,7 @@ func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming
 		IsPrimary:  false,
 		IsNullable: false,
 		IsCustom:   true,
-		IsRelation: customField.Relation,
+		IsRelation: hasRelationship(customField.Tags...),
 	}
 	if customField.Import != "" {
 		field.Imports = append(field.Imports, customField.Import)

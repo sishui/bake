@@ -94,11 +94,6 @@ func (o *Output) Validate() error {
 	return nil
 }
 
-type Replacement struct {
-	From string `koanf:"from"`
-	To   string `koanf:"to"`
-}
-
 type CustomStruct struct {
 	Name    string         `koanf:"name"`
 	Comment string         `koanf:"comment"`
@@ -125,12 +120,11 @@ func (c *CustomStruct) Validate() error {
 }
 
 type CustomField struct {
-	Import   string `koanf:"import"`
-	Name     string `koanf:"name"`
-	Type     string `koanf:"type"`
-	Relation bool   `koanf:"relation"` // true for relation
-	Tags     []*Tag `koanf:"tags"`
-	Comment  string `koanf:"comment"`
+	Import  string `koanf:"import"`
+	Name    string `koanf:"name"`
+	Type    string `koanf:"type"`
+	Tags    []*Tag `koanf:"tags"`
+	Comment string `koanf:"comment"`
 }
 
 func (c *CustomField) Validate() error {
