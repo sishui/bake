@@ -132,11 +132,14 @@ db:
                   author_id:
                       name: "Author" # custom field name
                       type: "*User" # custom field type
-                      relation: true # is a relation
                       tags:
                           - key: "bun"
-                            options: ["rel:belongs", "join:author_id=id"]
+                            options: ["rel:belongs-to", "join:author_id=id"]
 ```
+
+A field is treated as a relation when its `bun` tag carries one of
+`rel:belongs-to`, `rel:has-one`, `rel:has-many`, or an `m2m:<join_table>`
+option. There is no separate flag to set.
 
 ### Tag Name Transformations
 
@@ -189,7 +192,7 @@ type Field struct {
     IsPrimary   bool     // is primary key
     IsNullable  bool     // is nullable
     IsCustom    bool     // is custom field
-    IsRelation  bool     // is relation field
+    IsRelation  bool     // is a relation (from the bun rel:/m2m option)
 }
 ```
 
@@ -381,7 +384,10 @@ const (
 
 ### Manual Override
 
-You can still manually configure relations using the `custom` configuration. Manual configuration takes precedence over automatic detection.
+You can still manually configure relations using the `custom` configuration. A
+field counts as a relation when its `bun` tag has `rel:belongs-to`,
+`rel:has-one`, `rel:has-many` or `m2m:<join_table>`, so the tag is what marks it.
+Manual configuration takes precedence over automatic detection.
 
 ## Custom Structs
 
