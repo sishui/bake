@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -254,5 +255,81 @@ func TestCustomFieldValidate(t *testing.T) {
 				t.Errorf("CustomField.Validate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestImportValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		imp     Import
+		wantErr string
+	}{
+		{
+			name: "plain package",
+			imp:  Import{Package: "github.com/google/uuid", Types: []string{"uuid.UUID"}},
+		},
+		{
+			name: "package whose name differs from the path",
+			imp:  Import{Package: "github.com/hashicorp/go-version", Types: []string{"version.Version"}},
+		},
+		{
+			name: "with alias",
+			imp:  Import{Package: "github.com/shopspring/decimal", Alias: "dec", Types: []string{"dec.Decimal"}},
+		},
+		{
+			name:    "unqualified type",
+			imp:     Import{Package: "github.com/google/uuid", Types: []string{"UUID"}},
+			wantErr: "must be qualified",
+		},
+		{
+			name:    "type does not use the alias",
+			imp:     Import{Package: "github.com/shopspring/decimal", Alias: "dec", Types: []string{"decimal.Decimal"}},
+			wantErr: "must use the alias",
+		},
+		{
+			name:    "missing package",
+			imp:     Import{},
+			wantErr: "import.package is required",
+		},
+		{
+			name:    "package with a quote",
+			imp:     Import{Package: `github.com/x/"y"`},
+			wantErr: "contains invalid characters",
+		},
+		{
+			name:    "invalid alias",
+			imp:     Import{Package: "github.com/x/y", Alias: "1bad"},
+			wantErr: "import.alias",
+		},
+		{
+			name:    "invalid type",
+			imp:     Import{Package: "github.com/x/y", Types: []string{"pkg.not a type"}},
+			wantErr: "import.types",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.imp.Validate()
+			if tt.wantErr == "" {
+				if err != nil {
+					t.Fatalf("Validate() error = %v, want nil", err)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), tt.wantErr) {
+				t.Fatalf("Validate() error = %v, want error containing %q", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestConfigValidateChecksImports(t *testing.T) {
+	c := &Config{
+		Output:  &Output{Dir: "model", Package: "model", Module: "github.com/x/y"},
+		Imports: []*Import{{Package: "github.com/x/y", Alias: "1bad"}},
+	}
+	if err := c.Validate(); err == nil {
+		t.Fatal("Validate() error = nil, want an error for the invalid import alias")
 	}
 }

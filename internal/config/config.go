@@ -27,33 +27,26 @@ type Config struct {
 	Initialisms  []string        `koanf:"initialisms"`
 	Timezone     string          `koanf:"timezone"`
 	Template     *Template       `koanf:"template"`
+	Imports      []*Import       `koanf:"imports"`
 	Output       *Output         `koanf:"output"`
 	Custom       []*CustomStruct `koanf:"custom"`
 	DB           []*DB           `koanf:"db"`
 }
 
 func (c *Config) Validate() error {
-	if err := c.Template.Validate(); err != nil {
+	if err := validateAll(c.Template); err != nil {
 		return err
 	}
-
-	if err := c.Output.Validate(); err != nil {
+	if err := validateAll(c.Output); err != nil {
 		return err
 	}
-
-	for _, db := range c.DB {
-		if err := db.Validate(); err != nil {
-			return err
-		}
+	if err := validateAll(c.Imports...); err != nil {
+		return err
 	}
-
-	for _, o := range c.Custom {
-		if err := o.Validate(); err != nil {
-			return err
-		}
+	if err := validateAll(c.DB...); err != nil {
+		return err
 	}
-
-	return nil
+	return validateAll(c.Custom...)
 }
 
 type Log struct {
@@ -66,6 +59,64 @@ type Template struct {
 }
 
 func (t *Template) Validate() error {
+	return nil
+}
+
+type Import struct {
+	Package string   `koanf:"package"`
+	Alias   string   `koanf:"alias"`
+	Types   []string `koanf:"types"`
+}
+
+func (i *Import) Validate() error {
+	if err := validateImportPackage(i.Package); err != nil {
+		return err
+	}
+	if err := validateImportAlias(i.Alias); err != nil {
+		return err
+	}
+	for _, t := range i.Types {
+		if err := validateImportType(i.Alias, t); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func validateImportPackage(pkg string) error {
+	if pkg == "" {
+		return errors.New("import.package is required")
+	}
+	if strings.ContainsAny(pkg, " \t\r\n\"'`") {
+		return fmt.Errorf("import.package %q contains invalid characters", pkg)
+	}
+	return nil
+}
+
+func validateImportAlias(alias string) error {
+	if alias == "" {
+		return nil
+	}
+	if err := validateIdent(alias); err != nil {
+		return fmt.Errorf("import.alias %w", err)
+	}
+	return nil
+}
+
+func validateImportType(alias, t string) error {
+	qualifier, name, ok := strings.Cut(t, ".")
+	if !ok {
+		return fmt.Errorf("import.types %q must be qualified as pkg.Type", t)
+	}
+	if err := validateIdent(qualifier); err != nil {
+		return fmt.Errorf("import.types %w", err)
+	}
+	if err := validateIdent(name); err != nil {
+		return fmt.Errorf("import.types %w", err)
+	}
+	if alias != "" && qualifier != alias {
+		return fmt.Errorf("import.types %q must use the alias %q", t, alias)
+	}
 	return nil
 }
 
@@ -120,7 +171,6 @@ func (c *CustomStruct) Validate() error {
 }
 
 type CustomField struct {
-	Import  string `koanf:"import"`
 	Name    string `koanf:"name"`
 	Type    string `koanf:"type"`
 	Tags    []*Tag `koanf:"tags"`
@@ -287,6 +337,15 @@ func loadENV() (string, error) {
 	}
 
 	return "", nil
+}
+
+func validateAll[T Validator](validators ...T) error {
+	for _, item := range validators {
+		if err := item.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func validatePackage(name string) error {
