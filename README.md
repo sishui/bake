@@ -92,6 +92,8 @@ output:
     package: "model" # package name
     module: "github.com/username/project" # module path for imports
 
+imports: [] # type -> package mapping for custom field types (see Imports)
+
 custom: [] # custom struct definitions (not tied to db tables)
 
 db:
@@ -141,6 +143,32 @@ A field is treated as a relation when its `bun` tag carries one of
 `rel:belongs-to`, `rel:has-one`, `rel:has-many`, or an `m2m:<join_table>`
 option. There is no separate flag to set.
 
+### Imports
+
+A custom field type that comes from another package needs an import. Declare it
+once at the top level; bake matches it against the field `type` and adds the
+import to the generated file.
+
+```yaml
+imports:
+    - package: "github.com/google/uuid"
+      types: ["uuid.UUID"]
+    - package: "github.com/hashicorp/go-version"
+      types: ["version.Version"]
+    - package: "github.com/shopspring/decimal"
+      alias: "dec" # emits: dec "github.com/shopspring/decimal"
+      types: ["dec.Decimal"]
+```
+
+- `types` lists the qualified type names exactly as they appear in a field
+  `type`; pointers, slices and maps around them still match (`*version.Version`,
+  `[]uuid.UUID`).
+- `alias` only changes the emitted import line. When it is set, every entry in
+  `types` must use that alias.
+- Without `alias` the import is emitted as-is, so the qualifier in `types` must
+  be the package's own name, which can differ from the last path element
+  (`github.com/hashicorp/go-version` is used as `version`, not `go-version`).
+
 ### Tag Name Transformations
 
 | Value         | Description           |
@@ -158,7 +186,7 @@ type Model struct {
     Version             string     // bake version
     Module              string     // module path
     Package             string     // package name
-    Imports             [][]string // imports
+    Imports             [][]Import // imports grouped by std / third-party / local
     BunModel            string     // bun.BaseModel
     Driver              string     // database driver: mysql, postgres
     Table               string     // table name
@@ -181,8 +209,13 @@ type Model struct {
     HasTime             bool       // has a TIME field
 }
 
+type Import struct {
+    Path  string // import path, e.g. "github.com/google/uuid"
+    Alias string // import alias, empty unless the package is renamed
+}
+
 type Field struct {
-    Imports     []string // field imports
+    Imports     []Import // imports required by the field type
     Name        string   // field name
     Type        string   // Go type
     Tag         string   // field tags
