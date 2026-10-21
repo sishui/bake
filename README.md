@@ -204,13 +204,14 @@ type Model struct {
     Module              string     // module path
     Package             string     // package name
     Imports             [][]Import // imports grouped by std / third-party / local
-    BunModel            string     // bun.BaseModel
     Driver              string     // database driver: mysql, postgres
+    BunModel            string     // bun.BaseModel
     Table               string     // table name
     Model               string     // model name
     Alias               string     // model alias
     Comments            []string   // model comments
     Fields              []*Field   // fields
+    Indexes             []Index    // indexes
     Timezone            string     // timezone
     CreatedAtType       string     // created_at type
     UpdatedAtType       string     // updated_at type
@@ -229,6 +230,11 @@ type Model struct {
 type Import struct {
     Path  string // import path, e.g. "github.com/google/uuid"
     Alias string // import alias, empty unless the package is renamed
+}
+
+type Index struct {
+    Key   string // constant suffix, e.g. "UsersEmail"
+    Value string // index name as stored in the database
 }
 
 type Field struct {
