@@ -26,6 +26,7 @@ type Table struct {
 	Name    string
 	Comment string
 	Columns []*Column
+	Indexes []string
 }
 
 type Column struct {

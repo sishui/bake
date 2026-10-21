@@ -173,6 +173,59 @@ type tableIndex struct {
 	indexName string
 }
 
+// assignIndexes records the non-primary index names of each table. Composite
+// indexes are recorded once, under their own name, not per column.
+func assignIndexes(tables []*Table, indexes []Index) {
+	tableMap := make(map[string]*Table, len(tables))
+	pkColumns := make(map[string]map[string]struct{}, len(tables))
+	for _, t := range tables {
+		tableMap[t.Name] = t
+		columns := make(map[string]struct{})
+		for _, c := range t.Columns {
+			if c.IsPrimaryKey() {
+				columns[c.Name] = struct{}{}
+			}
+		}
+		pkColumns[t.Name] = columns
+	}
+
+	columns := make(map[tableIndex][]string, len(indexes))
+	for _, idx := range indexes {
+		if idx.IndexName == "" {
+			continue
+		}
+		key := tableIndex{table: idx.Table, indexName: idx.IndexName}
+		columns[key] = append(columns[key], idx.ColumnName)
+	}
+
+	for key, cols := range columns {
+		if key.indexName == IndexNamePrimary || isPrimaryIndex(pkColumns[key.table], cols) {
+			continue
+		}
+		if t, ok := tableMap[key.table]; ok {
+			t.Indexes = append(t.Indexes, key.indexName)
+		}
+	}
+
+	for _, t := range tables {
+		sort.Strings(t.Indexes)
+	}
+}
+
+// isPrimaryIndex reports whether every column of the index is a primary key
+// column, i.e. the index is the one backing the primary key.
+func isPrimaryIndex(pkColumns map[string]struct{}, columns []string) bool {
+	if len(pkColumns) == 0 || len(columns) == 0 {
+		return false
+	}
+	for _, c := range columns {
+		if _, ok := pkColumns[c]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
 func columnIndexes(indexes []Index) map[tableColumn][]Index {
 	m := make(map[tableColumn][]Index, len(indexes))
 	for _, idx := range indexes {

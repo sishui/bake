@@ -2,6 +2,7 @@ package schema
 
 import (
 	"context"
+	"slices"
 	"testing"
 
 	"github.com/sishui/bake/internal/config"
@@ -431,5 +432,37 @@ func TestColumnIsUnique(t *testing.T) {
 				t.Errorf("IsUnique() = %v, want %v", got, tt.expected)
 			}
 		})
+	}
+}
+
+func TestAssignIndexes(t *testing.T) {
+	tables := []*Table{
+		{Name: "users", Columns: []*Column{
+			{Name: "id", Key: ColumnKeyPrimary},
+			{Name: "email"},
+			{Name: "a"},
+			{Name: "b"},
+		}},
+		{Name: "posts", Columns: []*Column{
+			{Name: "id", Key: ColumnKeyPrimary},
+			{Name: "title"},
+		}},
+	}
+	indexes := []Index{
+		{Table: "users", ColumnName: "id", IndexName: IndexNamePrimary, NonUnique: 0},
+		{Table: "users", ColumnName: "id", IndexName: "users_pkey", NonUnique: 0},
+		{Table: "users", ColumnName: "email", IndexName: "idx_users_email", NonUnique: 0},
+		{Table: "users", ColumnName: "a", IndexName: "idx_users_a_b", NonUnique: 1},
+		{Table: "users", ColumnName: "b", IndexName: "idx_users_a_b", NonUnique: 1},
+		{Table: "posts", ColumnName: "title", IndexName: "idx_posts_title", NonUnique: 1},
+	}
+
+	assignIndexes(tables, indexes)
+
+	if want := []string{"idx_users_a_b", "idx_users_email"}; !slices.Equal(tables[0].Indexes, want) {
+		t.Errorf("users.Indexes = %v, want %v", tables[0].Indexes, want)
+	}
+	if want := []string{"idx_posts_title"}; !slices.Equal(tables[1].Indexes, want) {
+		t.Errorf("posts.Indexes = %v, want %v", tables[1].Indexes, want)
 	}
 }

@@ -98,6 +98,7 @@ func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 		return nil, err
 	}
 	assignColumns(tables, columns, indexes)
+	assignIndexes(tables, indexes)
 	return tables, nil
 }
 
