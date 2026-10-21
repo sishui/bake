@@ -12,9 +12,10 @@ import (
 
 func TestNewStructField(t *testing.T) {
 	tests := []struct {
-		name string
-		cfg  *config.CustomField
-		want *Field
+		name    string
+		cfg     *config.CustomField
+		imports []*config.Import
+		want    *Field
 	}{
 		{
 			name: "basic field",
@@ -39,14 +40,17 @@ func TestNewStructField(t *testing.T) {
 			},
 		},
 		{
-			name: "field with custom import",
-			cfg:  &config.CustomField{Name: "Data", Type: "json.RawMessage", Import: "encoding/json"},
+			name: "field with a configured import",
+			cfg:  &config.CustomField{Name: "Data", Type: "json.RawMessage"},
+			imports: []*config.Import{
+				{Package: "encoding/json", Types: []string{"json.RawMessage"}},
+			},
 			want: &Field{
 				Name:     "Data",
 				Type:     "json.RawMessage",
 				Tag:      "`json:\"data,omitempty\"`",
 				Comments: nil,
-				Imports:  []string{"encoding/json"},
+				Imports:  []Import{{Path: "encoding/json"}},
 			},
 		},
 		{
@@ -109,7 +113,7 @@ func TestNewStructField(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := newStructField(tt.cfg)
+			got := newStructField(tt.cfg, tt.imports)
 			if got.Name != tt.want.Name {
 				t.Errorf("Name = %q, want %q", got.Name, tt.want.Name)
 			}
@@ -171,6 +175,9 @@ func TestNewCustomStruct(t *testing.T) {
 
 func TestNewCustomStruct_WithCustomImport(t *testing.T) {
 	cfg := &config.Config{
+		Imports: []*config.Import{
+			{Package: "time", Types: []string{"time.Time"}},
+		},
 		Output: &config.Output{
 			Package: "model",
 			Module:  "github.com/sishui/bake/examples/custom",
@@ -179,11 +186,7 @@ func TestNewCustomStruct_WithCustomImport(t *testing.T) {
 	cs := &config.CustomStruct{
 		Name: "Event",
 		Fields: []*config.CustomField{
-			{
-				Name:   "CreatedAt",
-				Type:   "time.Time",
-				Import: "time",
-			},
+			{Name: "CreatedAt", Type: "time.Time"},
 		},
 	}
 
@@ -193,7 +196,7 @@ func TestNewCustomStruct_WithCustomImport(t *testing.T) {
 	found := false
 	for _, group := range data.Imports {
 		for _, imp := range group {
-			if imp == "time" {
+			if imp.Path == "time" {
 				found = true
 			}
 		}
@@ -211,6 +214,9 @@ func TestCustomStructTemplateRender_WithCustomImport(t *testing.T) {
 
 	cfg := &config.Config{
 		Version: "v0.2.0",
+		Imports: []*config.Import{
+			{Package: "time", Types: []string{"time.Time"}},
+		},
 		Output: &config.Output{
 			Package: "model",
 			Module:  "github.com/sishui/bake/examples/custom",
@@ -222,7 +228,6 @@ func TestCustomStructTemplateRender_WithCustomImport(t *testing.T) {
 			{
 				Name:    "CreatedAt",
 				Type:    "time.Time",
-				Import:  "time",
 				Comment: "Event timestamp",
 			},
 			{Name: "Name", Type: "string"},
@@ -513,7 +518,7 @@ func TestStructField_EmptyTagsField(t *testing.T) {
 		},
 	}
 
-	field := newStructField(cfg)
+	field := newStructField(cfg, nil)
 	if field.Name != "Email" {
 		t.Errorf("Name = %q, want %q", field.Name, "Email")
 	}

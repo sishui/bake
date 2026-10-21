@@ -77,7 +77,7 @@ func TestNewField(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := NewField(&tt.column, tt.custom, tt.driver, n)
+			got, err := NewField(&tt.column, tt.custom, tt.driver, n, nil)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("NewField() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -118,7 +118,7 @@ func TestNewField_WithCustomField(t *testing.T) {
 		},
 	}
 
-	got, err := NewField(column, customTable, "mysql", n)
+	got, err := NewField(column, customTable, "mysql", n, nil)
 	if err != nil {
 		t.Fatalf("NewField() error = %v", err)
 	}
@@ -146,7 +146,7 @@ func TestNewField_WithCustomTags(t *testing.T) {
 		},
 	}
 
-	got, err := NewField(column, customTable, "mysql", n)
+	got, err := NewField(column, customTable, "mysql", n, nil)
 	if err != nil {
 		t.Fatalf("NewField() error = %v", err)
 	}
@@ -201,13 +201,13 @@ func TestNewField_Imports(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := NewField(&tt.column, nil, tt.driver, n)
+			got, err := NewField(&tt.column, nil, tt.driver, n, nil)
 			if err != nil {
 				t.Fatalf("NewField() error = %v", err)
 			}
 			found := false
 			for _, imp := range got.Imports {
-				if imp == tt.wantContain {
+				if imp.Path == tt.wantContain {
 					found = true
 					break
 				}
@@ -246,7 +246,7 @@ func TestNewField_Comments(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := NewField(&tt.column, nil, "mysql", n)
+			got, err := NewField(&tt.column, nil, "mysql", n, nil)
 			if err != nil {
 				t.Fatalf("NewField() error = %v", err)
 			}
@@ -568,10 +568,12 @@ func BenchmarkNewModel(b *testing.B) {
 }
 
 // flattenImports flattens grouped imports into a single slice.
-func flattenImports(groups [][]string) []string {
+func flattenImports(groups [][]Import) []string {
 	var result []string
 	for _, g := range groups {
-		result = append(result, g...)
+		for _, imp := range g {
+			result = append(result, imp.Path)
+		}
 	}
 	return result
 }

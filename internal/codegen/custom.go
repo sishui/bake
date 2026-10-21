@@ -9,12 +9,17 @@ import (
 func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *Model {
 	fields := make([]*Field, 0, len(st.Fields))
 	for _, f := range st.Fields {
-		fields = append(fields, newStructField(f))
+		fields = append(fields, newStructField(f, cfg.Imports))
 	}
 	sortFields(fields)
 
-	imports := make([]string, 0, 4+len(fields))
-	imports = append(imports, "database/sql", "database/sql/driver", "encoding/json", "fmt")
+	imports := make([]Import, 0, 6+len(fields))
+	imports = append(imports,
+		Import{Path: "database/sql"},
+		Import{Path: "database/sql/driver"},
+		Import{Path: "encoding/json"},
+		Import{Path: "fmt"},
+	)
 	for _, f := range fields {
 		imports = append(imports, f.Imports...)
 	}
@@ -30,7 +35,7 @@ func NewCustomStruct(cfg *config.Config, st *config.CustomStruct) *Model {
 	}
 }
 
-func newStructField(cfg *config.CustomField) *Field {
+func newStructField(cfg *config.CustomField, imports []*config.Import) *Field {
 	name := cfg.Name
 	jsonName := naming.ToSnakeCase(name)
 
@@ -54,16 +59,11 @@ func newStructField(cfg *config.CustomField) *Field {
 	tags := NewTags(jsonTag)
 	tags.Add(extraTags...)
 
-	var imports []string
-	if cfg.Import != "" {
-		imports = append(imports, cfg.Import)
-	}
-
 	return &Field{
 		Name:     name,
 		Type:     cfg.Type,
 		Tag:      tags.String(),
 		Comments: naming.SplitCommentLines(cfg.Comment),
-		Imports:  imports,
+		Imports:  importsForType(cfg.Type, imports),
 	}
 }

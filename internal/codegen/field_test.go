@@ -11,42 +11,82 @@ import (
 )
 
 func TestFieldImports(t *testing.T) {
+	uuid := &config.Import{Package: "github.com/google/uuid", Types: []string{"uuid.UUID"}}
+	dec := &config.Import{Package: "github.com/shopspring/decimal", Alias: "dec", Types: []string{"dec.Decimal"}}
+
 	tests := []struct {
-		name   string
-		desc   types.Desc
-		custom *config.CustomField
-		want   []string
+		name    string
+		desc    types.Desc
+		custom  *config.CustomField
+		imports []*config.Import
+		want    []Import
 	}{
 		{
 			name:   "no custom field",
 			desc:   types.Desc{Imports: []string{"time"}},
 			custom: nil,
-			want:   []string{"time"},
+			want:   []Import{{Path: "time"}},
 		},
 		{
-			name:   "no custom import",
+			name:   "no type override",
 			desc:   types.Desc{Imports: []string{"time"}},
 			custom: &config.CustomField{},
-			want:   []string{"time"},
+			want:   []Import{{Path: "time"}},
 		},
 		{
-			name:   "with custom import",
+			name:   "type override without a configured import",
 			desc:   types.Desc{Imports: []string{"time"}},
-			custom: &config.CustomField{Import: "github.com/google/uuid"},
-			want:   []string{"time", "github.com/google/uuid"},
+			custom: &config.CustomField{Type: "string"},
+			want:   []Import{{Path: "time"}},
 		},
 		{
-			name:   "nil desc imports",
-			desc:   types.Desc{},
-			custom: &config.CustomField{Import: "github.com/google/uuid"},
-			want:   []string{"github.com/google/uuid"},
+			name:    "configured import matched by type",
+			desc:    types.Desc{Imports: []string{"time"}},
+			custom:  &config.CustomField{Type: "uuid.UUID"},
+			imports: []*config.Import{uuid},
+			want:    []Import{{Path: "time"}, {Path: "github.com/google/uuid"}},
+		},
+		{
+			name:    "pointer type still matches",
+			desc:    types.Desc{},
+			custom:  &config.CustomField{Type: "*uuid.UUID"},
+			imports: []*config.Import{uuid},
+			want:    []Import{{Path: "github.com/google/uuid"}},
+		},
+		{
+			name:    "alias is rendered in the import spec",
+			desc:    types.Desc{},
+			custom:  &config.CustomField{Type: "[]dec.Decimal"},
+			imports: []*config.Import{dec},
+			want:    []Import{{Path: "github.com/shopspring/decimal", Alias: "dec"}},
+		},
+		{
+			name:    "slice of pointers matches",
+			desc:    types.Desc{},
+			custom:  &config.CustomField{Type: "[]*uuid.UUID"},
+			imports: []*config.Import{uuid},
+			want:    []Import{{Path: "github.com/google/uuid"}},
+		},
+		{
+			name:    "map value and key match",
+			desc:    types.Desc{},
+			custom:  &config.CustomField{Type: "map[uuid.UUID]dec.Decimal"},
+			imports: []*config.Import{uuid, dec},
+			want:    []Import{{Path: "github.com/google/uuid"}, {Path: "github.com/shopspring/decimal", Alias: "dec"}},
+		},
+		{
+			name:    "partial identifier does not match",
+			desc:    types.Desc{},
+			custom:  &config.CustomField{Type: "myuuid.UUID"},
+			imports: []*config.Import{uuid},
+			want:    nil,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := fieldImports(tt.desc, tt.custom)
+			got := fieldImports(tt.desc, tt.custom, tt.imports)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("fieldImports() = %v, want %v", got, tt.want)
 			}
@@ -130,4 +170,3 @@ func TestFieldType(t *testing.T) {
 		})
 	}
 }
-

@@ -10,7 +10,7 @@ import (
 )
 
 type Field struct {
-	Imports    []string // field imports libs
+	Imports    []Import // imports required by the field type
 	Name       string   // field name, e.g: ID
 	Type       string   // type, e.g: string | int32 | int8
 	Tag        string   // tag, e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
@@ -23,7 +23,7 @@ type Field struct {
 	IsRelation bool     // is relation
 }
 
-func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming) (*Field, error) {
+func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming, imports []*config.Import) (*Field, error) {
 	desc, err := types.NewDesc(driver, c)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 		customField = customTable.Fields[c.Name]
 	}
 	return &Field{
-		Imports:    fieldImports(desc, customField),
+		Imports:    fieldImports(desc, customField, imports),
 		Name:       fieldName(c, customField, n),
 		Type:       fieldType(desc, customField),
 		Tag:        fieldTags(c, customField, customTags).String(),
@@ -51,7 +51,7 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 	}, nil
 }
 
-func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming.Naming) *Field {
+func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming.Naming, imports []*config.Import) *Field {
 	customField, ok := customTable.Fields[fieldName]
 	if !ok {
 		return nil
@@ -64,7 +64,7 @@ func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming
 	tags.Add(newCustomTags(name, customTable.Tags...)...)
 	tags.Add(newCustomTags(name, customField.Tags...)...)
 	field := &Field{
-		Imports:    nil,
+		Imports:    importsForType(customField.Type, imports),
 		Name:       n.ColumnToField(name),
 		Type:       customField.Type,
 		Tag:        tags.String(),
@@ -75,9 +75,6 @@ func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming
 		IsNullable: false,
 		IsCustom:   true,
 		IsRelation: hasRelationship(customField.Tags...),
-	}
-	if customField.Import != "" {
-		field.Imports = append(field.Imports, customField.Import)
 	}
 	return field
 }
@@ -96,15 +93,19 @@ func fieldType(desc types.Desc, customField *config.CustomField) string {
 	return customField.Type
 }
 
-func fieldImports(desc types.Desc, customField *config.CustomField) []string {
-	if customField == nil || customField.Import == "" {
-		return desc.Imports
+func fieldImports(desc types.Desc, customField *config.CustomField, imports []*config.Import) []Import {
+	var extra []Import
+	if customField != nil {
+		extra = importsForType(customField.Type, imports)
 	}
-	// Avoid modifying the original desc.Imports slice
-	imports := make([]string, len(desc.Imports), len(desc.Imports)+1)
-	copy(imports, desc.Imports)
-	imports = append(imports, customField.Import)
-	return imports
+	if len(desc.Imports) == 0 {
+		return extra
+	}
+	result := make([]Import, 0, len(desc.Imports)+len(extra))
+	for _, path := range desc.Imports {
+		result = append(result, Import{Path: path})
+	}
+	return append(result, extra...)
 }
 
 func fieldTags(c *schema.Column, customField *config.CustomField, objectTags []*config.Tag) *Tags {

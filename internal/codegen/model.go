@@ -13,7 +13,7 @@ type Model struct {
 	Version             string     // bake version
 	Module              string     // module path
 	Package             string     // package name
-	Imports             [][]string // imports
+	Imports             [][]Import // imports
 	Driver              string     // driver name
 	BunModel            string     // bun.BaseModel
 	Table               string     // table name
@@ -55,7 +55,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 	applyCustom(m, customTable)
 	fields := make([]*Field, 0, len(t.Columns)*2)
 	for _, c := range t.Columns {
-		f, err := NewField(c, customTable, db.Driver, n)
+		f, err := NewField(c, customTable, db.Driver, n, cfg.Imports)
 		if err != nil {
 			return nil, err
 		}
@@ -65,15 +65,15 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 	for _, f := range fields {
 		columns[f.ColumnName] = struct{}{}
 	}
-	fields = append(fields, newCustomFields(customTable, columns, n)...)
+	fields = append(fields, newCustomFields(customTable, columns, n, cfg.Imports)...)
 	m.Fields = fields
 	initModel(m)
 	return m, nil
 }
 
 func initModel(m *Model) {
-	imports := make([]string, 0, len(m.Fields)*2+1)
-	imports = append(imports, "context", "github.com/uptrace/bun")
+	imports := make([]Import, 0, len(m.Fields)*2+2)
+	imports = append(imports, Import{Path: "context"}, Import{Path: "github.com/uptrace/bun"})
 
 	for _, f := range m.Fields {
 		imports = append(imports, f.Imports...)
@@ -122,7 +122,7 @@ func initModel(m *Model) {
 		default:
 			continue
 		}
-		imports = append(imports, "time")
+		imports = append(imports, Import{Path: "time"})
 	}
 
 	m.Imports = groupImports(m.Module, imports...)
@@ -143,7 +143,7 @@ func applyCustom(m *Model, customTable *config.CustomTable) {
 	}
 }
 
-func newCustomFields(customTable *config.CustomTable, columns map[string]struct{}, n *naming.Naming) []*Field {
+func newCustomFields(customTable *config.CustomTable, columns map[string]struct{}, n *naming.Naming, imports []*config.Import) []*Field {
 	if customTable == nil {
 		return nil
 	}
@@ -155,7 +155,7 @@ func newCustomFields(customTable *config.CustomTable, columns map[string]struct{
 		if field.Name == "" && field.Type == "" && !hasRelationship(field.Tags...) {
 			continue
 		}
-		f := NewCustomField(k, customTable, n)
+		f := NewCustomField(k, customTable, n, imports)
 		if f != nil { // defensive: avoid nil element
 			results = append(results, f)
 		}
