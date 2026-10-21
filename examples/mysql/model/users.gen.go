@@ -31,6 +31,12 @@ const (
 )
 
 const (
+	UserIndexSeq      = "idx_seq"
+	UserIndexStartEnd = "idx_start_end"
+	UserIndexUkEmail  = "uk_email"
+)
+
+const (
 	UserRelationPosts = "Posts"
 )
 

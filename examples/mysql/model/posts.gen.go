@@ -31,6 +31,10 @@ const (
 )
 
 const (
+	PostIndexUserId = "idx_user_id"
+)
+
+const (
 	PostRelationUser = "User"
 )
 

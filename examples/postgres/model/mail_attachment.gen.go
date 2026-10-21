@@ -30,6 +30,10 @@ const (
 	MailAttachmentUpdatedAt   = "updated_at"
 )
 
+const (
+	MailAttachmentIndexMailId = "idx_mail_id"
+)
+
 var (
 	MailAttachmentIDIdent          = bun.Ident("id")
 	MailAttachmentMailIDIdent      = bun.Ident("mail_id")

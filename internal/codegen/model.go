@@ -21,6 +21,7 @@ type Model struct {
 	Alias               string     // model alias
 	Comments            []string   // model comments
 	Fields              []*Field   // fields
+	Indexes             []Index    // indexes
 	Timezone            string     // timezone
 	CreatedAtType       string     // created_at type
 	UpdatedAtType       string     // updated_at type
@@ -48,6 +49,7 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		Model:    naming.TableToStruct(t.Name),
 		Alias:    naming.TableToAlias(t.Name),
 		Comments: naming.SplitCommentLines(t.Comment),
+		Indexes:  newIndexes(t.Indexes...),
 		Timezone: cfg.Timezone,
 	}
 

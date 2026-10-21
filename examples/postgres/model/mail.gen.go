@@ -32,6 +32,11 @@ const (
 )
 
 const (
+	MailIndexUidCreated = "idx_uid_created"
+	MailIndexUidStatus  = "idx_uid_status"
+)
+
+const (
 	MailRelationAttachments = "Attachments"
 )
 

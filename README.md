@@ -39,6 +39,23 @@ For each table, bake generates two files:
 | Ordering   | `Asc`, `Desc`                                                                              | Sort order            |
 | Join       | `InnerJoin`, `LeftJoin`, `RightJoin`, `FullJoin` (alias file, `FullJoin` skipped on MySQL) | JOIN helpers          |
 
+### Index Constants
+
+Each non-primary index is emitted once, under its own name, so composite
+indexes are covered as well:
+
+```go
+const (
+	UserIndexSeq      = "idx_seq"
+	UserIndexStartEnd = "idx_start_end"
+	UserIndexUkEmail  = "uk_email"
+)
+```
+
+The constant suffix is the index name in CamelCase, with a leading `idx_`
+dropped so the name does not repeat "Index". The index backing the primary key
+is skipped, whatever the driver calls it.
+
 ## Installation
 
 ```shell

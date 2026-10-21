@@ -39,6 +39,15 @@ const (
 {{- end}}
 )
 
+{{- if gt (len .Indexes) 0 -}}
+{{- "\n\n" -}}
+const (
+{{- range $index := .Indexes}}
+	{{- "\n\t" }}{{$model}}Index{{$index.Key}} = "{{$index.Value}}"
+{{- end}}
+)
+{{- end}}
+
 {{- if .HasRelation -}}
 {{- "\n\n" -}}
 const (

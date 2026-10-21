@@ -27,6 +27,10 @@ const (
 	TestIndexSeq     = "seq"
 )
 
+const (
+	TestIndexIndexSeq = "idx_seq"
+)
+
 var (
 	TestIndexIDIdent      = bun.Ident("id")
 	TestIndexStartAtIdent = bun.Ident("start_at")

@@ -27,6 +27,10 @@ const (
 	TestMultiIndexSeq     = "seq"
 )
 
+const (
+	TestMultiIndexIndexTestMultiIndexStartEndKey = "test_multi_index_start_end_key"
+)
+
 var (
 	TestMultiIndexIDIdent      = bun.Ident("id")
 	TestMultiIndexStartAtIdent = bun.Ident("start_at")

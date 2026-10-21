@@ -27,6 +27,10 @@ const (
 	TestIndexSeq     = "seq"
 )
 
+const (
+	TestIndexIndexTestIndexSeqKey = "test_index_seq_key"
+)
+
 var (
 	TestIndexIDIdent      = bun.Ident("id")
 	TestIndexStartAtIdent = bun.Ident("start_at")
