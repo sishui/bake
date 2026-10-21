@@ -117,31 +117,6 @@ func loadIndexes(ctx context.Context, db *sql.DB, schema string, querySQL string
 	return result, nil
 }
 
-func loadForeignKeys(ctx context.Context, db *sql.DB, scheme string, querySQL string) ([]ForeignKey, error) {
-	rows, err := db.QueryContext(ctx, querySQL, scheme)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			slog.ErrorContext(ctx, "close rows", "error", err)
-		}
-	}()
-	result := make([]ForeignKey, 0)
-	for rows.Next() {
-		var fk ForeignKey
-		err = rows.Scan(&fk.ConstraintName, &fk.Table, &fk.ColumnName, &fk.RefTable, &fk.RefColumn)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, fk)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
 func loadColumns(ctx context.Context, db *sql.DB, schema string, querySQL string, tables []*Table) (map[string][]*Column, error) {
 	rows, err := db.QueryContext(ctx, querySQL, schema)
 	if err != nil {
@@ -246,38 +221,6 @@ func assignColumns(tables []*Table, columns map[string][]*Column, indexes []Inde
 			column.IndexName = best.IndexName
 			column.NonUnique = best.NonUnique
 			column.IsMultiKey = best.NonUnique == 0 && indexMembers[tableIndex{table: t.Name, indexName: best.IndexName}] >= 2
-		}
-	}
-}
-
-// assignForeignKeys assigns foreign key information to tables and columns.
-func assignForeignKeys(tables []*Table, foreignKeys []ForeignKey) {
-	// Create a map for quick table lookup
-	tableMap := make(map[string]*Table, len(tables))
-	for _, t := range tables {
-		tableMap[t.Name] = t
-	}
-
-	// Assign foreign keys to tables and columns
-	for _, fk := range foreignKeys {
-		// Find the source table
-		sourceTable, ok := tableMap[fk.Table]
-		if !ok {
-			continue
-		}
-
-		// Find the column in the source table
-		for _, c := range sourceTable.Columns {
-			if c.Name == fk.ColumnName {
-				c.ForeignKey = &fk
-				sourceTable.ForeignKeys = append(sourceTable.ForeignKeys, fk)
-
-				// Add reverse foreign key to the referenced table
-				if refTable, ok := tableMap[fk.RefTable]; ok {
-					refTable.ReverseForeignKeys = append(refTable.ReverseForeignKeys, fk)
-				}
-				break
-			}
 		}
 	}
 }

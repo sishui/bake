@@ -62,9 +62,6 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		fields = append(fields, f)
 	}
 	columns := make(map[string]struct{}, len(t.Columns))
-	fields = append(fields, newBelongsToFields(t.ForeignKeys, customTable)...)
-	fields = append(fields, newHasManyFields(t.ReverseForeignKeys, customTable)...)
-
 	for _, f := range fields {
 		columns[f.ColumnName] = struct{}{}
 	}

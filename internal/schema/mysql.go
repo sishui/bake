@@ -40,23 +40,6 @@ ORDER BY
   ordinal_position;
 `
 
-const mysqlForeignKeyQuery = `
-SELECT
-  constraint_name,
-  table_name,
-  column_name,
-  referenced_table_name,
-  referenced_column_name
-FROM
-  information_schema.KEY_COLUMN_USAGE
-WHERE
-  table_schema = ?
-  AND referenced_table_name IS NOT NULL
-ORDER BY
-  constraint_name,
-  ordinal_position;
-`
-
 const mysqlIndexQuery = `
 SELECT
   table_name,
@@ -114,12 +97,7 @@ func (s *mysqlScheme) Load(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
-	foreignKeys, err := loadForeignKeys(ctx, s.db, s.database, mysqlForeignKeyQuery)
-	if err != nil {
-		return nil, err
-	}
 	assignColumns(tables, columns, indexes)
-	assignForeignKeys(tables, foreignKeys)
 	return tables, nil
 }
 

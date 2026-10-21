@@ -23,11 +23,9 @@ const (
 )
 
 type Table struct {
-	Name               string
-	Comment            string
-	Columns            []*Column
-	ForeignKeys        []ForeignKey
-	ReverseForeignKeys []ForeignKey // Foreign keys from other tables referencing this table
+	Name    string
+	Comment string
+	Columns []*Column
 }
 
 type Column struct {
@@ -41,18 +39,9 @@ type Column struct {
 	Key             string // ColumnKey
 	Extra           string
 	Comment         string // ColumnComment
-	ForeignKey      *ForeignKey
 	IndexName       string
 	NonUnique       int
 	IsMultiKey      bool
-}
-
-type ForeignKey struct {
-	ConstraintName string // FK constraint name
-	Table          string // Source table (e.g., "posts")
-	ColumnName     string // Column in source table (e.g., "user_id")
-	RefTable       string // Referenced table (e.g., "users")
-	RefColumn      string // Referenced column (e.g., "id")
 }
 
 type Index struct {
@@ -81,10 +70,6 @@ func (c *Column) IsAutoIncrement() bool {
 
 func (c *Column) IsUnsigned() bool {
 	return strings.Contains(c.ColumnType, "unsigned")
-}
-
-func (c *Column) IsForeignKey() bool {
-	return c.ForeignKey != nil
 }
 
 func (c *Column) IsUnique() bool {

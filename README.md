@@ -6,7 +6,7 @@ A database model code generator for Go. Generate ORM models from database schema
 
 - Supports MySQL and PostgreSQL databases
 - Automatic Go type mapping for database columns
-- Automatic foreign key detection and relation generation (belongs-to, has-many)
+- Relation fields declared with bun tags (`rel:belongs-to`, `rel:has-one`, `rel:has-many`, `m2m`)
 - Composite unique index detection (`unique`, `unique:index_name` tags)
 - Customizable templates
 - Custom struct generation — define non-DB structs for JSON columns, value objects, configuration objects
@@ -313,60 +313,74 @@ Every column also gets a `json` tag: `json:"<column_name>,omitempty"`, with
 `json:"-"` for `deleted_at`. Override it per column with a `custom` tag using
 `key: "json"`.
 
-## Foreign Key Relations
+## Relations
 
-bake automatically detects foreign key relationships from your database schema and generates the appropriate bun relation tags.
+Relations are declared in the configuration; bake does not inspect foreign keys
+to create them. A field counts as a relation when its `bun` tag carries
 
-### How It Works
+- `rel:belongs-to`, `rel:has-one` or `rel:has-many`, or
+- `m2m:<join_table>`.
 
-When a column has a foreign key constraint:
+Field name, Go type and `join:` option are part of the same declaration:
 
-```sql
--- posts.user_id references users.id
-ALTER TABLE posts ADD CONSTRAINT fk_posts_user_id
-  FOREIGN KEY (user_id) REFERENCES users(id);
+```yaml
+db:
+    - driver: "postgres"
+      custom:
+          posts:
+              fields:
+                  user: # field name on the Post model
+                      type: "*User"
+                      comment: "post author"
+                      tags:
+                          - key: "bun"
+                            options: ["rel:belongs-to", "join:user_id=id"]
+          users:
+              fields:
+                  posts:
+                      type: "[]*Post"
+                      tags:
+                          - key: "bun"
+                            options: ["rel:has-many", "join:id=user_id"]
+                  profile:
+                      type: "*Profile"
+                      tags:
+                          - key: "bun"
+                            options: ["rel:has-one", "join:id=user_id"]
+                  roles:
+                      type: "[]*Role"
+                      tags:
+                          - key: "bun"
+                            options: ["m2m:user_roles"]
 ```
 
-bake will automatically:
+A declaration is ignored when the field name matches a real column. A `json`
+tag is added automatically as `json:"<field>,omitempty"`.
 
-1. On `posts` table: Generate `User *User` field with `rel:belongs-to`
-2. On `users` table: Generate `Posts []*Post` field with `rel:has-many`
+`type` is required on a declared field: it is not backed by a column, so there
+is no database type to infer.
 
-### Generated Example
-
-For the `posts` table with `user_id` foreign key:
+The generated models contain exactly the relations you declared:
 
 ```go
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
 
-	ID        int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`                             //
-	UserID    int64     `bun:"user_id,notnull" json:"user_id,omitempty"`                                    // 用户ID
-	Title     string    `bun:"title,notnull" json:"title,omitempty"`                                        // 标题
-	Content   *string   `bun:"content,nullzero" json:"content,omitempty"`                                   // 内容
-	Status    int8      `bun:"status,notnull,default:'0'" json:"status,omitempty"`                          // 状态: 0=草稿, 1=发布
-	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty"` // 创建时间
-	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp(3)" json:"updated_at,omitempty"` // 更新时间
-	User      *User     `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"`                   //
+	// ...
+	User *User `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"`
 }
 
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
 
-	ID        int64     `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`                             //
-	Name      string    `bun:"name,notnull" json:"name,omitempty"`                                          // 用户名
-	Email     string    `bun:"email,unique,notnull" json:"email,omitempty"`                                 // 邮箱
-	StartAt   time.Time `bun:"start_at,notnull" json:"start_at,omitempty"`                                  //
-	EndAt     time.Time `bun:"end_at,notnull" json:"end_at,omitempty"`                                      //
-	Seq       int64     `bun:"seq,notnull" json:"seq,omitempty"`                                            //
-	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" json:"created_at,omitempty"` // 创建时间
-	Posts     []*Post   `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`                   //
+	// ...
+	Posts []*Post `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`
 }
 ```
 
-`rel:belongs-to` is generated on the table holding the foreign key, and the
-matching `rel:has-many` slice on the referenced table. Alongside each model,
-`<table>.alias.gen.go` carries the join helpers:
+### Join Helpers
+
+Alongside each model, `<table>.alias.gen.go` carries the alias and join helpers:
 
 ```go
 const PostTableAlias = "posts_alias"
@@ -381,13 +395,6 @@ const (
 ```
 
 `FullJoin` is emitted for PostgreSQL only, since MySQL has no `FULL JOIN`.
-
-### Manual Override
-
-You can still manually configure relations using the `custom` configuration. A
-field counts as a relation when its `bun` tag has `rel:belongs-to`,
-`rel:has-one`, `rel:has-many` or `m2m:<join_table>`, so the tag is what marks it.
-Manual configuration takes precedence over automatic detection.
 
 ## Custom Structs
 

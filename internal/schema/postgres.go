@@ -91,26 +91,6 @@ ORDER BY
   a.attnum;
 `
 
-const pgForeignKeyQuery = `
-SELECT
-  con.conname AS constraint_name,
-  rel.relname AS table_name,
-  att.attname AS column_name,
-  frel.relname AS referenced_table_name,
-  fatt.attname AS referenced_column_name
-FROM pg_constraint con
-JOIN pg_class rel ON rel.oid = con.conrelid
-JOIN pg_class frel ON frel.oid = con.confrelid
-JOIN unnest(con.conkey) WITH ORDINALITY AS cols(attnum, ord) ON TRUE
-JOIN pg_attribute att ON att.attrelid = rel.oid AND att.attnum = cols.attnum
-JOIN unnest(con.confkey) WITH ORDINALITY AS fcols(attnum, ord) ON cols.ord = fcols.ord
-JOIN pg_attribute fatt ON fatt.attrelid = frel.oid AND fatt.attnum = fcols.attnum
-WHERE con.contype = 'f'
-  AND rel.relnamespace = (
-    SELECT oid FROM pg_namespace WHERE nspname = $1
-  );
-`
-
 const pgIndexQuery = `
 SELECT
   t.relname AS table_name,
@@ -178,12 +158,7 @@ func (s *postgresScheme) Load(ctx context.Context) ([]*Table, error) {
 	if err != nil {
 		return nil, err
 	}
-	foreignKeys, err := loadForeignKeys(ctx, s.db, s.cfg.Schema, pgForeignKeyQuery)
-	if err != nil {
-		return nil, err
-	}
 	assignColumns(tables, columns, indexes)
-	assignForeignKeys(tables, foreignKeys)
 	return tables, nil
 }
 

@@ -308,7 +308,7 @@ type User struct {
 	EndAt     time.Time `bun:"end_at,notnull" form:"end_at" json:"end_at,omitempty"`                                          //
 	Seq       int64     `bun:"seq,notnull" form:"seq" json:"seq,omitempty"`                                                   //
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp(3)" form:"created_at" json:"created_at,omitempty"` // 创建时间
-	Posts     []*Post   `bun:"posts,join:id=user_id,rel:has-many" form:"posts" json:"posts,omitempty"`                        //
+	Posts     []*Post   `bun:"posts,rel:has-many,join:id=user_id" form:"posts" json:"posts,omitempty"`                        // custom comment
 }
 
 func (m *User) BeforeAppendModel(ctx context.Context, query bun.Query) error {

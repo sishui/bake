@@ -200,36 +200,6 @@ func TestColumnIsUnsigned(t *testing.T) {
 	}
 }
 
-func TestColumnIsForeignKey(t *testing.T) {
-	tests := []struct {
-		name string
-		fk   *ForeignKey
-		want bool
-	}{
-		{
-			name: "no foreign key",
-			fk:   nil,
-			want: false,
-		},
-		{
-			name: "has foreign key",
-			fk:   &ForeignKey{ConstraintName: "fk_user_id"},
-			want: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			c := &Column{ForeignKey: tt.fk}
-			got := c.IsForeignKey()
-			if got != tt.want {
-				t.Errorf("IsForeignKey() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestAssignColumns_CompositeUniqueIndex(t *testing.T) {
 	tables := []*Table{
 		{Name: "bookings"},
@@ -325,68 +295,6 @@ func TestAssignColumns_PreferUniqueIndex(t *testing.T) {
 		t.Error("name IsMultiKey = false, want true")
 	}
 }
-
-func TestAssignForeignKeys(t *testing.T) {
-	tables := []*Table{
-		{
-			Name: "posts",
-			Columns: []*Column{
-				{Name: "id", OrdinalPosition: 1},
-				{Name: "user_id", OrdinalPosition: 2},
-			},
-		},
-		{
-			Name: "users",
-			Columns: []*Column{
-				{Name: "id", OrdinalPosition: 1},
-			},
-		},
-	}
-	foreignKeys := []ForeignKey{
-		{
-			ConstraintName: "fk_posts_user_id",
-			Table:          "posts",
-			ColumnName:     "user_id",
-			RefTable:       "users",
-			RefColumn:      "id",
-		},
-	}
-
-	assignForeignKeys(tables, foreignKeys)
-
-	// Check that user_id column has foreign key
-	userIDColumn := tables[0].Columns[1]
-	if userIDColumn.ForeignKey == nil {
-		t.Fatal("user_id column should have foreign key")
-	}
-	if userIDColumn.ForeignKey.RefTable != "users" {
-		t.Errorf("foreign key ref table = %q, want %q", userIDColumn.ForeignKey.RefTable, "users")
-	}
-	if userIDColumn.ForeignKey.RefColumn != "id" {
-		t.Errorf("foreign key ref column = %q, want %q", userIDColumn.ForeignKey.RefColumn, "id")
-	}
-
-	// Check that posts table has foreign key
-	postsTable := tables[0]
-	if len(postsTable.ForeignKeys) != 1 {
-		t.Fatalf("posts table should have 1 foreign key, got %d", len(postsTable.ForeignKeys))
-	}
-
-	// Check that users table has no foreign keys
-	usersTable := tables[1]
-	if len(usersTable.ForeignKeys) != 0 {
-		t.Fatalf("users table should have 0 foreign keys, got %d", len(usersTable.ForeignKeys))
-	}
-
-	// Check that users table has reverse foreign key
-	if len(usersTable.ReverseForeignKeys) != 1 {
-		t.Fatalf("users table should have 1 reverse foreign key, got %d", len(usersTable.ReverseForeignKeys))
-	}
-	if usersTable.ReverseForeignKeys[0].ColumnName != "user_id" {
-		t.Errorf("reverse foreign key column = %q, want %q", usersTable.ReverseForeignKeys[0].ColumnName, "user_id")
-	}
-}
-
 
 func TestColumnIndexes(t *testing.T) {
 	t.Run("EmptyInput_ReturnsEmptyMap", func(t *testing.T) {
@@ -491,61 +399,6 @@ func TestBestIndexForColumn(t *testing.T) {
 			t.Errorf("got ok=true for non-unique only, want false")
 		}
 	})
-}
-
-func TestAssignForeignKeys_ReverseFK(t *testing.T) {
-	usersTable := &Table{Name: "users", Columns: []*Column{
-		{Name: "id"},
-	}}
-	postsTable := &Table{Name: "posts", Columns: []*Column{
-		{Name: "id"},
-		{Name: "user_id"},
-	}}
-	tables := []*Table{usersTable, postsTable}
-
-	fk := ForeignKey{
-		ConstraintName: "fk_posts_user",
-		Table:          "posts",
-		ColumnName:     "user_id",
-		RefTable:       "users",
-		RefColumn:      "id",
-	}
-
-	assignForeignKeys(tables, []ForeignKey{fk})
-
-	// posts.ForeignKeys should contain the FK
-	if len(postsTable.ForeignKeys) != 1 {
-		t.Fatalf("posts.ForeignKeys: got %d, want 1", len(postsTable.ForeignKeys))
-	}
-	if postsTable.ForeignKeys[0].ConstraintName != "fk_posts_user" {
-		t.Errorf("posts.ForeignKeys[0].ConstraintName = %q, want %q", postsTable.ForeignKeys[0].ConstraintName, "fk_posts_user")
-	}
-
-	// users.ReverseForeignKeys should contain the FK
-	if len(usersTable.ReverseForeignKeys) != 1 {
-		t.Fatalf("users.ReverseForeignKeys: got %d, want 1", len(usersTable.ReverseForeignKeys))
-	}
-	if usersTable.ReverseForeignKeys[0].ConstraintName != "fk_posts_user" {
-		t.Errorf("users.ReverseForeignKeys[0].ConstraintName = %q, want %q", usersTable.ReverseForeignKeys[0].ConstraintName, "fk_posts_user")
-	}
-
-	// The user_id column in posts should have ForeignKey set
-	var userCol *Column
-	for _, c := range postsTable.Columns {
-		if c.Name == "user_id" {
-			userCol = c
-			break
-		}
-	}
-	if userCol == nil {
-		t.Fatalf("user_id column not found in posts")
-	}
-	if userCol.ForeignKey == nil {
-		t.Fatalf("user_id.ForeignKey is nil, want non-nil")
-	}
-	if userCol.ForeignKey.ConstraintName != "fk_posts_user" {
-		t.Errorf("user_id.ForeignKey.ConstraintName = %q, want %q", userCol.ForeignKey.ConstraintName, "fk_posts_user")
-	}
 }
 
 func TestColumnIsUnique(t *testing.T) {

@@ -307,7 +307,7 @@ func TestNewModel(t *testing.T) {
 		t.Errorf("Package = %q, want %q", m.Package, "model")
 	}
 
-	// Check fields count (3 columns, no foreign keys)
+	// Check fields count (3 columns)
 	if len(m.Fields) != 3 {
 		t.Fatalf("len(Fields) = %d, want 3", len(m.Fields))
 	}
@@ -340,99 +340,6 @@ func TestNewModel(t *testing.T) {
 	}
 	if !strings.Contains(importStr, "github.com/uptrace/bun") {
 		t.Error("Imports missing bun")
-	}
-}
-
-func TestNewModel_WithForeignKey(t *testing.T) {
-	n := naming.New()
-	cfg := &config.Config{
-		Version: "v0.2.1",
-		Output: &config.Output{
-			Package: "model",
-			Module:  "github.com/sishui/bake",
-		},
-	}
-	db := &config.DB{
-		Driver: "mysql",
-		DSN:    "root:@tcp(127.0.0.1:3306)/test",
-	}
-
-	postsTable := &schema.Table{
-		Name: "posts",
-		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
-			{Name: "user_id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", OrdinalPosition: 2},
-			{Name: "title", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 3},
-		},
-		ForeignKeys: []schema.ForeignKey{
-			{ConstraintName: "fk_posts_user", Table: "posts", ColumnName: "user_id", RefTable: "users", RefColumn: "id"},
-		},
-	}
-
-	m, err := NewModel(postsTable, db, cfg, n)
-	if err != nil {
-		t.Fatalf("NewModel() error = %v", err)
-	}
-
-	// 3 columns + 1 belongs-to relation
-	if len(m.Fields) != 4 {
-		t.Fatalf("len(Fields) = %d, want 4", len(m.Fields))
-	}
-
-	// Last field should be the belongs-to relation
-	relation := m.Fields[3]
-	if !relation.IsRelation {
-		t.Error("Fields[3].IsRelation = false, want true")
-	}
-	if !relation.IsCustom {
-		t.Error("Fields[3].IsCustom = false, want true")
-	}
-	if relation.Kind != "STRUCT" {
-		t.Errorf("Fields[3].Kind = %q, want %q", relation.Kind, "STRUCT")
-	}
-}
-
-func TestNewModel_WithReverseForeignKey(t *testing.T) {
-	n := naming.New()
-	cfg := &config.Config{
-		Version: "v0.2.1",
-		Output: &config.Output{
-			Package: "model",
-			Module:  "github.com/sishui/bake",
-		},
-	}
-	db := &config.DB{
-		Driver: "mysql",
-		DSN:    "root:@tcp(127.0.0.1:3306)/test",
-	}
-
-	usersTable := &schema.Table{
-		Name: "users",
-		Columns: []*schema.Column{
-			{Name: "id", DataType: "int", ColumnType: "int(11)", Nullable: "NO", Key: schema.ColumnKeyPrimary, OrdinalPosition: 1},
-			{Name: "name", DataType: "varchar", ColumnType: "varchar(255)", Nullable: "NO", OrdinalPosition: 2},
-		},
-		ReverseForeignKeys: []schema.ForeignKey{
-			{ConstraintName: "fk_posts_user", Table: "posts", ColumnName: "user_id", RefTable: "users", RefColumn: "id"},
-		},
-	}
-
-	m, err := NewModel(usersTable, db, cfg, n)
-	if err != nil {
-		t.Fatalf("NewModel() error = %v", err)
-	}
-
-	// 2 columns + 1 has-many relation
-	if len(m.Fields) != 3 {
-		t.Fatalf("len(Fields) = %d, want 3", len(m.Fields))
-	}
-
-	relation := m.Fields[2]
-	if !relation.IsRelation {
-		t.Error("Fields[2].IsRelation = false, want true")
-	}
-	if !strings.HasPrefix(relation.Type, "[]*") {
-		t.Errorf("Fields[2].Type = %q, want slice-of-pointers type", relation.Type)
 	}
 }
 
