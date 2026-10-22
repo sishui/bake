@@ -56,6 +56,41 @@ The constant suffix is the index name in CamelCase, with a leading `idx_`
 dropped so the name does not repeat "Index". The index backing the primary key
 is skipped, whatever the driver calls it.
 
+### Upsert Conflict Targets
+
+For PostgreSQL, every primary key and unique index is emitted as a conflict
+target, together with one assignment per updatable column. The caller picks the
+assignments it wants in the `SET` clause:
+
+```go
+const (
+	MailConflictID = "CONFLICT (id) DO UPDATE"
+)
+
+const (
+	MailSubjectExcluded = "subject = EXCLUDED.subject"
+	MailContentExcluded = "content = EXCLUDED.content"
+)
+```
+
+```go
+db.NewInsert().Model(&m).On(
+	model.MailConflictID + " SET " + model.MailSubjectExcluded + ", " + model.MailContentExcluded)
+```
+
+- The target lists every column of the key, in index order, so a composite
+  unique index yields `CONFLICT (start_at, end_at) DO UPDATE`.
+- Assignments exist for every column except primary keys and `created_at`,
+  which are never overwritten.
+- When nothing is updatable the target degrades to `DO NOTHING`.
+- MySQL models get the assignments with `VALUES(col)` instead of `EXCLUDED.`,
+  and no conflict target, since `ON DUPLICATE KEY UPDATE` takes no column list.
+  bun appends the leading `ON` itself, so pass
+  `.On("DUPLICATE KEY UPDATE " + model.MailSubjectExcluded)`.
+  The `new.col` form MySQL 8.0.19 added needs an `INSERT ... AS new` that bun's
+  MySQL dialect never emits (its `InsertTableAlias` feature is PostgreSQL and
+  SQLite only), while `VALUES(col)` still works despite being deprecated.
+
 ## Installation
 
 ```shell
@@ -212,6 +247,8 @@ type Model struct {
     Comments            []string   // model comments
     Fields              []*Field   // fields
     Indexes             []Index    // indexes
+    Conflicts           []Conflict // upsert conflict targets (postgres)
+    Excluded            []Excluded // upsert SET assignments (postgres)
     Timezone            string     // timezone
     CreatedAtType       string     // created_at type
     UpdatedAtType       string     // updated_at type
@@ -235,6 +272,16 @@ type Import struct {
 type Index struct {
     Key   string // constant suffix, e.g. "UsersEmail"
     Value string // index name as stored in the database
+}
+
+type Conflict struct {
+    Key   string // constant suffix, e.g. "Email"
+    Value string // CONFLICT (email) DO UPDATE
+}
+
+type Excluded struct {
+    Key   string // constant suffix, e.g. "Subject"
+    Value string // subject = EXCLUDED.subject
 }
 
 type Field struct {

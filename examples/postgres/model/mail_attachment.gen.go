@@ -45,6 +45,18 @@ var (
 )
 
 const (
+	MailAttachmentConflictID = "CONFLICT (id) DO UPDATE"
+)
+
+const (
+	MailAttachmentMailIDExcluded      = "mail_id = EXCLUDED.mail_id"
+	MailAttachmentKindExcluded        = "kind = EXCLUDED.kind"
+	MailAttachmentRewardIDExcluded    = "reward_id = EXCLUDED.reward_id"
+	MailAttachmentRewardCountExcluded = "reward_count = EXCLUDED.reward_count"
+	MailAttachmentUpdatedAtExcluded   = "updated_at = EXCLUDED.updated_at"
+)
+
+const (
 	MailAttachmentIDEq          = "id = ?"
 	MailAttachmentMailIDEq      = "mail_id = ?"
 	MailAttachmentKindEq        = "kind = ?"

@@ -49,6 +49,18 @@ var (
 )
 
 const (
+	PostConflictID = "CONFLICT (id) DO UPDATE"
+)
+
+const (
+	PostUserIDExcluded    = "user_id = EXCLUDED.user_id"
+	PostTitleExcluded     = "title = EXCLUDED.title"
+	PostContentExcluded   = "content = EXCLUDED.content"
+	PostStatusExcluded    = "status = EXCLUDED.status"
+	PostUpdatedAtExcluded = "updated_at = EXCLUDED.updated_at"
+)
+
+const (
 	PostIDEq        = "id = ?"
 	PostUserIDEq    = "user_id = ?"
 	PostTitleEq     = "title = ?"

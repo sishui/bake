@@ -51,6 +51,14 @@ var (
 )
 
 const (
+	UserNameExcluded    = "name = VALUES(name)"
+	UserEmailExcluded   = "email = VALUES(email)"
+	UserStartAtExcluded = "start_at = VALUES(start_at)"
+	UserEndAtExcluded   = "end_at = VALUES(end_at)"
+	UserSeqExcluded     = "seq = VALUES(seq)"
+)
+
+const (
 	UserIDEq        = "id = ?"
 	UserNameEq      = "name = ?"
 	UserEmailEq     = "email = ?"

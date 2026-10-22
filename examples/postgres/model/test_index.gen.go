@@ -39,6 +39,17 @@ var (
 )
 
 const (
+	TestIndexConflictID  = "CONFLICT (id) DO UPDATE"
+	TestIndexConflictSeq = "CONFLICT (seq) DO UPDATE"
+)
+
+const (
+	TestIndexStartAtExcluded = "start_at = EXCLUDED.start_at"
+	TestIndexEndAtExcluded   = "end_at = EXCLUDED.end_at"
+	TestIndexSeqExcluded     = "seq = EXCLUDED.seq"
+)
+
+const (
 	TestIndexIDEq      = "id = ?"
 	TestIndexStartAtEq = "start_at = ?"
 	TestIndexEndAtEq   = "end_at = ?"

@@ -97,6 +97,45 @@ var (
 )
 
 const (
+	TestAllTypeConflictID = "CONFLICT (id) DO UPDATE"
+)
+
+const (
+	TestAllTypeTinyIntValExcluded     = "tiny_int_val = EXCLUDED.tiny_int_val"
+	TestAllTypeSmallIntValExcluded    = "small_int_val = EXCLUDED.small_int_val"
+	TestAllTypeMediumIntValExcluded   = "medium_int_val = EXCLUDED.medium_int_val"
+	TestAllTypeIntValExcluded         = "int_val = EXCLUDED.int_val"
+	TestAllTypeBigIntValExcluded      = "big_int_val = EXCLUDED.big_int_val"
+	TestAllTypeDecimalValExcluded     = "decimal_val = EXCLUDED.decimal_val"
+	TestAllTypeFloatValExcluded       = "float_val = EXCLUDED.float_val"
+	TestAllTypeDoubleValExcluded      = "double_val = EXCLUDED.double_val"
+	TestAllTypeCharValExcluded        = "char_val = EXCLUDED.char_val"
+	TestAllTypeVarcharValExcluded     = "varchar_val = EXCLUDED.varchar_val"
+	TestAllTypeTextValExcluded        = "text_val = EXCLUDED.text_val"
+	TestAllTypeMediumtextValExcluded  = "mediumtext_val = EXCLUDED.mediumtext_val"
+	TestAllTypeLongtextValExcluded    = "longtext_val = EXCLUDED.longtext_val"
+	TestAllTypeDateValExcluded        = "date_val = EXCLUDED.date_val"
+	TestAllTypeTimeValExcluded        = "time_val = EXCLUDED.time_val"
+	TestAllTypeDatetimeValExcluded    = "datetime_val = EXCLUDED.datetime_val"
+	TestAllTypeTimestampValExcluded   = "timestamp_val = EXCLUDED.timestamp_val"
+	TestAllTypeYearValExcluded        = "year_val = EXCLUDED.year_val"
+	TestAllTypeBoolValExcluded        = "bool_val = EXCLUDED.bool_val"
+	TestAllTypeEnumValExcluded        = "enum_val = EXCLUDED.enum_val"
+	TestAllTypeSetValExcluded         = "set_val = EXCLUDED.set_val"
+	TestAllTypeBinaryValExcluded      = "binary_val = EXCLUDED.binary_val"
+	TestAllTypeVarbinaryValExcluded   = "varbinary_val = EXCLUDED.varbinary_val"
+	TestAllTypeBlobValExcluded        = "blob_val = EXCLUDED.blob_val"
+	TestAllTypeMediumblobValExcluded  = "mediumblob_val = EXCLUDED.mediumblob_val"
+	TestAllTypeLongblobValExcluded    = "longblob_val = EXCLUDED.longblob_val"
+	TestAllTypeJsonValExcluded        = "json_val = EXCLUDED.json_val"
+	TestAllTypeBitValExcluded         = "bit_val = EXCLUDED.bit_val"
+	TestAllTypeNullableIntValExcluded = "nullable_int_val = EXCLUDED.nullable_int_val"
+	TestAllTypeIgnoreValExcluded      = "ignore_val = EXCLUDED.ignore_val"
+	TestAllTypeUpdatedAtExcluded      = "updated_at = EXCLUDED.updated_at"
+	TestAllTypeDeletedAtExcluded      = "deleted_at = EXCLUDED.deleted_at"
+)
+
+const (
 	TestAllTypeIDEq             = "id = ?"
 	TestAllTypeTinyIntValEq     = "tiny_int_val = ?"
 	TestAllTypeSmallIntValEq    = "small_int_val = ?"

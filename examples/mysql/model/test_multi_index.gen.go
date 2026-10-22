@@ -39,6 +39,12 @@ var (
 )
 
 const (
+	TestMultiIndexStartAtExcluded = "start_at = VALUES(start_at)"
+	TestMultiIndexEndAtExcluded   = "end_at = VALUES(end_at)"
+	TestMultiIndexSeqExcluded     = "seq = VALUES(seq)"
+)
+
+const (
 	TestMultiIndexIDEq      = "id = ?"
 	TestMultiIndexStartAtEq = "start_at = ?"
 	TestMultiIndexEndAtEq   = "end_at = ?"

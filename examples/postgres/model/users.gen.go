@@ -51,6 +51,19 @@ var (
 )
 
 const (
+	UserConflictEmail = "CONFLICT (email) DO UPDATE"
+	UserConflictID    = "CONFLICT (id) DO UPDATE"
+)
+
+const (
+	UserNameExcluded    = "name = EXCLUDED.name"
+	UserEmailExcluded   = "email = EXCLUDED.email"
+	UserStartAtExcluded = "start_at = EXCLUDED.start_at"
+	UserEndAtExcluded   = "end_at = EXCLUDED.end_at"
+	UserSeqExcluded     = "seq = EXCLUDED.seq"
+)
+
+const (
 	UserIDEq        = "id = ?"
 	UserNameEq      = "name = ?"
 	UserEmailEq     = "email = ?"

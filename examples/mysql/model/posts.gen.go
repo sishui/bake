@@ -49,6 +49,14 @@ var (
 )
 
 const (
+	PostUserIDExcluded    = "user_id = VALUES(user_id)"
+	PostTitleExcluded     = "title = VALUES(title)"
+	PostContentExcluded   = "content = VALUES(content)"
+	PostStatusExcluded    = "status = VALUES(status)"
+	PostUpdatedAtExcluded = "updated_at = VALUES(updated_at)"
+)
+
+const (
 	PostIDEq        = "id = ?"
 	PostUserIDEq    = "user_id = ?"
 	PostTitleEq     = "title = ?"

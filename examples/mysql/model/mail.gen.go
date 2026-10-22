@@ -52,6 +52,15 @@ var (
 )
 
 const (
+	MailUIDExcluded           = "uid = VALUES(uid)"
+	MailSubjectExcluded       = "subject = VALUES(subject)"
+	MailContentExcluded       = "content = VALUES(content)"
+	MailStatusExcluded        = "status = VALUES(status)"
+	MailHasAttachmentExcluded = "has_attachment = VALUES(has_attachment)"
+	MailUpdatedAtExcluded     = "updated_at = VALUES(updated_at)"
+)
+
+const (
 	MailIDEq                  = "id = ?"
 	MailUIDEq                 = "uid = ?"
 	MailSubjectEq             = "subject = ?"

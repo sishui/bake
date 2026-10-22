@@ -45,6 +45,14 @@ var (
 )
 
 const (
+	MailAttachmentMailIDExcluded      = "mail_id = VALUES(mail_id)"
+	MailAttachmentKindExcluded        = "kind = VALUES(kind)"
+	MailAttachmentRewardIDExcluded    = "reward_id = VALUES(reward_id)"
+	MailAttachmentRewardCountExcluded = "reward_count = VALUES(reward_count)"
+	MailAttachmentUpdatedAtExcluded   = "updated_at = VALUES(updated_at)"
+)
+
+const (
 	MailAttachmentIDEq          = "id = ?"
 	MailAttachmentMailIDEq      = "mail_id = ?"
 	MailAttachmentKindEq        = "kind = ?"
