@@ -7,8 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/spf13/cobra"
 	"github.com/sishui/bake/internal/cmd"
+	"github.com/sishui/bake/internal/config"
+	"github.com/spf13/cobra"
 )
 
 func TestRunVersion(t *testing.T) {
@@ -145,4 +146,24 @@ func newTestRootCommand() *cobra.Command {
 	root.AddCommand(cmd.NewVersionCommand())
 	root.AddCommand(cmd.NewInitCommand())
 	return root
+}
+
+func TestInitCommandWritesParseableConfig(t *testing.T) {
+	t.Chdir(t.TempDir())
+
+	c := cmd.NewInitCommand()
+	if err := c.RunE(c, nil); err != nil {
+		t.Fatalf("init: %v", err)
+	}
+
+	cfg, err := config.Parse(config.Args{Config: "bake.gen.yaml"})
+	if err != nil {
+		t.Fatalf("generated config does not parse: %v", err)
+	}
+	if err := cfg.Validate(); err != nil {
+		t.Errorf("generated config does not validate: %v", err)
+	}
+	if len(cfg.Imports) != 0 {
+		t.Errorf("Imports = %v, want none", cfg.Imports)
+	}
 }

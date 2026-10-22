@@ -34,11 +34,16 @@ timezone: ""
 
 template:
   dir: "{{template}}" # template dir(if not set, use default template)
+
 output:
   dir: "{{output}}"
   package: "{{package}}"
   module: "{{module}}"
+
+imports: [] # custom imports: package and the types it provides
+
 custom: [] # custom struct
+
 db:
   - driver: "{{driver}}"
     dsn: "{{dsn}}"{{schema}}
