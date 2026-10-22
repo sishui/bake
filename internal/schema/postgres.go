@@ -62,7 +62,6 @@ SELECT
     ELSE
       ''
   END AS column_key,
-  -- extra（PG没有auto_increment概念，用 identity / sequence 替代）
   CASE
     WHEN pg_get_serial_sequence (c.OID :: REGCLASS :: TEXT, a.attname) IS NOT NULL THEN
       'auto_increment'
