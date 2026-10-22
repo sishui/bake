@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/go-sql-driver/mysql v1.10.1
-	github.com/jackc/pgx/v5 v5.8.0
+	github.com/jackc/pgx/v5 v5.11.0
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.1
 	github.com/knadh/koanf/v2 v2.3.4
