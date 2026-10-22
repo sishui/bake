@@ -27,6 +27,12 @@ type Table struct {
 	Comment string
 	Columns []*Column
 	Indexes []string
+	Keys    []UniqueKey
+}
+
+// UniqueKey is a primary key or unique index, with its columns in index order.
+type UniqueKey struct {
+	Columns []string
 }
 
 type Column struct {

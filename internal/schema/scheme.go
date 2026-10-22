@@ -173,43 +173,72 @@ type tableIndex struct {
 	indexName string
 }
 
-// assignIndexes records the non-primary index names of each table. Composite
-// indexes are recorded once, under their own name, not per column.
 func assignIndexes(tables []*Table, indexes []Index) {
 	tableMap := make(map[string]*Table, len(tables))
 	pkColumns := make(map[string]map[string]struct{}, len(tables))
 	for _, t := range tables {
 		tableMap[t.Name] = t
-		columns := make(map[string]struct{})
-		for _, c := range t.Columns {
-			if c.IsPrimaryKey() {
-				columns[c.Name] = struct{}{}
-			}
-		}
-		pkColumns[t.Name] = columns
+		pkColumns[t.Name] = primaryColumns(t)
 	}
 
-	columns := make(map[tableIndex][]string, len(indexes))
-	for _, idx := range indexes {
-		if idx.IndexName == "" {
-			continue
-		}
-		key := tableIndex{table: idx.Table, indexName: idx.IndexName}
-		columns[key] = append(columns[key], idx.ColumnName)
-	}
-
-	for key, cols := range columns {
-		if key.indexName == IndexNamePrimary || isPrimaryIndex(pkColumns[key.table], cols) {
-			continue
-		}
+	columns, unique, order := groupIndexColumns(indexes)
+	for _, key := range order {
 		if t, ok := tableMap[key.table]; ok {
-			t.Indexes = append(t.Indexes, key.indexName)
+			t.addIndex(key, columns[key], unique[key], pkColumns[key.table])
 		}
 	}
 
 	for _, t := range tables {
 		sort.Strings(t.Indexes)
 	}
+}
+
+// groupIndexColumns groups index rows by (table, index) keeping the column
+// order of each index, and reports whether it is unique.
+func groupIndexColumns(indexes []Index) (map[tableIndex][]string, map[tableIndex]bool, []tableIndex) {
+	columns := make(map[tableIndex][]string, len(indexes))
+	unique := make(map[tableIndex]bool, len(indexes))
+	order := make([]tableIndex, 0, len(indexes))
+	for _, idx := range indexes {
+		if idx.IndexName == "" {
+			continue
+		}
+		key := tableIndex{table: idx.Table, indexName: idx.IndexName}
+		if _, ok := columns[key]; !ok {
+			order = append(order, key)
+			unique[key] = idx.NonUnique == 0
+		}
+		columns[key] = append(columns[key], idx.ColumnName)
+	}
+	return columns, unique, order
+}
+
+func (t *Table) addIndex(key tableIndex, columns []string, unique bool, pkColumns map[string]struct{}) {
+	if key.indexName != IndexNamePrimary && !isPrimaryIndex(pkColumns, columns) {
+		t.Indexes = append(t.Indexes, key.indexName)
+	}
+	if unique && !t.hasUniqueKey(columns) {
+		t.Keys = append(t.Keys, UniqueKey{Columns: columns})
+	}
+}
+
+func primaryColumns(t *Table) map[string]struct{} {
+	columns := make(map[string]struct{})
+	for _, c := range t.Columns {
+		if c.IsPrimaryKey() {
+			columns[c.Name] = struct{}{}
+		}
+	}
+	return columns
+}
+
+func (t *Table) hasUniqueKey(columns []string) bool {
+	for _, key := range t.Keys {
+		if slices.Equal(key.Columns, columns) {
+			return true
+		}
+	}
+	return false
 }
 
 // isPrimaryIndex reports whether every column of the index is a primary key

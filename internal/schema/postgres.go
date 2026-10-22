@@ -104,9 +104,10 @@ JOIN pg_class t
   ON t.oid = ix.indrelid
 JOIN pg_class i
   ON i.oid = ix.indexrelid
+JOIN LATERAL unnest(ix.indkey) WITH ORDINALITY AS k(attnum, ord) ON TRUE
 JOIN pg_attribute a
     ON a.attrelid = t.oid
-   AND a.attnum = ANY(ix.indkey)
+   AND a.attnum = k.attnum
 
 WHERE t.relnamespace = (
     SELECT oid
@@ -115,7 +116,8 @@ WHERE t.relnamespace = (
 )
 ORDER BY
     table_name,
-    index_name;
+    index_name,
+    k.ord;
 `
 
 func init() {

@@ -2,6 +2,7 @@ package schema
 
 import (
 	"context"
+	"reflect"
 	"slices"
 	"testing"
 
@@ -464,5 +465,39 @@ func TestAssignIndexes(t *testing.T) {
 	}
 	if want := []string{"idx_posts_title"}; !slices.Equal(tables[1].Indexes, want) {
 		t.Errorf("posts.Indexes = %v, want %v", tables[1].Indexes, want)
+	}
+}
+
+func TestAssignUniqueKeys(t *testing.T) {
+	tables := []*Table{{Name: "users"}}
+	indexes := []Index{
+		{Table: "users", ColumnName: "id", IndexName: "users_pkey", NonUnique: 0},
+		{Table: "users", ColumnName: "tenant_id", IndexName: "uk_tenant_email", NonUnique: 0},
+		{Table: "users", ColumnName: "email", IndexName: "uk_tenant_email", NonUnique: 0},
+		{Table: "users", ColumnName: "name", IndexName: "idx_name", NonUnique: 1},
+	}
+
+	assignIndexes(tables, indexes)
+
+	want := []UniqueKey{
+		{Columns: []string{"id"}},
+		{Columns: []string{"tenant_id", "email"}},
+	}
+	if !reflect.DeepEqual(tables[0].Keys, want) {
+		t.Errorf("users.Keys = %v, want %v", tables[0].Keys, want)
+	}
+}
+
+func TestAssignUniqueKeys_DeduplicatesSameColumns(t *testing.T) {
+	tables := []*Table{{Name: "users"}}
+	indexes := []Index{
+		{Table: "users", ColumnName: "id", IndexName: "users_pkey", NonUnique: 0},
+		{Table: "users", ColumnName: "id", IndexName: "users_id_key", NonUnique: 0},
+	}
+
+	assignIndexes(tables, indexes)
+
+	if len(tables[0].Keys) != 1 {
+		t.Fatalf("users.Keys = %v, want a single key", tables[0].Keys)
 	}
 }
