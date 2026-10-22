@@ -5,9 +5,9 @@ go 1.25.0
 require (
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/shopspring/decimal v1.4.0
-	github.com/uptrace/bun v1.2.18
-	github.com/uptrace/bun/dialect/pgdialect v1.2.18
-	github.com/uptrace/bun/extra/bundebug v1.2.18
+	github.com/uptrace/bun v1.3.0
+	github.com/uptrace/bun/dialect/pgdialect v1.3.0
+	github.com/uptrace/bun/extra/bundebug v1.3.0
 )
 
 require (
