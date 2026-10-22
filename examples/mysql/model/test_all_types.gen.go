@@ -352,7 +352,6 @@ const (
 	TestAllTypeDecimalValSUMExpr     = "SUM(decimal_val)"
 	TestAllTypeFloatValSUMExpr       = "SUM(float_val)"
 	TestAllTypeDoubleValSUMExpr      = "SUM(double_val)"
-	TestAllTypeYearValSUMExpr        = "SUM(year_val)"
 	TestAllTypeNullableIntValSUMExpr = "SUM(nullable_int_val)"
 )
 
@@ -365,7 +364,6 @@ const (
 	TestAllTypeDecimalValAVGExpr     = "AVG(decimal_val)"
 	TestAllTypeFloatValAVGExpr       = "AVG(float_val)"
 	TestAllTypeDoubleValAVGExpr      = "AVG(double_val)"
-	TestAllTypeYearValAVGExpr        = "AVG(year_val)"
 	TestAllTypeNullableIntValAVGExpr = "AVG(nullable_int_val)"
 )
 
@@ -420,7 +418,6 @@ const (
 	TestAllTypeDecimalValAddExpr     = "decimal_val = decimal_val + ?"
 	TestAllTypeFloatValAddExpr       = "float_val = float_val + ?"
 	TestAllTypeDoubleValAddExpr      = "double_val = double_val + ?"
-	TestAllTypeYearValAddExpr        = "year_val = year_val + ?"
 	TestAllTypeNullableIntValAddExpr = "nullable_int_val = nullable_int_val + ?"
 )
 
@@ -433,7 +430,6 @@ const (
 	TestAllTypeDecimalValSubExpr     = "decimal_val = decimal_val - ?"
 	TestAllTypeFloatValSubExpr       = "float_val = float_val - ?"
 	TestAllTypeDoubleValSubExpr      = "double_val = double_val - ?"
-	TestAllTypeYearValSubExpr        = "year_val = year_val - ?"
 	TestAllTypeNullableIntValSubExpr = "nullable_int_val = nullable_int_val - ?"
 )
 
@@ -446,7 +442,6 @@ const (
 	TestAllTypeDecimalValMulExpr     = "decimal_val = decimal_val * ?"
 	TestAllTypeFloatValMulExpr       = "float_val = float_val * ?"
 	TestAllTypeDoubleValMulExpr      = "double_val = double_val * ?"
-	TestAllTypeYearValMulExpr        = "year_val = year_val * ?"
 	TestAllTypeNullableIntValMulExpr = "nullable_int_val = nullable_int_val * ?"
 )
 
@@ -459,7 +454,6 @@ const (
 	TestAllTypeDecimalValDivExpr     = "decimal_val = decimal_val / ?"
 	TestAllTypeFloatValDivExpr       = "float_val = float_val / ?"
 	TestAllTypeDoubleValDivExpr      = "double_val = double_val / ?"
-	TestAllTypeYearValDivExpr        = "year_val = year_val / ?"
 	TestAllTypeNullableIntValDivExpr = "nullable_int_val = nullable_int_val / ?"
 )
 
@@ -472,7 +466,6 @@ const (
 	TestAllTypeDecimalValAddLeastExpr     = "decimal_val = LEAST(decimal_val + ?, ?)"
 	TestAllTypeFloatValAddLeastExpr       = "float_val = LEAST(float_val + ?, ?)"
 	TestAllTypeDoubleValAddLeastExpr      = "double_val = LEAST(double_val + ?, ?)"
-	TestAllTypeYearValAddLeastExpr        = "year_val = LEAST(year_val + ?, ?)"
 	TestAllTypeNullableIntValAddLeastExpr = "nullable_int_val = LEAST(nullable_int_val + ?, ?)"
 )
 
@@ -485,7 +478,6 @@ const (
 	TestAllTypeDecimalValSubGreatestExpr     = "decimal_val = GREATEST(decimal_val - ?, ?)"
 	TestAllTypeFloatValSubGreatestExpr       = "float_val = GREATEST(float_val - ?, ?)"
 	TestAllTypeDoubleValSubGreatestExpr      = "double_val = GREATEST(double_val - ?, ?)"
-	TestAllTypeYearValSubGreatestExpr        = "year_val = GREATEST(year_val - ?, ?)"
 	TestAllTypeNullableIntValSubGreatestExpr = "nullable_int_val = GREATEST(nullable_int_val - ?, ?)"
 )
 
@@ -498,7 +490,6 @@ const (
 	TestAllTypeDecimalValClampExpr     = "decimal_val = LEAST(GREATEST(decimal_val + ?, ?), ?)"
 	TestAllTypeFloatValClampExpr       = "float_val = LEAST(GREATEST(float_val + ?, ?), ?)"
 	TestAllTypeDoubleValClampExpr      = "double_val = LEAST(GREATEST(double_val + ?, ?), ?)"
-	TestAllTypeYearValClampExpr        = "year_val = LEAST(GREATEST(year_val + ?, ?), ?)"
 	TestAllTypeNullableIntValClampExpr = "nullable_int_val = LEAST(GREATEST(nullable_int_val + ?, ?), ?)"
 )
 

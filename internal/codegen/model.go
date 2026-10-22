@@ -106,7 +106,7 @@ func initModel(m *Model) {
 			m.HasOrdered = true
 			m.HasOrderedNonString = true
 			m.HasEquatable = true
-			if !f.IsPrimary {
+			if !f.IsPrimary && f.IsArithmetic {
 				m.HasArithmetic = true
 			}
 

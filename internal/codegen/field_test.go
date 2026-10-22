@@ -170,3 +170,44 @@ func TestFieldType(t *testing.T) {
 		})
 	}
 }
+
+func TestIsArithmetic(t *testing.T) {
+	tests := []struct {
+		name   string
+		column *schema.Column
+		desc   types.Desc
+		want   bool
+	}{
+		{
+			name:   "numeric",
+			column: &schema.Column{Name: "amount", DataType: "int"},
+			desc:   types.Desc{Kind: types.KindNumeric},
+			want:   true,
+		},
+		{
+			name:   "year is temporal, however it is stored",
+			column: &schema.Column{Name: "year_val", DataType: "year"},
+			desc:   types.Desc{Kind: types.KindNumeric},
+			want:   false,
+		},
+		{
+			name:   "time",
+			column: &schema.Column{Name: "created_at", DataType: "timestamp"},
+			desc:   types.Desc{Kind: types.KindTime},
+			want:   false,
+		},
+		{
+			name:   "string",
+			column: &schema.Column{Name: "name", DataType: "varchar"},
+			desc:   types.Desc{Kind: types.KindString},
+			want:   false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isArithmetic(tt.column, tt.desc); got != tt.want {
+				t.Errorf("isArithmetic() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

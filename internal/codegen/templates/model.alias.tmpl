@@ -154,7 +154,7 @@ const (
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}SUMExpr = "SUM({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -162,7 +162,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}AVGExpr = "AVG({{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -192,7 +192,7 @@ const (
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}AddExpr = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} + ?"
 	{{- end}}
 {{- end}}
@@ -200,7 +200,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}SubExpr = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} - ?"
 	{{- end}}
 {{- end}}
@@ -208,7 +208,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}MulExpr = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} * ?"
 	{{- end}}
 {{- end}}
@@ -216,7 +216,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}DivExpr = "{{$alias}}.{{$field.ColumnName}} = {{$alias}}.{{$field.ColumnName}} / ?"
 	{{- end}}
 {{- end}}
@@ -224,7 +224,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}AddLeastExpr = "{{$alias}}.{{$field.ColumnName}} = LEAST({{$alias}}.{{$field.ColumnName}} + ?, ?)"
 	{{- end}}
 {{- end}}
@@ -232,7 +232,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}SubGreatestExpr = "{{$alias}}.{{$field.ColumnName}} = GREATEST({{$alias}}.{{$field.ColumnName}} - ?, ?)"
 	{{- end}}
 {{- end}}
@@ -240,7 +240,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if and (eq $field.Kind "NUMERIC") (not $field.IsPrimary) }}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}ClampExpr = "{{$alias}}.{{$field.ColumnName}} = LEAST(GREATEST({{$alias}}.{{$field.ColumnName}} + ?, ?), ?)"
 	{{- end}}
 {{- end}}

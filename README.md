@@ -39,6 +39,12 @@ For each table, bake generates two files:
 | Ordering   | `Asc`, `Desc`                                                                              | Sort order            |
 | Join       | `InnerJoin`, `LeftJoin`, `RightJoin`, `FullJoin` (alias file, `FullJoin` skipped on MySQL) | JOIN helpers          |
 
+`SUMExpr`, `AVGExpr` and every arithmetic expression are gated on
+`Field.IsArithmetic`, which holds for numeric columns that are not temporal.
+MySQL `YEAR` is a temporal type stored as an integer, so it keeps ordering,
+range and equality constants but gets no arithmetic: a sum or a multiple of a
+year is meaningless.
+
 ### Index Constants
 
 Each non-primary index is emitted once, under its own name, so composite
@@ -285,17 +291,18 @@ type Excluded struct {
 }
 
 type Field struct {
-    Imports     []Import // imports required by the field type
-    Name        string   // field name
-    Type        string   // Go type
-    Tag         string   // field tags
-    Comments    []string // field comments
-    ColumnName  string   // database column name
-    Kind        string   // field kind: NUMERIC, STRING, TIME, etc.
-    IsPrimary   bool     // is primary key
-    IsNullable  bool     // is nullable
-    IsCustom    bool     // is custom field
-    IsRelation  bool     // is a relation (from the bun rel:/m2m option)
+    Imports      []Import // imports required by the field type
+    Name         string   // field name
+    Type         string   // Go type
+    Tag          string   // field tags
+    Comments     []string // field comments
+    ColumnName   string   // database column name
+    Kind         string   // field kind: NUMERIC, STRING, TIME, etc.
+    IsArithmetic bool     // SUM/AVG and the add, subtract, multiply, divide set
+    IsPrimary    bool     // is primary key
+    IsNullable   bool     // is nullable
+    IsCustom     bool     // is custom field
+    IsRelation   bool     // is a relation (from the bun rel:/m2m option)
 }
 ```
 

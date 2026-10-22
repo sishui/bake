@@ -2,6 +2,7 @@ package codegen
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/sishui/bake/internal/config"
 	"github.com/sishui/bake/internal/naming"
@@ -10,17 +11,18 @@ import (
 )
 
 type Field struct {
-	Imports    []Import // imports required by the field type
-	Name       string   // field name, e.g: ID
-	Type       string   // type, e.g: string | int32 | int8
-	Tag        string   // tag, e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
-	Comments   []string // comments e.g: user id
-	ColumnName string   // db column name e.g: id
-	Kind       string   // logic type: NUMERIC |STRING | ...
-	IsPrimary  bool     // is primary key
-	IsNullable bool     // is nullable
-	IsCustom   bool     // is custom type
-	IsRelation bool     // is relation
+	Imports      []Import // imports required by the field type
+	Name         string   // field name, e.g: ID
+	Type         string   // type, e.g: string | int32 | int8
+	Tag          string   // tag, e.g: `bun:"id,pk,autoincrement,notnull" json:"id,omitempty"`
+	Comments     []string // comments e.g: user id
+	ColumnName   string   // db column name e.g: id
+	Kind         string   // logic type: NUMERIC |STRING | ...
+	IsArithmetic bool     // arithmetic expressions make sense for the field
+	IsPrimary    bool     // is primary key
+	IsNullable   bool     // is nullable
+	IsCustom     bool     // is custom type
+	IsRelation   bool     // is relation
 }
 
 func NewField(c *schema.Column, customTable *config.CustomTable, driver string, n *naming.Naming, imports []*config.Import) (*Field, error) {
@@ -37,17 +39,18 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 		customField = customTable.Fields[c.Name]
 	}
 	return &Field{
-		Imports:    fieldImports(desc, customField, imports),
-		Name:       fieldName(c, customField, n),
-		Type:       fieldType(desc, customField),
-		Tag:        fieldTags(c, customField, customTags).String(),
-		Comments:   naming.SplitCommentLines(c.Comment),
-		ColumnName: c.Name,
-		Kind:       desc.Kind,
-		IsPrimary:  c.IsPrimaryKey(),
-		IsNullable: c.IsNullable(),
-		IsCustom:   false,
-		IsRelation: false,
+		Imports:      fieldImports(desc, customField, imports),
+		Name:         fieldName(c, customField, n),
+		Type:         fieldType(desc, customField),
+		Tag:          fieldTags(c, customField, customTags).String(),
+		Comments:     naming.SplitCommentLines(c.Comment),
+		ColumnName:   c.Name,
+		Kind:         desc.Kind,
+		IsArithmetic: isArithmetic(c, desc),
+		IsPrimary:    c.IsPrimaryKey(),
+		IsNullable:   c.IsNullable(),
+		IsCustom:     false,
+		IsRelation:   false,
 	}, nil
 }
 
@@ -64,19 +67,31 @@ func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming
 	tags.Add(newCustomTags(name, customTable.Tags...)...)
 	tags.Add(newCustomTags(name, customField.Tags...)...)
 	field := &Field{
-		Imports:    importsForType(customField.Type, imports),
-		Name:       n.ColumnToField(name),
-		Type:       customField.Type,
-		Tag:        tags.String(),
-		Comments:   naming.SplitCommentLines(customField.Comment),
-		ColumnName: name,
-		Kind:       types.TypeToKind(customField.Type),
-		IsPrimary:  false,
-		IsNullable: false,
-		IsCustom:   true,
-		IsRelation: hasRelationship(customField.Tags...),
+		Imports:      importsForType(customField.Type, imports),
+		Name:         n.ColumnToField(name),
+		Type:         customField.Type,
+		Tag:          tags.String(),
+		Comments:     naming.SplitCommentLines(customField.Comment),
+		ColumnName:   name,
+		Kind:         types.TypeToKind(customField.Type),
+		IsArithmetic: types.TypeToKind(customField.Type) == types.KindNumeric,
+		IsPrimary:    false,
+		IsNullable:   false,
+		IsCustom:     true,
+		IsRelation:   hasRelationship(customField.Tags...),
 	}
 	return field
+}
+
+// isArithmetic reports whether SUM, AVG and the add, subtract, multiply and
+// divide expressions make sense for the column. Temporal numerics such as
+// MySQL's YEAR are left out: they sort and compare like a number, but a sum or
+// a multiple of a year is meaningless.
+func isArithmetic(c *schema.Column, desc types.Desc) bool {
+	if desc.Kind != types.KindNumeric {
+		return false
+	}
+	return !strings.EqualFold(c.DataType, "year")
 }
 
 func fieldName(c *schema.Column, customField *config.CustomField, naming *naming.Naming) string {

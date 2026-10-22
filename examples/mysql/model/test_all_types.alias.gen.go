@@ -316,7 +316,6 @@ const (
 	TestAllTypeAliasDecimalValSUMExpr     = "SUM(test_all_types_alias.decimal_val)"
 	TestAllTypeAliasFloatValSUMExpr       = "SUM(test_all_types_alias.float_val)"
 	TestAllTypeAliasDoubleValSUMExpr      = "SUM(test_all_types_alias.double_val)"
-	TestAllTypeAliasYearValSUMExpr        = "SUM(test_all_types_alias.year_val)"
 	TestAllTypeAliasNullableIntValSUMExpr = "SUM(test_all_types_alias.nullable_int_val)"
 )
 
@@ -329,7 +328,6 @@ const (
 	TestAllTypeAliasDecimalValAVGExpr     = "AVG(test_all_types_alias.decimal_val)"
 	TestAllTypeAliasFloatValAVGExpr       = "AVG(test_all_types_alias.float_val)"
 	TestAllTypeAliasDoubleValAVGExpr      = "AVG(test_all_types_alias.double_val)"
-	TestAllTypeAliasYearValAVGExpr        = "AVG(test_all_types_alias.year_val)"
 	TestAllTypeAliasNullableIntValAVGExpr = "AVG(test_all_types_alias.nullable_int_val)"
 )
 
@@ -384,7 +382,6 @@ const (
 	TestAllTypeAliasDecimalValAddExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val + ?"
 	TestAllTypeAliasFloatValAddExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val + ?"
 	TestAllTypeAliasDoubleValAddExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val + ?"
-	TestAllTypeAliasYearValAddExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val + ?"
 	TestAllTypeAliasNullableIntValAddExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val + ?"
 )
 
@@ -397,7 +394,6 @@ const (
 	TestAllTypeAliasDecimalValSubExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val - ?"
 	TestAllTypeAliasFloatValSubExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val - ?"
 	TestAllTypeAliasDoubleValSubExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val - ?"
-	TestAllTypeAliasYearValSubExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val - ?"
 	TestAllTypeAliasNullableIntValSubExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val - ?"
 )
 
@@ -410,7 +406,6 @@ const (
 	TestAllTypeAliasDecimalValMulExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val * ?"
 	TestAllTypeAliasFloatValMulExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val * ?"
 	TestAllTypeAliasDoubleValMulExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val * ?"
-	TestAllTypeAliasYearValMulExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val * ?"
 	TestAllTypeAliasNullableIntValMulExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val * ?"
 )
 
@@ -423,7 +418,6 @@ const (
 	TestAllTypeAliasDecimalValDivExpr     = "test_all_types_alias.decimal_val = test_all_types_alias.decimal_val / ?"
 	TestAllTypeAliasFloatValDivExpr       = "test_all_types_alias.float_val = test_all_types_alias.float_val / ?"
 	TestAllTypeAliasDoubleValDivExpr      = "test_all_types_alias.double_val = test_all_types_alias.double_val / ?"
-	TestAllTypeAliasYearValDivExpr        = "test_all_types_alias.year_val = test_all_types_alias.year_val / ?"
 	TestAllTypeAliasNullableIntValDivExpr = "test_all_types_alias.nullable_int_val = test_all_types_alias.nullable_int_val / ?"
 )
 
@@ -436,7 +430,6 @@ const (
 	TestAllTypeAliasDecimalValAddLeastExpr     = "test_all_types_alias.decimal_val = LEAST(test_all_types_alias.decimal_val + ?, ?)"
 	TestAllTypeAliasFloatValAddLeastExpr       = "test_all_types_alias.float_val = LEAST(test_all_types_alias.float_val + ?, ?)"
 	TestAllTypeAliasDoubleValAddLeastExpr      = "test_all_types_alias.double_val = LEAST(test_all_types_alias.double_val + ?, ?)"
-	TestAllTypeAliasYearValAddLeastExpr        = "test_all_types_alias.year_val = LEAST(test_all_types_alias.year_val + ?, ?)"
 	TestAllTypeAliasNullableIntValAddLeastExpr = "test_all_types_alias.nullable_int_val = LEAST(test_all_types_alias.nullable_int_val + ?, ?)"
 )
 
@@ -449,7 +442,6 @@ const (
 	TestAllTypeAliasDecimalValSubGreatestExpr     = "test_all_types_alias.decimal_val = GREATEST(test_all_types_alias.decimal_val - ?, ?)"
 	TestAllTypeAliasFloatValSubGreatestExpr       = "test_all_types_alias.float_val = GREATEST(test_all_types_alias.float_val - ?, ?)"
 	TestAllTypeAliasDoubleValSubGreatestExpr      = "test_all_types_alias.double_val = GREATEST(test_all_types_alias.double_val - ?, ?)"
-	TestAllTypeAliasYearValSubGreatestExpr        = "test_all_types_alias.year_val = GREATEST(test_all_types_alias.year_val - ?, ?)"
 	TestAllTypeAliasNullableIntValSubGreatestExpr = "test_all_types_alias.nullable_int_val = GREATEST(test_all_types_alias.nullable_int_val - ?, ?)"
 )
 
@@ -462,7 +454,6 @@ const (
 	TestAllTypeAliasDecimalValClampExpr     = "test_all_types_alias.decimal_val = LEAST(GREATEST(test_all_types_alias.decimal_val + ?, ?), ?)"
 	TestAllTypeAliasFloatValClampExpr       = "test_all_types_alias.float_val = LEAST(GREATEST(test_all_types_alias.float_val + ?, ?), ?)"
 	TestAllTypeAliasDoubleValClampExpr      = "test_all_types_alias.double_val = LEAST(GREATEST(test_all_types_alias.double_val + ?, ?), ?)"
-	TestAllTypeAliasYearValClampExpr        = "test_all_types_alias.year_val = LEAST(GREATEST(test_all_types_alias.year_val + ?, ?), ?)"
 	TestAllTypeAliasNullableIntValClampExpr = "test_all_types_alias.nullable_int_val = LEAST(GREATEST(test_all_types_alias.nullable_int_val + ?, ?), ?)"
 )
 
