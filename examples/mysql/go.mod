@@ -5,9 +5,9 @@ go 1.25.0
 require (
 	github.com/go-sql-driver/mysql v1.10.1
 	github.com/shopspring/decimal v1.4.0
-	github.com/uptrace/bun v1.2.18
-	github.com/uptrace/bun/dialect/mysqldialect v1.2.18
-	github.com/uptrace/bun/extra/bundebug v1.2.18
+	github.com/uptrace/bun v1.3.0
+	github.com/uptrace/bun/dialect/mysqldialect v1.3.0
+	github.com/uptrace/bun/extra/bundebug v1.3.0
 )
 
 require (
