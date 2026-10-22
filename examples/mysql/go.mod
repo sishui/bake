@@ -1,6 +1,6 @@
 module github.com/sishui/bake/examples/mysql
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/go-sql-driver/mysql v1.10.1
