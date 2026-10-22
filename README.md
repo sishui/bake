@@ -377,15 +377,17 @@ to create them. A field counts as a relation when its `bun` tag carries
 - `rel:belongs-to`, `rel:has-one` or `rel:has-many`, or
 - `m2m:<join_table>`.
 
-Field name, Go type and `join:` option are part of the same declaration:
+Field name, Go type, comment and `join:` option are part of the same
+declaration:
 
 ```yaml
 db:
     - driver: "postgres"
+      # ...
       custom:
           posts:
               fields:
-                  user: # field name on the Post model
+                  user: # key: field name on the model
                       type: "*User"
                       comment: "post author"
                       tags:
@@ -410,27 +412,29 @@ db:
                             options: ["m2m:user_roles"]
 ```
 
-A declaration is ignored when the field name matches a real column. A `json`
-tag is added automatically as `json:"<field>,omitempty"`.
+- A key that matches a real column customizes that column instead of adding a
+  field, which is how column names, types and tags are overridden.
+- A declared field is not backed by a column, so `type` is required.
+- A `json` tag is added automatically as `json:"<name>,omitempty"`, where
+  `<name>` is the declaration key unless `name` overrides it.
 
-`type` is required on a declared field: it is not backed by a column, so there
-is no database type to infer.
-
-The generated models contain exactly the relations you declared:
+The generated models contain exactly these relations, next to the columns:
 
 ```go
 type Post struct {
 	bun.BaseModel `bun:"table:posts,alias:posts_alias"`
 
-	// ...
-	User *User `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"`
+	// columns ...
+	User *User `bun:"user,rel:belongs-to,join:user_id=id" json:"user,omitempty"` // post author
 }
 
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:users_alias"`
 
-	// ...
-	Posts []*Post `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`
+	// columns ...
+	Posts   []*Post  `bun:"posts,rel:has-many,join:id=user_id" json:"posts,omitempty"`
+	Profile *Profile `bun:"profile,rel:has-one,join:id=user_id" json:"profile,omitempty"`
+	Roles   []*Role  `bun:"roles,m2m:user_roles" json:"roles,omitempty"`
 }
 ```
 
