@@ -67,6 +67,24 @@ var (
 {{- end}}
 )
 
+{{- if gt (len .Conflicts) 0 -}}
+{{- "\n\n" -}}
+const (
+{{- range $conflict := .Conflicts}}
+	{{- "\n\t" }}{{$model}}Conflict{{$conflict.Key}} = "{{$conflict.Value}}"
+{{- end}}
+)
+{{- end}}
+
+{{- if gt (len .Excluded) 0 -}}
+{{- "\n\n" -}}
+const (
+{{- range $excluded := .Excluded}}
+	{{- "\n\t" }}{{$model}}{{$excluded.Key}}Excluded = "{{$excluded.Value}}"
+{{- end}}
+)
+{{- end}}
+
 const (
 {{- range $field := .Fields}}
 	{{- if not $field.IsCustom }}

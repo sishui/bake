@@ -22,6 +22,8 @@ type Model struct {
 	Comments            []string   // model comments
 	Fields              []*Field   // fields
 	Indexes             []Index    // indexes
+	Conflicts           []Conflict // upsert conflict targets
+	Excluded            []Excluded // upsert SET assignments
 	Timezone            string     // timezone
 	CreatedAtType       string     // created_at type
 	UpdatedAtType       string     // updated_at type
@@ -51,6 +53,10 @@ func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Nami
 		Comments: naming.SplitCommentLines(t.Comment),
 		Indexes:  newIndexes(t.Indexes...),
 		Timezone: cfg.Timezone,
+	}
+	m.Excluded = newExcluded(t.Columns, n, db.Driver)
+	if db.Driver == "postgres" {
+		m.Conflicts = newConflicts(t.Keys, t.Columns, n)
 	}
 
 	customTable := db.Custom[t.Name]
