@@ -162,6 +162,9 @@ func (c *CustomStruct) Validate() error {
 	}
 
 	for _, field := range c.Fields {
+		if err := validateIdent(field.Name); err != nil {
+			return fmt.Errorf("custom.fields.name %w", err)
+		}
 		if err := field.Validate(); err != nil {
 			return err
 		}
@@ -222,7 +225,10 @@ type CustomTable struct {
 }
 
 func (c *CustomTable) Validate() error {
-	for _, field := range c.Fields {
+	for key, field := range c.Fields {
+		if err := validateIdent(key); err != nil {
+			return fmt.Errorf("custom.fields key %w", err)
+		}
 		if err := field.Validate(); err != nil {
 			return err
 		}

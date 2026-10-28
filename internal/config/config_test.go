@@ -258,6 +258,133 @@ func TestCustomFieldValidate(t *testing.T) {
 	}
 }
 
+func TestCustomTableValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		table   *CustomTable
+		wantErr bool
+	}{
+		{
+			name:    "no fields",
+			table:   &CustomTable{Name: "config"},
+			wantErr: false,
+		},
+		{
+			name: "snake case key",
+			table: &CustomTable{
+				Name:   "mail",
+				Fields: map[string]*CustomField{"has_attachment": {Type: "bool"}},
+			},
+			wantErr: false,
+		},
+		{
+			name: "empty key",
+			table: &CustomTable{
+				Name:   "config",
+				Fields: map[string]*CustomField{"": {Type: "string"}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "empty key with name override",
+			table: &CustomTable{
+				Name:   "config",
+				Fields: map[string]*CustomField{"": {Name: "Setting"}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "key starting with a digit",
+			table: &CustomTable{
+				Name:   "config",
+				Fields: map[string]*CustomField{"1setting": {Type: "string"}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "keyword as key",
+			table: &CustomTable{
+				Name:   "config",
+				Fields: map[string]*CustomField{"func": {Type: "string"}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid field name under a valid key",
+			table: &CustomTable{
+				Name:   "config",
+				Fields: map[string]*CustomField{"setting": {Name: "1Field"}},
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			err := tt.table.Validate()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CustomTable.Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestCustomStructValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		st      *CustomStruct
+		wantErr bool
+	}{
+		{
+			name: "valid struct",
+			st: &CustomStruct{
+				Name:   "Config",
+				Fields: []*CustomField{{Name: "Language", Type: "string"}},
+			},
+			wantErr: false,
+		},
+		{
+			name: "missing struct name",
+			st: &CustomStruct{
+				Fields: []*CustomField{{Name: "Language", Type: "string"}},
+			},
+			wantErr: true,
+		},
+		{
+			name:    "no fields",
+			st:      &CustomStruct{Name: "Config"},
+			wantErr: true,
+		},
+		{
+			name: "empty field name",
+			st: &CustomStruct{
+				Name:   "Config",
+				Fields: []*CustomField{{Type: "string"}},
+			},
+			wantErr: true,
+		},
+		{
+			name: "keyword as field name",
+			st: &CustomStruct{
+				Name:   "Config",
+				Fields: []*CustomField{{Name: "range", Type: "string"}},
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			err := tt.st.Validate()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CustomStruct.Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
 func TestImportValidate(t *testing.T) {
 	tests := []struct {
 		name    string
