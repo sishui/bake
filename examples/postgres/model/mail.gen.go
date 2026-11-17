@@ -287,8 +287,8 @@ const (
 )
 
 const (
-	MailCreatedAtDateExpr = "DATE(created_at)"
-	MailUpdatedAtDateExpr = "DATE(updated_at)"
+	MailCreatedAtDateExpr = "CAST(created_at AS DATE)"
+	MailUpdatedAtDateExpr = "CAST(updated_at AS DATE)"
 )
 
 const (

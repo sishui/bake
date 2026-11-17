@@ -233,9 +233,9 @@ const (
 )
 
 const (
-	UserAliasStartAtDateExpr   = "DATE(users_alias.start_at)"
-	UserAliasEndAtDateExpr     = "DATE(users_alias.end_at)"
-	UserAliasCreatedAtDateExpr = "DATE(users_alias.created_at)"
+	UserAliasStartAtDateExpr   = "CAST(users_alias.start_at AS DATE)"
+	UserAliasEndAtDateExpr     = "CAST(users_alias.end_at AS DATE)"
+	UserAliasCreatedAtDateExpr = "CAST(users_alias.created_at AS DATE)"
 )
 
 const (

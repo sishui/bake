@@ -746,13 +746,13 @@ const (
 )
 
 const (
-	TestAllTypeAliasDateValDateExpr      = "DATE(test_all_types_alias.date_val)"
-	TestAllTypeAliasTimeValDateExpr      = "DATE(test_all_types_alias.time_val)"
-	TestAllTypeAliasDatetimeValDateExpr  = "DATE(test_all_types_alias.datetime_val)"
-	TestAllTypeAliasTimestampValDateExpr = "DATE(test_all_types_alias.timestamp_val)"
-	TestAllTypeAliasCreatedAtDateExpr    = "DATE(test_all_types_alias.created_at)"
-	TestAllTypeAliasUpdatedAtDateExpr    = "DATE(test_all_types_alias.updated_at)"
-	TestAllTypeAliasDeletedAtDateExpr    = "DATE(test_all_types_alias.deleted_at)"
+	TestAllTypeAliasDateValDateExpr      = "CAST(test_all_types_alias.date_val AS DATE)"
+	TestAllTypeAliasTimeValDateExpr      = "CAST(test_all_types_alias.time_val AS DATE)"
+	TestAllTypeAliasDatetimeValDateExpr  = "CAST(test_all_types_alias.datetime_val AS DATE)"
+	TestAllTypeAliasTimestampValDateExpr = "CAST(test_all_types_alias.timestamp_val AS DATE)"
+	TestAllTypeAliasCreatedAtDateExpr    = "CAST(test_all_types_alias.created_at AS DATE)"
+	TestAllTypeAliasUpdatedAtDateExpr    = "CAST(test_all_types_alias.updated_at AS DATE)"
+	TestAllTypeAliasDeletedAtDateExpr    = "CAST(test_all_types_alias.deleted_at AS DATE)"
 )
 
 const (

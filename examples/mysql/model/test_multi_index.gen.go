@@ -179,8 +179,8 @@ const (
 )
 
 const (
-	TestMultiIndexStartAtDateExpr = "DATE(start_at)"
-	TestMultiIndexEndAtDateExpr   = "DATE(end_at)"
+	TestMultiIndexStartAtDateExpr = "CAST(start_at AS DATE)"
+	TestMultiIndexEndAtDateExpr   = "CAST(end_at AS DATE)"
 )
 
 const (

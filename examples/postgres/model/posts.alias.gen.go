@@ -254,8 +254,8 @@ const (
 )
 
 const (
-	PostAliasCreatedAtDateExpr = "DATE(posts_alias.created_at)"
-	PostAliasUpdatedAtDateExpr = "DATE(posts_alias.updated_at)"
+	PostAliasCreatedAtDateExpr = "CAST(posts_alias.created_at AS DATE)"
+	PostAliasUpdatedAtDateExpr = "CAST(posts_alias.updated_at AS DATE)"
 )
 
 const (

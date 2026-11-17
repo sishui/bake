@@ -767,13 +767,13 @@ const (
 )
 
 const (
-	TestAllTypeDateValDateExpr      = "DATE(date_val)"
-	TestAllTypeTimeValDateExpr      = "DATE(time_val)"
-	TestAllTypeDatetimeValDateExpr  = "DATE(datetime_val)"
-	TestAllTypeTimestampValDateExpr = "DATE(timestamp_val)"
-	TestAllTypeCreatedAtDateExpr    = "DATE(created_at)"
-	TestAllTypeUpdatedAtDateExpr    = "DATE(updated_at)"
-	TestAllTypeDeletedAtDateExpr    = "DATE(deleted_at)"
+	TestAllTypeDateValDateExpr      = "CAST(date_val AS DATE)"
+	TestAllTypeTimeValDateExpr      = "CAST(time_val AS DATE)"
+	TestAllTypeDatetimeValDateExpr  = "CAST(datetime_val AS DATE)"
+	TestAllTypeTimestampValDateExpr = "CAST(timestamp_val AS DATE)"
+	TestAllTypeCreatedAtDateExpr    = "CAST(created_at AS DATE)"
+	TestAllTypeUpdatedAtDateExpr    = "CAST(updated_at AS DATE)"
+	TestAllTypeDeletedAtDateExpr    = "CAST(deleted_at AS DATE)"
 )
 
 const (

@@ -254,9 +254,9 @@ const (
 )
 
 const (
-	UserStartAtDateExpr   = "DATE(start_at)"
-	UserEndAtDateExpr     = "DATE(end_at)"
-	UserCreatedAtDateExpr = "DATE(created_at)"
+	UserStartAtDateExpr   = "CAST(start_at AS DATE)"
+	UserEndAtDateExpr     = "CAST(end_at AS DATE)"
+	UserCreatedAtDateExpr = "CAST(created_at AS DATE)"
 )
 
 const (

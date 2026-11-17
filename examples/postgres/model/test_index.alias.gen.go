@@ -171,8 +171,8 @@ const (
 )
 
 const (
-	TestIndexAliasStartAtDateExpr = "DATE(test_index_alias.start_at)"
-	TestIndexAliasEndAtDateExpr   = "DATE(test_index_alias.end_at)"
+	TestIndexAliasStartAtDateExpr = "CAST(test_index_alias.start_at AS DATE)"
+	TestIndexAliasEndAtDateExpr   = "CAST(test_index_alias.end_at AS DATE)"
 )
 
 const (

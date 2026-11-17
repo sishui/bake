@@ -269,8 +269,8 @@ const (
 )
 
 const (
-	PostCreatedAtDateExpr = "DATE(created_at)"
-	PostUpdatedAtDateExpr = "DATE(updated_at)"
+	PostCreatedAtDateExpr = "CAST(created_at AS DATE)"
+	PostUpdatedAtDateExpr = "CAST(updated_at AS DATE)"
 )
 
 const (

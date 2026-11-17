@@ -266,8 +266,8 @@ const (
 )
 
 const (
-	MailAliasCreatedAtDateExpr = "DATE(mail_alias.created_at)"
-	MailAliasUpdatedAtDateExpr = "DATE(mail_alias.updated_at)"
+	MailAliasCreatedAtDateExpr = "CAST(mail_alias.created_at AS DATE)"
+	MailAliasUpdatedAtDateExpr = "CAST(mail_alias.updated_at AS DATE)"
 )
 
 const (

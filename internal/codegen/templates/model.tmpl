@@ -374,7 +374,7 @@ const (
 const (
 {{- range $field := .Fields}}
 	{{- if eq $field.Kind "TIME" }}
-	{{- "\n\t" }}{{$model}}{{$field.Name}}DateExpr = "DATE({{$field.ColumnName}})"
+	{{- "\n\t" }}{{$model}}{{$field.Name}}DateExpr = "CAST({{$field.ColumnName}} AS DATE)"
 	{{- end}}
 {{- end}}
 )
