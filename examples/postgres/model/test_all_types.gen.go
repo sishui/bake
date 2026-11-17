@@ -787,7 +787,6 @@ const (
 
 const (
 	TestAllTypeDateValDateExpr      = "CAST(date_val AS DATE)"
-	TestAllTypeTimeValDateExpr      = "CAST(time_val AS DATE)"
 	TestAllTypeDatetimeValDateExpr  = "CAST(datetime_val AS DATE)"
 	TestAllTypeTimestampValDateExpr = "CAST(timestamp_val AS DATE)"
 	TestAllTypeCreatedAtDateExpr    = "CAST(created_at AS DATE)"
@@ -797,7 +796,6 @@ const (
 
 const (
 	TestAllTypeDateValYearExpr      = "EXTRACT(YEAR FROM date_val)"
-	TestAllTypeTimeValYearExpr      = "EXTRACT(YEAR FROM time_val)"
 	TestAllTypeDatetimeValYearExpr  = "EXTRACT(YEAR FROM datetime_val)"
 	TestAllTypeTimestampValYearExpr = "EXTRACT(YEAR FROM timestamp_val)"
 	TestAllTypeCreatedAtYearExpr    = "EXTRACT(YEAR FROM created_at)"
@@ -807,7 +805,6 @@ const (
 
 const (
 	TestAllTypeDateValMonthExpr      = "EXTRACT(MONTH FROM date_val)"
-	TestAllTypeTimeValMonthExpr      = "EXTRACT(MONTH FROM time_val)"
 	TestAllTypeDatetimeValMonthExpr  = "EXTRACT(MONTH FROM datetime_val)"
 	TestAllTypeTimestampValMonthExpr = "EXTRACT(MONTH FROM timestamp_val)"
 	TestAllTypeCreatedAtMonthExpr    = "EXTRACT(MONTH FROM created_at)"
@@ -817,7 +814,6 @@ const (
 
 const (
 	TestAllTypeDateValDayExpr      = "EXTRACT(DAY FROM date_val)"
-	TestAllTypeTimeValDayExpr      = "EXTRACT(DAY FROM time_val)"
 	TestAllTypeDatetimeValDayExpr  = "EXTRACT(DAY FROM datetime_val)"
 	TestAllTypeTimestampValDayExpr = "EXTRACT(DAY FROM timestamp_val)"
 	TestAllTypeCreatedAtDayExpr    = "EXTRACT(DAY FROM created_at)"
@@ -826,7 +822,6 @@ const (
 )
 
 const (
-	TestAllTypeDateValHourExpr      = "EXTRACT(HOUR FROM date_val)"
 	TestAllTypeTimeValHourExpr      = "EXTRACT(HOUR FROM time_val)"
 	TestAllTypeDatetimeValHourExpr  = "EXTRACT(HOUR FROM datetime_val)"
 	TestAllTypeTimestampValHourExpr = "EXTRACT(HOUR FROM timestamp_val)"
@@ -836,7 +831,6 @@ const (
 )
 
 const (
-	TestAllTypeDateValMinuteExpr      = "EXTRACT(MINUTE FROM date_val)"
 	TestAllTypeTimeValMinuteExpr      = "EXTRACT(MINUTE FROM time_val)"
 	TestAllTypeDatetimeValMinuteExpr  = "EXTRACT(MINUTE FROM datetime_val)"
 	TestAllTypeTimestampValMinuteExpr = "EXTRACT(MINUTE FROM timestamp_val)"
@@ -846,7 +840,6 @@ const (
 )
 
 const (
-	TestAllTypeDateValSecondExpr      = "EXTRACT(SECOND FROM date_val)"
 	TestAllTypeTimeValSecondExpr      = "EXTRACT(SECOND FROM time_val)"
 	TestAllTypeDatetimeValSecondExpr  = "EXTRACT(SECOND FROM datetime_val)"
 	TestAllTypeTimestampValSecondExpr = "EXTRACT(SECOND FROM timestamp_val)"

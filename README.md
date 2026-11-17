@@ -45,6 +45,15 @@ MySQL `YEAR` is a temporal type stored as an integer, so it keeps ordering,
 range and equality constants but gets no arithmetic: a sum or a multiple of a
 year is meaningless.
 
+Temporal expressions follow the column's actual parts. `DateExpr`, `YearExpr`,
+`MonthExpr` and `DayExpr` are emitted only for date-bearing columns (`date`,
+`datetime`, `timestamp`, `timestamptz`). `HourExpr`, `MinuteExpr` and
+`SecondExpr` are emitted only for clock-bearing columns (`time`, `timetz`,
+`datetime`, `timestamp`, `timestamptz`). PostgreSQL rejects both
+`EXTRACT(YEAR FROM time)` and `CAST(time AS DATE)`, so a time-only column gets
+no calendar constants, and a date-only column gets no clock constants.
+PostgreSQL `interval` maps to `time.Duration` and gets neither.
+
 ### Index Constants
 
 Each non-primary index is emitted once, under its own name, so composite
@@ -267,7 +276,9 @@ type Model struct {
     HasEquatable        bool       // has an equatable field (numeric/string/bool/time/enum)
     HasRelation         bool       // has a relation field
     HasArithmetic       bool       // has a non-primary numeric field
-    HasTime             bool       // has a TIME field
+    HasTime             bool       // has a TIME field with a date or clock part
+    HasDate             bool       // has a TIME field with a calendar part
+    HasClock            bool       // has a TIME field with a clock part
 }
 
 type Import struct {
@@ -298,6 +309,8 @@ type Field struct {
     Comments     []string // field comments
     ColumnName   string   // database column name
     Kind         string   // field kind: NUMERIC, STRING, TIME, etc.
+    HasDate      bool     // SQL type has a calendar component
+    HasClock     bool     // SQL type has a clock component
     IsArithmetic bool     // SUM/AVG and the add, subtract, multiply, divide set
     IsPrimary    bool     // is primary key
     IsNullable   bool     // is nullable

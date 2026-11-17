@@ -36,7 +36,9 @@ type Model struct {
 	HasEquatable        bool       // has an equatable field (numeric/string/bool/time/enum)
 	HasRelation         bool       // has a relation field
 	HasArithmetic       bool       // has a non-primary numeric field
-	HasTime             bool       // has a TIME field
+	HasTime             bool       // has a TIME field with a date or clock part
+	HasDate             bool       // has a TIME field with a calendar part
+	HasClock            bool       // has a TIME field with a clock part
 }
 
 func NewModel(t *schema.Table, db *config.DB, cfg *config.Config, n *naming.Naming) (*Model, error) {
@@ -114,7 +116,11 @@ func initModel(m *Model) {
 			m.HasOrdered = true
 			m.HasOrderedNonString = true
 			m.HasEquatable = true
-			m.HasTime = true
+			if !f.IsCustom {
+				m.HasDate = m.HasDate || f.HasDate
+				m.HasClock = m.HasClock || f.HasClock
+				m.HasTime = m.HasTime || f.HasDate || f.HasClock
+			}
 
 		case types.KindBoolean, types.KindEnum:
 			m.HasEquatable = true

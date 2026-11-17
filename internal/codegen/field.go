@@ -18,6 +18,8 @@ type Field struct {
 	Comments     []string // comments e.g: user id
 	ColumnName   string   // db column name e.g: id
 	Kind         string   // logic type: NUMERIC |STRING | ...
+	HasDate      bool     // SQL type has a calendar component
+	HasClock     bool     // SQL type has a clock component
 	IsArithmetic bool     // arithmetic expressions make sense for the field
 	IsPrimary    bool     // is primary key
 	IsNullable   bool     // is nullable
@@ -46,6 +48,8 @@ func NewField(c *schema.Column, customTable *config.CustomTable, driver string, 
 		Comments:     naming.SplitCommentLines(c.Comment),
 		ColumnName:   c.Name,
 		Kind:         desc.Kind,
+		HasDate:      desc.HasDate,
+		HasClock:     desc.HasClock,
 		IsArithmetic: isArithmetic(c, desc),
 		IsPrimary:    c.IsPrimaryKey(),
 		IsNullable:   c.IsNullable(),

@@ -32,9 +32,11 @@ func NewDesc(name string, c *schema.Column) (Desc, error) {
 }
 
 type Desc struct {
-	Type    string   // go Type
-	Kind    string   // logic Type
-	Imports []string // imports packages
+	Type     string   // go Type
+	Kind     string   // logic Type
+	HasDate  bool     // SQL type has a calendar component (date, timestamp)
+	HasClock bool     // SQL type has a clock component (time, timestamp)
+	Imports  []string // imports packages
 }
 
 func newNumericDesc(c *schema.Column, signed string, unsigned string) Desc {
@@ -76,10 +78,24 @@ func newTimeDesc(c *schema.Column) Desc {
 	if c.IsNullable() {
 		typ = "*" + typ
 	}
+	hasDate, hasClock := temporalParts(c.DataType)
 	return Desc{
-		Type:    typ,
-		Kind:    KindTime,
-		Imports: []string{"time"},
+		Type:     typ,
+		Kind:     KindTime,
+		HasDate:  hasDate,
+		HasClock: hasClock,
+		Imports:  []string{"time"},
+	}
+}
+
+func temporalParts(dataType string) (hasDate bool, hasClock bool) {
+	switch dataType {
+	case "date":
+		return true, false
+	case "time", "timetz":
+		return false, true
+	default: // datetime, timestamp, timestamptz
+		return true, true
 	}
 }
 

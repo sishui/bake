@@ -731,7 +731,6 @@ const (
 
 const (
 	TestAllTypeAliasDateValDateExpr      = "CAST(test_all_types_alias.date_val AS DATE)"
-	TestAllTypeAliasTimeValDateExpr      = "CAST(test_all_types_alias.time_val AS DATE)"
 	TestAllTypeAliasDatetimeValDateExpr  = "CAST(test_all_types_alias.datetime_val AS DATE)"
 	TestAllTypeAliasTimestampValDateExpr = "CAST(test_all_types_alias.timestamp_val AS DATE)"
 	TestAllTypeAliasCreatedAtDateExpr    = "CAST(test_all_types_alias.created_at AS DATE)"
@@ -741,7 +740,6 @@ const (
 
 const (
 	TestAllTypeAliasDateValYearExpr      = "EXTRACT(YEAR FROM test_all_types_alias.date_val)"
-	TestAllTypeAliasTimeValYearExpr      = "EXTRACT(YEAR FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValYearExpr  = "EXTRACT(YEAR FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValYearExpr = "EXTRACT(YEAR FROM test_all_types_alias.timestamp_val)"
 	TestAllTypeAliasCreatedAtYearExpr    = "EXTRACT(YEAR FROM test_all_types_alias.created_at)"
@@ -751,7 +749,6 @@ const (
 
 const (
 	TestAllTypeAliasDateValMonthExpr      = "EXTRACT(MONTH FROM test_all_types_alias.date_val)"
-	TestAllTypeAliasTimeValMonthExpr      = "EXTRACT(MONTH FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValMonthExpr  = "EXTRACT(MONTH FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValMonthExpr = "EXTRACT(MONTH FROM test_all_types_alias.timestamp_val)"
 	TestAllTypeAliasCreatedAtMonthExpr    = "EXTRACT(MONTH FROM test_all_types_alias.created_at)"
@@ -761,7 +758,6 @@ const (
 
 const (
 	TestAllTypeAliasDateValDayExpr      = "EXTRACT(DAY FROM test_all_types_alias.date_val)"
-	TestAllTypeAliasTimeValDayExpr      = "EXTRACT(DAY FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValDayExpr  = "EXTRACT(DAY FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValDayExpr = "EXTRACT(DAY FROM test_all_types_alias.timestamp_val)"
 	TestAllTypeAliasCreatedAtDayExpr    = "EXTRACT(DAY FROM test_all_types_alias.created_at)"
@@ -770,7 +766,6 @@ const (
 )
 
 const (
-	TestAllTypeAliasDateValHourExpr      = "EXTRACT(HOUR FROM test_all_types_alias.date_val)"
 	TestAllTypeAliasTimeValHourExpr      = "EXTRACT(HOUR FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValHourExpr  = "EXTRACT(HOUR FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValHourExpr = "EXTRACT(HOUR FROM test_all_types_alias.timestamp_val)"
@@ -780,7 +775,6 @@ const (
 )
 
 const (
-	TestAllTypeAliasDateValMinuteExpr      = "EXTRACT(MINUTE FROM test_all_types_alias.date_val)"
 	TestAllTypeAliasTimeValMinuteExpr      = "EXTRACT(MINUTE FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValMinuteExpr  = "EXTRACT(MINUTE FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValMinuteExpr = "EXTRACT(MINUTE FROM test_all_types_alias.timestamp_val)"
@@ -790,7 +784,6 @@ const (
 )
 
 const (
-	TestAllTypeAliasDateValSecondExpr      = "EXTRACT(SECOND FROM test_all_types_alias.date_val)"
 	TestAllTypeAliasTimeValSecondExpr      = "EXTRACT(SECOND FROM test_all_types_alias.time_val)"
 	TestAllTypeAliasDatetimeValSecondExpr  = "EXTRACT(SECOND FROM test_all_types_alias.datetime_val)"
 	TestAllTypeAliasTimestampValSecondExpr = "EXTRACT(SECOND FROM test_all_types_alias.timestamp_val)"

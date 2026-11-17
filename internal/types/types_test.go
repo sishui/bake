@@ -529,3 +529,42 @@ func TestDescFuncs(t *testing.T) {
 		t.Error("NewDesc(unsupported) should return error")
 	}
 }
+
+func TestTemporalParts(t *testing.T) {
+	tests := []struct {
+		name      string
+		driver    string
+		dataType  string
+		wantDate  bool
+		wantClock bool
+	}{
+		{name: "mysql date", driver: "mysql", dataType: "date", wantDate: true},
+		{name: "mysql time", driver: "mysql", dataType: "time", wantClock: true},
+		{name: "mysql datetime", driver: "mysql", dataType: "datetime", wantDate: true, wantClock: true},
+		{name: "mysql timestamp", driver: "mysql", dataType: "timestamp", wantDate: true, wantClock: true},
+		{name: "postgres date", driver: "postgres", dataType: "date", wantDate: true},
+		{name: "postgres time", driver: "postgres", dataType: "time", wantClock: true},
+		{name: "postgres timetz", driver: "postgres", dataType: "timetz", wantClock: true},
+		{name: "postgres timestamp", driver: "postgres", dataType: "timestamp", wantDate: true, wantClock: true},
+		{name: "postgres timestamptz", driver: "postgres", dataType: "timestamptz", wantDate: true, wantClock: true},
+		{name: "postgres interval", driver: "postgres", dataType: "interval"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			desc, err := NewDesc(tt.driver, &schema.Column{
+				DataType:   tt.dataType,
+				ColumnType: tt.dataType,
+				Nullable:   "NO",
+			})
+			if err != nil {
+				t.Fatalf("NewDesc() error = %v", err)
+			}
+			if desc.HasDate != tt.wantDate || desc.HasClock != tt.wantClock {
+				t.Errorf("temporal parts = (%v, %v), want (%v, %v)",
+					desc.HasDate, desc.HasClock, tt.wantDate, tt.wantClock)
+			}
+		})
+	}
+}

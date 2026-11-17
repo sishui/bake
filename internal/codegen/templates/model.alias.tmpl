@@ -331,11 +331,11 @@ const (
 )
 {{- end}}
 
-{{- if .HasTime -}}
+{{- if .HasDate -}}
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}DateExpr = "CAST({{$alias}}.{{$field.ColumnName}} AS DATE)"
 	{{- end}}
 {{- end}}
@@ -343,7 +343,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}YearExpr = "EXTRACT(YEAR FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -351,7 +351,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}MonthExpr = "EXTRACT(MONTH FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -359,15 +359,18 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}DayExpr = "EXTRACT(DAY FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
+{{- end}}
 
+{{- if .HasClock -}}
+{{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}HourExpr = "EXTRACT(HOUR FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -375,7 +378,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}MinuteExpr = "EXTRACT(MINUTE FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -383,7 +386,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}Alias{{$field.Name}}SecondExpr = "EXTRACT(SECOND FROM {{$alias}}.{{$field.ColumnName}})"
 	{{- end}}
 {{- end}}

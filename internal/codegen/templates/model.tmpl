@@ -369,11 +369,11 @@ const (
 )
 {{- end}}
 
-{{- if .HasTime -}}
+{{- if .HasDate -}}
 {{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}DateExpr = "CAST({{$field.ColumnName}} AS DATE)"
 	{{- end}}
 {{- end}}
@@ -381,7 +381,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}YearExpr = "EXTRACT(YEAR FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -389,7 +389,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}MonthExpr = "EXTRACT(MONTH FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -397,15 +397,18 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasDate }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}DayExpr = "EXTRACT(DAY FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
 )
+{{- end}}
 
+{{- if .HasClock -}}
+{{- "\n\n" -}}
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}HourExpr = "EXTRACT(HOUR FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -413,7 +416,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}MinuteExpr = "EXTRACT(MINUTE FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}
@@ -421,7 +424,7 @@ const (
 
 const (
 {{- range $field := .Fields}}
-	{{- if eq $field.Kind "TIME" }}
+	{{- if and (eq $field.Kind "TIME") $field.HasClock }}
 	{{- "\n\t" }}{{$model}}{{$field.Name}}SecondExpr = "EXTRACT(SECOND FROM {{$field.ColumnName}})"
 	{{- end}}
 {{- end}}

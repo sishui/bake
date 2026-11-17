@@ -455,6 +455,9 @@ func TestNewModel_KindFlags(t *testing.T) {
 	if !m.HasTime {
 		t.Error("HasTime = false, want true (created_at, deleted_at)")
 	}
+	if !m.HasDate || !m.HasClock {
+		t.Error("HasDate/HasClock = false, want true for datetime columns")
+	}
 	if m.HasRelation {
 		t.Error("HasRelation = true, want false")
 	}

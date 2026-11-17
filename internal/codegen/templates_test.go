@@ -62,3 +62,158 @@ func TestModelTemplatesCastDate(t *testing.T) {
 		})
 	}
 }
+
+func TestModelTemplatesTemporalExpressions(t *testing.T) {
+	tests := []struct {
+		name    string
+		driver  string
+		table   string
+		columns []*schema.Column
+		want    []string
+		notWant []string
+	}{
+		{
+			name:   "mysql date time timestamp",
+			driver: "mysql",
+			table:  "events",
+			columns: []*schema.Column{
+				{Name: "id", DataType: "bigint", ColumnType: "bigint", Nullable: "NO", Key: schema.ColumnKeyPrimary},
+				{Name: "date_val", DataType: "date", ColumnType: "date", Nullable: "NO"},
+				{Name: "time_val", DataType: "time", ColumnType: "time", Nullable: "NO"},
+				{Name: "timestamp_val", DataType: "timestamp", ColumnType: "timestamp", Nullable: "NO"},
+			},
+			want: []string{
+				`EventDateValDateExpr`,
+				`"CAST(date_val AS DATE)"`,
+				`EventTimestampValDateExpr`,
+				`"CAST(timestamp_val AS DATE)"`,
+				`EventDateValYearExpr`,
+				`EventTimestampValYearExpr`,
+				`EventTimeValHourExpr`,
+				`EventTimestampValHourExpr`,
+				`EventAliasDateValDateExpr`,
+				`EventAliasTimeValHourExpr`,
+			},
+			notWant: []string{
+				`EventTimeValDateExpr`,
+				`EventTimeValYearExpr`,
+				`EventTimeValMonthExpr`,
+				`EventTimeValDayExpr`,
+				`EventDateValHourExpr`,
+				`EventDateValMinuteExpr`,
+				`EventDateValSecondExpr`,
+				`EventAliasTimeValDateExpr`,
+				`EventAliasDateValHourExpr`,
+			},
+		},
+		{
+			name:   "postgres date time timestamp interval",
+			driver: "postgres",
+			table:  "events",
+			columns: []*schema.Column{
+				{Name: "id", DataType: "int8", ColumnType: "bigint", Nullable: "NO", Key: schema.ColumnKeyPrimary},
+				{Name: "date_val", DataType: "date", ColumnType: "date", Nullable: "NO"},
+				{Name: "time_val", DataType: "time", ColumnType: "time", Nullable: "NO"},
+				{Name: "timestamp_val", DataType: "timestamp", ColumnType: "timestamp", Nullable: "NO"},
+				{Name: "interval_val", DataType: "interval", ColumnType: "interval", Nullable: "NO"},
+			},
+			want: []string{
+				`EventDateValDateExpr`,
+				`"CAST(date_val AS DATE)"`,
+				`EventTimestampValDateExpr`,
+				`"CAST(timestamp_val AS DATE)"`,
+				`EventTimeValHourExpr`,
+				`EventAliasTimestampValDateExpr`,
+			},
+			notWant: []string{
+				`EventTimeValDateExpr`,
+				`EventTimeValYearExpr`,
+				`EventDateValHourExpr`,
+				`EventIntervalValDateExpr`,
+				`EventIntervalValYearExpr`,
+				`EventIntervalValHourExpr`,
+			},
+		},
+		{
+			name:   "postgres time only",
+			driver: "postgres",
+			table:  "clocks",
+			columns: []*schema.Column{
+				{Name: "id", DataType: "int8", ColumnType: "bigint", Nullable: "NO", Key: schema.ColumnKeyPrimary},
+				{Name: "time_val", DataType: "time", ColumnType: "time", Nullable: "NO"},
+			},
+			want: []string{
+				`ClockTimeValHourExpr`,
+				`ClockAliasTimeValHourExpr`,
+			},
+			notWant: []string{
+				`ClockTimeValDateExpr`,
+				`ClockTimeValYearExpr`,
+				`ClockTimeValMonthExpr`,
+				`ClockTimeValDayExpr`,
+				`const ()`,
+			},
+		},
+		{
+			name:   "postgres date only",
+			driver: "postgres",
+			table:  "birthdays",
+			columns: []*schema.Column{
+				{Name: "id", DataType: "int8", ColumnType: "bigint", Nullable: "NO", Key: schema.ColumnKeyPrimary},
+				{Name: "date_val", DataType: "date", ColumnType: "date", Nullable: "NO"},
+			},
+			want: []string{
+				`BirthdayDateValDateExpr`,
+				`BirthdayDateValYearExpr`,
+			},
+			notWant: []string{
+				`BirthdayDateValHourExpr`,
+				`BirthdayDateValMinuteExpr`,
+				`BirthdayDateValSecondExpr`,
+				`const ()`,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			out := renderTemporalTemplates(t, tt.driver, tt.table, tt.columns)
+			for _, want := range tt.want {
+				if !strings.Contains(out, want) {
+					t.Errorf("rendered templates do not contain %q", want)
+				}
+			}
+			for _, notWant := range tt.notWant {
+				if strings.Contains(out, notWant) {
+					t.Errorf("rendered templates contain %q", notWant)
+				}
+			}
+		})
+	}
+}
+
+func renderTemporalTemplates(t *testing.T, driver string, tableName string, columns []*schema.Column) string {
+	t.Helper()
+	cfg := &config.Config{
+		Output:   &config.Output{Dir: "model", Package: "model", Module: "github.com/x/y"},
+		Timezone: "UTC",
+	}
+	table := &schema.Table{Name: tableName, Columns: columns}
+	m, err := NewModel(table, &config.DB{Driver: driver}, cfg, naming.New())
+	if err != nil {
+		t.Fatalf("NewModel() error = %v", err)
+	}
+	tmpl, err := parseTemplates("")
+	if err != nil {
+		t.Fatalf("parseTemplates() error = %v", err)
+	}
+	var out strings.Builder
+	for _, name := range []string{"model", "model.alias"} {
+		buf, err := tmpl.render(name, m)
+		if err != nil {
+			t.Fatalf("render(%s) error = %v", name, err)
+		}
+		out.WriteString(buf.String())
+	}
+	return out.String()
+}
