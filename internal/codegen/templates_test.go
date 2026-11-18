@@ -225,6 +225,7 @@ func TestModelTemplatesSUMOrZero(t *testing.T) {
 			"orders": {
 				Fields: map[string]*config.CustomField{
 					"bonus": {Type: "int64"},
+					"fee":   {Name: "Charge"},
 				},
 			},
 		},
@@ -238,6 +239,7 @@ func TestModelTemplatesSUMOrZero(t *testing.T) {
 		Columns: []*schema.Column{
 			{Name: "id", DataType: "bigint", ColumnType: "bigint", Nullable: "NO", Key: schema.ColumnKeyPrimary},
 			{Name: "amount", DataType: "decimal", ColumnType: "decimal(10,2)", Nullable: "NO"},
+			{Name: "fee", DataType: "decimal", ColumnType: "decimal(10,2)", Nullable: "NO"},
 			{Name: "year_val", DataType: "year", ColumnType: "year", Nullable: "NO"},
 			{Name: "created_at", DataType: "datetime", ColumnType: "datetime", Nullable: "NO"},
 			{Name: "name", DataType: "varchar", ColumnType: "varchar(20)", Nullable: "NO"},
@@ -267,6 +269,11 @@ func TestModelTemplatesSUMOrZero(t *testing.T) {
 		`COALESCE(SUM(amount), 0)`,
 		`OrderAliasAmountSUMOrZeroExpr`,
 		`COALESCE(SUM(orders_alias.amount), 0)`,
+		`OrderChargeSUMExpr`,
+		`OrderChargeSUMOrZeroExpr`,
+		`COALESCE(SUM(fee), 0)`,
+		`OrderAliasChargeSUMOrZeroExpr`,
+		`COALESCE(SUM(orders_alias.fee), 0)`,
 	}
 	for _, w := range want {
 		if !strings.Contains(rendered, w) {
@@ -288,8 +295,8 @@ func TestModelTemplatesSUMOrZero(t *testing.T) {
 			t.Errorf("rendered templates contain %q", w)
 		}
 	}
-	if got := strings.Count(rendered, "SUMOrZeroExpr"); got != 2 {
-		t.Errorf("SUMOrZeroExpr count = %d, want 2 (base and alias)", got)
+	if got := strings.Count(rendered, "SUMOrZeroExpr"); got != 4 {
+		t.Errorf("SUMOrZeroExpr count = %d, want 4 (two columns, base and alias)", got)
 	}
 
 	// A custom numeric field alone must not emit SUMOrZeroExpr, and its absence

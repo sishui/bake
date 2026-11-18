@@ -103,6 +103,27 @@ func main() {
 	}
 	fmt.Println("count distinct users:", count)
 
+	// --- SUM vs SUMOrZero on an empty result set ---
+	var sumZero int64
+	err = db.NewSelect().
+		Table(model.TestIndexTableName).
+		ColumnExpr(model.TestIndexSeqSUMOrZeroExpr).
+		Where("id = ?", -1).
+		Scan(ctx, &sumZero)
+	if err != nil {
+		panic(err)
+	}
+	var sumRaw sql.NullInt64
+	err = db.NewSelect().
+		Table(model.TestIndexTableName).
+		ColumnExpr(model.TestIndexSeqSUMExpr).
+		Where("id = ?", -1).
+		Scan(ctx, &sumRaw)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("sum or zero:", sumZero, "sum null:", !sumRaw.Valid)
+
 	// --- Custom struct demo (JSONB values) ---
 	configJSON := []byte(`{
 		"theme": "dark",
