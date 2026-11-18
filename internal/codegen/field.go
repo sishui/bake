@@ -78,7 +78,7 @@ func NewCustomField(fieldName string, customTable *config.CustomTable, n *naming
 		Comments:     naming.SplitCommentLines(customField.Comment),
 		ColumnName:   name,
 		Kind:         types.TypeToKind(customField.Type),
-		IsArithmetic: types.TypeToKind(customField.Type) == types.KindNumeric,
+		IsArithmetic: false,
 		IsPrimary:    false,
 		IsNullable:   false,
 		IsCustom:     true,

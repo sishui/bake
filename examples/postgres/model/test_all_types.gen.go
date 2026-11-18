@@ -367,6 +367,19 @@ const (
 )
 
 const (
+	TestAllTypeTinyIntValSUMOrZeroExpr     = "COALESCE(SUM(tiny_int_val), 0)"
+	TestAllTypeSmallIntValSUMOrZeroExpr    = "COALESCE(SUM(small_int_val), 0)"
+	TestAllTypeMediumIntValSUMOrZeroExpr   = "COALESCE(SUM(medium_int_val), 0)"
+	TestAllTypeIntValSUMOrZeroExpr         = "COALESCE(SUM(int_val), 0)"
+	TestAllTypeBigIntValSUMOrZeroExpr      = "COALESCE(SUM(big_int_val), 0)"
+	TestAllTypeDecimalValSUMOrZeroExpr     = "COALESCE(SUM(decimal_val), 0)"
+	TestAllTypeFloatValSUMOrZeroExpr       = "COALESCE(SUM(float_val), 0)"
+	TestAllTypeDoubleValSUMOrZeroExpr      = "COALESCE(SUM(double_val), 0)"
+	TestAllTypeYearValSUMOrZeroExpr        = "COALESCE(SUM(year_val), 0)"
+	TestAllTypeNullableIntValSUMOrZeroExpr = "COALESCE(SUM(nullable_int_val), 0)"
+)
+
+const (
 	TestAllTypeTinyIntValAVGExpr     = "AVG(tiny_int_val)"
 	TestAllTypeSmallIntValAVGExpr    = "AVG(small_int_val)"
 	TestAllTypeMediumIntValAVGExpr   = "AVG(medium_int_val)"

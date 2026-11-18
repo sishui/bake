@@ -82,6 +82,10 @@ const (
 )
 
 const (
+	TestMultiIndexAliasSeqSUMOrZeroExpr = "COALESCE(SUM(test_multi_index_alias.seq), 0)"
+)
+
+const (
 	TestMultiIndexAliasSeqAVGExpr = "AVG(test_multi_index_alias.seq)"
 )
 

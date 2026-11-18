@@ -145,6 +145,10 @@ const (
 )
 
 const (
+	UserSeqSUMOrZeroExpr = "COALESCE(SUM(seq), 0)"
+)
+
+const (
 	UserSeqAVGExpr = "AVG(seq)"
 )
 

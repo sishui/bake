@@ -159,6 +159,12 @@ const (
 )
 
 const (
+	MailUIDSUMOrZeroExpr                 = "COALESCE(SUM(uid), 0)"
+	MailStatusSUMOrZeroExpr              = "COALESCE(SUM(status), 0)"
+	MailCustomHasAttachmentSUMOrZeroExpr = "COALESCE(SUM(has_attachment), 0)"
+)
+
+const (
 	MailUIDAVGExpr                 = "AVG(uid)"
 	MailStatusAVGExpr              = "AVG(status)"
 	MailCustomHasAttachmentAVGExpr = "AVG(has_attachment)"

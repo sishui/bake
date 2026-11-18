@@ -35,7 +35,7 @@ type Model struct {
 	HasOrderedNonString bool       // has a numeric or time field
 	HasEquatable        bool       // has an equatable field (numeric/string/bool/time/enum)
 	HasRelation         bool       // has a relation field
-	HasArithmetic       bool       // has a non-primary numeric field
+	HasArithmetic       bool       // has a non-primary numeric column
 	HasTime             bool       // has a TIME field with a date or clock part
 	HasDate             bool       // has a TIME field with a calendar part
 	HasClock            bool       // has a TIME field with a clock part

@@ -91,6 +91,10 @@ const (
 )
 
 const (
+	TestIndexSeqSUMOrZeroExpr = "COALESCE(SUM(seq), 0)"
+)
+
+const (
 	TestIndexSeqAVGExpr = "AVG(seq)"
 )
 

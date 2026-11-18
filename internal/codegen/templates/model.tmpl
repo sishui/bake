@@ -197,6 +197,15 @@ const (
 {{- end}}
 )
 
+{{- "\n\n" -}}
+const (
+{{- range $field := .Fields}}
+	{{- if and $field.IsArithmetic (not $field.IsPrimary) (not $field.IsCustom) }}
+	{{- "\n\t" }}{{$model}}{{$field.Name}}SUMOrZeroExpr = "COALESCE(SUM({{$field.ColumnName}}), 0)"
+	{{- end}}
+{{- end}}
+)
+
 const (
 {{- range $field := .Fields}}
 	{{- if and $field.IsArithmetic (not $field.IsPrimary) }}

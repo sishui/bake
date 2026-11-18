@@ -122,6 +122,15 @@ const (
 )
 
 const (
+	MailAttachmentMailIDSUMOrZeroExpr      = "COALESCE(SUM(mail_id), 0)"
+	MailAttachmentKindSUMOrZeroExpr        = "COALESCE(SUM(kind), 0)"
+	MailAttachmentRewardIDSUMOrZeroExpr    = "COALESCE(SUM(reward_id), 0)"
+	MailAttachmentRewardCountSUMOrZeroExpr = "COALESCE(SUM(reward_count), 0)"
+	MailAttachmentCreatedAtSUMOrZeroExpr   = "COALESCE(SUM(created_at), 0)"
+	MailAttachmentUpdatedAtSUMOrZeroExpr   = "COALESCE(SUM(updated_at), 0)"
+)
+
+const (
 	MailAttachmentMailIDAVGExpr      = "AVG(mail_id)"
 	MailAttachmentKindAVGExpr        = "AVG(kind)"
 	MailAttachmentRewardIDAVGExpr    = "AVG(reward_id)"

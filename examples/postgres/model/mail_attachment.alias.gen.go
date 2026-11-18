@@ -112,6 +112,15 @@ const (
 )
 
 const (
+	MailAttachmentAliasMailIDSUMOrZeroExpr      = "COALESCE(SUM(mail_attachment_alias.mail_id), 0)"
+	MailAttachmentAliasKindSUMOrZeroExpr        = "COALESCE(SUM(mail_attachment_alias.kind), 0)"
+	MailAttachmentAliasRewardIDSUMOrZeroExpr    = "COALESCE(SUM(mail_attachment_alias.reward_id), 0)"
+	MailAttachmentAliasRewardCountSUMOrZeroExpr = "COALESCE(SUM(mail_attachment_alias.reward_count), 0)"
+	MailAttachmentAliasCreatedAtSUMOrZeroExpr   = "COALESCE(SUM(mail_attachment_alias.created_at), 0)"
+	MailAttachmentAliasUpdatedAtSUMOrZeroExpr   = "COALESCE(SUM(mail_attachment_alias.updated_at), 0)"
+)
+
+const (
 	MailAttachmentAliasMailIDAVGExpr      = "AVG(mail_attachment_alias.mail_id)"
 	MailAttachmentAliasKindAVGExpr        = "AVG(mail_attachment_alias.kind)"
 	MailAttachmentAliasRewardIDAVGExpr    = "AVG(mail_attachment_alias.reward_id)"

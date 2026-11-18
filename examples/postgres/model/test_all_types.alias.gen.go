@@ -328,6 +328,19 @@ const (
 )
 
 const (
+	TestAllTypeAliasTinyIntValSUMOrZeroExpr     = "COALESCE(SUM(test_all_types_alias.tiny_int_val), 0)"
+	TestAllTypeAliasSmallIntValSUMOrZeroExpr    = "COALESCE(SUM(test_all_types_alias.small_int_val), 0)"
+	TestAllTypeAliasMediumIntValSUMOrZeroExpr   = "COALESCE(SUM(test_all_types_alias.medium_int_val), 0)"
+	TestAllTypeAliasIntValSUMOrZeroExpr         = "COALESCE(SUM(test_all_types_alias.int_val), 0)"
+	TestAllTypeAliasBigIntValSUMOrZeroExpr      = "COALESCE(SUM(test_all_types_alias.big_int_val), 0)"
+	TestAllTypeAliasDecimalValSUMOrZeroExpr     = "COALESCE(SUM(test_all_types_alias.decimal_val), 0)"
+	TestAllTypeAliasFloatValSUMOrZeroExpr       = "COALESCE(SUM(test_all_types_alias.float_val), 0)"
+	TestAllTypeAliasDoubleValSUMOrZeroExpr      = "COALESCE(SUM(test_all_types_alias.double_val), 0)"
+	TestAllTypeAliasYearValSUMOrZeroExpr        = "COALESCE(SUM(test_all_types_alias.year_val), 0)"
+	TestAllTypeAliasNullableIntValSUMOrZeroExpr = "COALESCE(SUM(test_all_types_alias.nullable_int_val), 0)"
+)
+
+const (
 	TestAllTypeAliasTinyIntValAVGExpr     = "AVG(test_all_types_alias.tiny_int_val)"
 	TestAllTypeAliasSmallIntValAVGExpr    = "AVG(test_all_types_alias.small_int_val)"
 	TestAllTypeAliasMediumIntValAVGExpr   = "AVG(test_all_types_alias.medium_int_val)"

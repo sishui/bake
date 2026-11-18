@@ -30,7 +30,7 @@ For each table, bake generates two files:
 | String     | `Like`, `LikePrefix`, `LikeSuffix`, `LikeContain`, `NotLike`, `ConcatExpr`                 | Pattern matching      |
 | String     | `LengthExpr`, `LowerExpr`, `UpperExpr`                                                     | String functions      |
 | Numeric    | `In`, `NotIn`, `Between`, `NotBetween`                                                     | Range operations      |
-| Aggregate  | `SUMExpr`, `AVGExpr`, `MINExpr`, `MAXExpr`                                                 | Aggregate functions   |
+| Aggregate  | `SUMExpr`, `SUMOrZeroExpr`, `AVGExpr`, `MINExpr`, `MAXExpr`                                | Aggregate functions   |
 | Arithmetic | `AddExpr`, `SubExpr`, `MulExpr`, `DivExpr`                                                 | Arithmetic assignment |
 | Arithmetic | `AddLeastExpr`, `SubGreatestExpr`, `ClampExpr`                                             | Bounded arithmetic    |
 | Distinct   | `DistinctExpr`, `CountDistinctExpr`                                                        | Deduplication         |
@@ -44,6 +44,13 @@ For each table, bake generates two files:
 MySQL `YEAR` is a temporal type stored as an integer, so it keeps ordering,
 range and equality constants but gets no arithmetic: a sum or a multiple of a
 year is meaningless.
+
+`SUMExpr` keeps the SQL standard `NULL` result when a group has no rows or
+only `NULL` values. `SUMOrZeroExpr` is the opt-in null-safe form,
+`COALESCE(SUM(col), 0)`, emitted only for non-custom numeric non-primary
+columns; it never applies to `YEAR`, time, string or bool columns. The choice
+matters in `HAVING`: a `NULL` sum does not match comparisons, while the zero
+form can match `= 0` or `< N`.
 
 Temporal expressions follow the column's actual parts. `DateExpr`, `YearExpr`,
 `MonthExpr` and `DayExpr` are emitted only for date-bearing columns (`date`,
@@ -275,7 +282,7 @@ type Model struct {
     HasOrderedNonString bool       // has a numeric or time field
     HasEquatable        bool       // has an equatable field (numeric/string/bool/time/enum)
     HasRelation         bool       // has a relation field
-    HasArithmetic       bool       // has a non-primary numeric field
+    HasArithmetic       bool       // has a non-primary numeric column
     HasTime             bool       // has a TIME field with a date or clock part
     HasDate             bool       // has a TIME field with a calendar part
     HasClock            bool       // has a TIME field with a clock part

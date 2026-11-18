@@ -130,6 +130,11 @@ const (
 )
 
 const (
+	PostAliasUserIDSUMOrZeroExpr = "COALESCE(SUM(posts_alias.user_id), 0)"
+	PostAliasStatusSUMOrZeroExpr = "COALESCE(SUM(posts_alias.status), 0)"
+)
+
+const (
 	PostAliasUserIDAVGExpr = "AVG(posts_alias.user_id)"
 	PostAliasStatusAVGExpr = "AVG(posts_alias.status)"
 )

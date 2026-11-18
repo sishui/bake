@@ -128,6 +128,10 @@ const (
 )
 
 const (
+	UserAliasSeqSUMOrZeroExpr = "COALESCE(SUM(users_alias.seq), 0)"
+)
+
+const (
 	UserAliasSeqAVGExpr = "AVG(users_alias.seq)"
 )
 
